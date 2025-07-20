@@ -9,7 +9,7 @@ extension FalconToolColorThemeExtensions on Color {
   
   /// Default percentage amount for color operations
   static const double _defaultAmount = 10.0;
-  
+
   /// Maximum RGB channel value
   static const int _maxChannelValue = 255;
   

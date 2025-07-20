@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:faltool/lib.dart';
 
 class DeviceIdGenerator {

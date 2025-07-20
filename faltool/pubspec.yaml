@@ -1,5 +1,5 @@
 name: faltool
-description: A new Flutter package project.
+description: A tools library for Flutter.
 version: 1.0.13
 publish_to: none
 
@@ -32,13 +32,14 @@ dependencies:
   numeral: ^3.1.1
   shared_preferences: ^2.5.3
   retry: ^3.1.2
+  intl: ^0.19.0
 
   #PLATFORM: Android, iOS, Linux, MacOS, Windows
   path_provider: ^2.1.5
   universal_io: ^2.2.2
 
   #PLATFORM: Android, iOS, MacOS, Web
-#  flutter_image_compress: ^2.3.0
+  flutter_image_compress: ^2.4.0
 
 dev_dependencies:
   flutter_lints: ^6.0.0

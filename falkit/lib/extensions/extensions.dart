@@ -1,5 +1,7 @@
 import 'package:falkit/lib.dart';
 
+export 'color_extensions.dart';
+export 'context_extensions.dart';
 export 'icons_extensions.dart';
 export 'images_extensions.dart';
 
