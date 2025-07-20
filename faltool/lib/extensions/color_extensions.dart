@@ -1,82 +1,105 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
+/// Extension methods for Color manipulation and transformation.
+/// Provides utilities for brightening, darkening, blending, and converting
+/// colors.
 extension FalconToolColorThemeExtensions on Color {
-  /// Brightens the color with the given integer percentage amount.
-  /// Defaults to 10%.
-  Color brighten([int amount = 10]) {
+  /// Maximum percentage value for color operations
+  static const double _maxPercentage = 100.0;
+  
+  /// Default percentage amount for color operations
+  static const double _defaultAmount = 10.0;
+  
+  /// Maximum RGB channel value
+  static const int _maxChannelValue = 255;
+  
+  /// Hex string padding length
+  static const int _hexPadLength = 8;
+  
+  /// RGB hex substring start position
+  static const int _rgbHexStart = 2;
+  /// Brightens the color with the given percentage amount.
+  /// 
+  /// [amount] - The percentage to brighten (0-100). Defaults to 10%.
+  /// Returns the original color if amount <= 0, white if amount >= 100.
+  Color brighten([double amount = _defaultAmount]) {
     if (amount <= 0) return this;
-    if (amount > 100) return Colors.white;
-    final color = Color.fromARGB(
-      alpha,
-      math.max(0, math.min(255, red - (255 * -(amount / 100)).round())),
-      math.max(0, math.min(255, green - (255 * -(amount / 100)).round())),
-      math.max(0, math.min(255, blue - (255 * -(amount / 100)).round())),
+    if (amount >= _maxPercentage) return Colors.white;
+    
+    final factor = amount / _maxPercentage;
+    final currentR = (r * _maxChannelValue).round();
+    final currentG = (g * _maxChannelValue).round();
+    final currentB = (b * _maxChannelValue).round();
+    final adjustment = (_maxChannelValue * factor).round();
+    
+    return Color.fromARGB(
+      (a * _maxChannelValue).round(),
+      _clampChannel(currentR + adjustment),
+      _clampChannel(currentG + adjustment),
+      _clampChannel(currentB + adjustment),
     );
-    return color;
   }
 
-  /// Lightens the color with the given integer percentage amount.
-  /// Defaults to 10%.
-  Color lighten([double amount = 10]) {
-    if (amount <= 0.0) return this;
-    if (amount > 100.0) return Colors.white;
-    // HSLColor returns saturation 1 for black, we want 0 instead to be able
-    // lighten black color up along the grey scale from black.
-    final hsl = this == const Color(0xFF000000)
+  /// Lightens the color with the given percentage amount using HSL color
+  /// space.
+  /// 
+  /// [amount] - The percentage to lighten (0-100). Defaults to 10%.
+  /// Special handling for black color to maintain greyscale.
+  Color lighten([double amount = _defaultAmount]) {
+    if (amount <= 0) return this;
+    if (amount >= _maxPercentage) return Colors.white;
+    
+    // Special handling for black to maintain greyscale
+    final hsl = this == Colors.black
         ? HSLColor.fromColor(this).withSaturation(0)
         : HSLColor.fromColor(this);
-    return hsl
-        .withLightness(math.min(1, math.max(0, hsl.lightness + amount / 100)))
-        .toColor();
+    
+    final newLightness = 
+        (hsl.lightness + amount / _maxPercentage).clamp(0.0, 1.0);
+    return hsl.withLightness(newLightness).toColor();
   }
 
-  /// Darkens the color with the given integer percentage amount.
-  /// Defaults to 10%.
-  Color darken([double amount = 10]) {
-    if (amount <= 0.0) return this;
-    if (amount > 100.0) return Colors.black;
-    final hsl = HSLColor.fromColor(this);
-    return hsl
-        .withLightness(math.min(1, math.max(0, hsl.lightness - amount / 100)))
-        .toColor();
-  }
-
-  /// Blend in the given input Color with a percentage of alpha.
-  ///
-  /// You typically apply this on a background color, light or dark
-  /// to create a background color with a hint of a color used in a theme.
-  ///
-  /// This is a use case of the alphaBlend static function that exists in
-  /// dart:ui Color. It is used to create the branded surface colors in
-  /// FlexColorScheme and to calculate dark scheme colors from light ones,
-  /// by blending in white color with light scheme color.
-  ///
-  /// Defaults to 10% alpha blend of the passed in Color value.
-  Color blend(Color input, [int amount = 10]) {
-    // Skip blending for impossible value and return the instance color value.
+  /// Darkens the color with the given percentage amount using HSL color
+  /// space.
+  /// 
+  /// [amount] - The percentage to darken (0-100). Defaults to 10%.
+  Color darken([double amount = _defaultAmount]) {
     if (amount <= 0) return this;
-    // Blend amounts >= 100 results in the input Color.
-    if (amount >= 100) return input;
-    return Color.alphaBlend(input.withAlpha(255 * amount ~/ 100), this);
+    if (amount >= _maxPercentage) return Colors.black;
+    
+    final hsl = HSLColor.fromColor(this);
+    final newLightness = 
+        (hsl.lightness - amount / _maxPercentage).clamp(0.0, 1.0);
+    return hsl.withLightness(newLightness).toColor();
   }
 
-  /// The [getShadeColor] extension is used to make a color darker or lighter,
-  /// the [shadeValue] defines the amount in % that the shade should be changed.
+  /// Blends the given input color with this color using alpha blending.
   ///
-  /// It can be used to make a shade of a color to be used in a gradient.
-  /// By default it makes a color that is 15% lighter. If lighten is false
-  /// it makes a color that is 15% darker by default.
+  /// Typically used to create background colors with a hint of a theme
+  /// color. This is a wrapper around dart:ui Color.alphaBlend for
+  /// convenience.
   ///
-  /// By default it does not affect black and white colors, but
-  /// if [keepWhite] is set to false, it will darken white color when [lighten]
-  /// is false and return a grey color. Wise versa for black with [keepBlack]
-  /// set to false, it will lighten black color, when [lighten] is true and
-  /// return a grey shade.
+  /// [input] - The color to blend into this color.
+  /// [amount] - The blend percentage (0-100). Defaults to 10%.
+  Color blend(Color input, [double amount = _defaultAmount]) {
+    if (amount <= 0) return this;
+    if (amount >= _maxPercentage) return input;
+    
+    final blendAlpha = (_maxChannelValue * amount / _maxPercentage).round();
+    return Color.alphaBlend(input.withAlpha(blendAlpha), this);
+  }
+
+  /// Creates a lighter or darker shade of the color.
   ///
-  /// White cannot be made lighter and black cannot be made
-  /// darker, the extension just returns white or black for such attempts, with
-  /// a quick exist from the call.
+  /// Useful for creating gradients or color variations.
+  /// Special handling for black and white colors based on parameters.
+  ///
+  /// [shadeValue] - The percentage to change the shade (0-100).
+  ///   Defaults to 15%.
+  /// [lighten] - Whether to lighten (true) or darken (false).
+  ///   Defaults to true.
+  /// [keepBlack] - Preserve black color when lightening. Defaults to true.
+  /// [keepWhite] - Preserve white color when darkening. Defaults to true.
   Color getShadeColor({
     double shadeValue = 15.0,
     bool lighten = true,
@@ -84,74 +107,100 @@ extension FalconToolColorThemeExtensions on Color {
     bool keepWhite = true,
   }) {
     if (shadeValue <= 0) return this;
-    if (shadeValue > 100) shadeValue = 100;
-
-    // Trying to make black darker, just return black
-    // ignore: parameter_assignments
-    if (this == Colors.black && !lighten) return this;
-    // Black is defined to be kept as black.
-    if (this == Colors.black && keepBlack) return this;
-    // Make black lighter as lighten was set and we do not keepBlack
-    if (this == Colors.black) return this.lighten(shadeValue);
-
-    // Trying to make white lighter, just return white
-    if (this == Colors.white && lighten) return this;
-    // White is defined to be kept as white.
-    if (this == Colors.white && keepWhite) return this;
-    // Make white darker as we do not keep white.
-    if (this == Colors.white) return darken(shadeValue);
-    // We are dealing with some other color than white or black, so we
-    // make it lighter or darker based on flag and requested shade %
-    if (lighten) {
-      return this.lighten(shadeValue);
-    } else {
-      return darken(shadeValue);
+    
+    final clampedValue = shadeValue.clamp(0.0, _maxPercentage);
+    
+    // Handle black color
+    if (this == Colors.black) {
+      if (!lighten || keepBlack) return this;
+      return this.lighten(clampedValue);
     }
+    
+    // Handle white color
+    if (this == Colors.white) {
+      if (lighten || keepWhite) return this;
+      return darken(clampedValue);
+    }
+    
+    // Handle all other colors
+    return lighten ? this.lighten(clampedValue) : darken(clampedValue);
   }
 
-  /// Return uppercase Flutter style hex code string of the color.
+  /// Returns the color as an uppercase 8-character hex string (AARRGGBB).
+  /// 
+  /// This format includes the alpha channel and is commonly used in
+  /// Flutter.
   String get hexCode {
-    return value.toRadixString(16).toUpperCase().padLeft(8, '0');
+    return toARGB32()
+        .toRadixString(16)
+        .toUpperCase()
+        .padLeft(_hexPadLength, '0');
   }
 
-  /// Return uppercase RGB hex code string, with # and no alpha value.
-  /// This format is often used in APIs and in CSS color values..
+  /// Returns the color as an uppercase RGB hex string with # prefix
+  /// (#RRGGBB).
+  /// 
+  /// This format excludes the alpha channel and is commonly used in CSS and
+  /// web APIs.
   String get hex {
-    return '#${value.toRadixString(16).toUpperCase().padLeft(8, '0').substring(2)}';
+    final fullHex = toARGB32()
+        .toRadixString(16)
+        .toUpperCase()
+        .padLeft(_hexPadLength, '0');
+    return '#${fullHex.substring(_rgbHexStart)}';
   }
+  
+  /// Helper method to clamp RGB channel values between 0 and 255.
+  int _clampChannel(int value) => value.clamp(0, _maxChannelValue);
 }
 
-/// Extensions on [String].
-///
-/// Included extensions are, [toColor] to convert a String to a Color.
-/// To [capitalize] the first letter in a String and [dotTail] to get
-/// remaining string after first dot "." in a String.
+/// Extension methods for String manipulation in theme context.
+/// 
+/// Provides utilities for color conversion and string formatting.
 extension FalconToolStringThemeExtensions on String {
-  /// Convert a HEX value encoded (A)RGB string to a Dart Color.
+  /// Default color returned when parsing fails
+  static const Color _defaultColor = Color(0xFF000000);
+  
+  /// Minimum hex color length (without alpha)
+  static const int _minHexLength = 6;
+  
+  /// Full hex color length (with alpha)
+  static const int _fullHexLength = 8;
+  /// Converts a hex-encoded color string to a Color object.
   ///
-  /// * The string may include the '#' char, but does not have to.
-  /// * String may also include '0x' Dart Hex indicator, but does not have to.
-  /// * Any '#' '0x' patterns are trimmed out and String is assumed to be Hex.
-  /// * The String may start with alpha channel hex value, but does not have to,
-  ///   if alpha value is missing "FF" is used for alpha.
-  /// * String may be longer than 8 chars, after trimming out # and 0x, it will
-  ///   be RIGHT truncated to max 8 chars before parsing.
+  /// Accepts various formats:
+  /// - With or without '#' prefix: #RRGGBB, RRGGBB
+  /// - With or without '0x' prefix: 0xRRGGBB, RRGGBB
+  /// - With or without alpha: AARRGGBB, RRGGBB (defaults to FF for alpha)
+  /// - Strings longer than 8 characters are right-truncated
   ///
-  /// IF the resulting string cannot be parsed to a Color, is empty or null
-  /// THEN fully opaque black color is returned ELSE the Color is returned.
+  /// Returns opaque black (0xFF000000) if parsing fails or string is empty.
   Color get toColor {
-    if (this == '') return const Color(0xFF000000);
-    var hexColor = replaceAll('#', '');
-    hexColor = hexColor.replaceAll('0x', '');
-    hexColor = hexColor.padLeft(6, '0');
-    hexColor = hexColor.padLeft(8, 'F');
-    final length = hexColor.length;
-    return Color(int.tryParse('0x${hexColor.substring(length - 8, length)}') ??
-        0xFF000000);
+    if (isEmpty) return _defaultColor;
+    
+    // Remove common prefixes
+    final cleanHex = replaceAll('#', '').replaceAll('0x', '');
+    
+    // Ensure minimum length with padding
+    final paddedHex = cleanHex
+        .padLeft(_minHexLength, '0')  // Pad RGB values
+        .padLeft(_fullHexLength, 'F'); // Pad alpha channel
+    
+    // Take only the last 8 characters if string is too long
+    final finalHex = paddedHex.length > _fullHexLength 
+        ? paddedHex.substring(paddedHex.length - _fullHexLength)
+        : paddedHex;
+    
+    return Color(int.tryParse('0x$finalHex') ?? _defaultColor.toARGB32());
   }
 
-  /// Capitalize the first letter in a string.
+  /// Capitalizes the first letter of the string.
+  /// 
+  /// Returns the string unchanged if empty, or fully uppercase if single
+  /// character.
   String get capitalize {
-    return (length > 1) ? this[0].toUpperCase() + substring(1) : toUpperCase();
+    if (isEmpty) return this;
+    if (length == 1) return toUpperCase();
+    return this[0].toUpperCase() + substring(1);
   }
 }
