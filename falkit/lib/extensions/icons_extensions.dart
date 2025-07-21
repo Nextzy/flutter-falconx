@@ -3,7 +3,7 @@
 
 import 'package:falkit/lib.dart';
 
-extension SvgIcons on String {
+extension SvgIcons on String? {
   Widget toSvg({
     Key? key,
     bool matchTextDirection = false,
@@ -24,29 +24,32 @@ extension SvgIcons on String {
     @Deprecated('Use colorFilter instead.')
     BlendMode colorBlendMode = BlendMode.srcIn,
     @Deprecated('This no longer does anything.') bool cacheColorFilter = false,
-  }) =>
-      SvgPicture.asset(
-        this,
-        key: key,
-        matchTextDirection: matchTextDirection,
-        bundle: bundle,
-        package: package,
-        width: width,
-        height: height,
-        fit: fit,
-        alignment: alignment,
-        allowDrawingOutsideViewBox: allowDrawingOutsideViewBox,
-        placeholderBuilder: placeholderBuilder,
-        semanticsLabel: semanticsLabel,
-        excludeFromSemantics: excludeFromSemantics,
-        theme: theme,
-        clipBehavior: clipBehavior,
-        colorFilter: colorFilter ??
-            (color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null),
-        color: color,
-        colorBlendMode: colorBlendMode,
-        cacheColorFilter: cacheColorFilter,
-      );
+  }) {
+    if (this == null) return const SizedBox.shrink();
+
+    return SvgPicture.asset(
+      this!,
+      key: key,
+      matchTextDirection: matchTextDirection,
+      bundle: bundle,
+      package: package,
+      width: width,
+      height: height,
+      fit: fit,
+      alignment: alignment,
+      allowDrawingOutsideViewBox: allowDrawingOutsideViewBox,
+      placeholderBuilder: placeholderBuilder,
+      semanticsLabel: semanticsLabel,
+      excludeFromSemantics: excludeFromSemantics,
+      theme: theme,
+      clipBehavior: clipBehavior,
+      colorFilter: colorFilter ??
+          (color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null),
+      color: color,
+      colorBlendMode: colorBlendMode,
+      cacheColorFilter: cacheColorFilter,
+    );
+  }
 
   Widget toSvgIcon({
     Key? key,

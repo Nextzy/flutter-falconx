@@ -196,7 +196,7 @@ class WidgetDataState<T> {
 
   // Data check getters
   bool get hasData => data != null; //
-  bool get hasNoData => data == null; //
+  bool get noData => data == null; //
 
   /// Applies a function to the state and data.
   R apply<R>(R Function(FullWidgetState state, T data) f) => f(state, data);

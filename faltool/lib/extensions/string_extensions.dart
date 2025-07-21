@@ -369,12 +369,6 @@ extension FalconToolStringExtension on String {
 
 /// Extension methods for nullable String manipulation and validation.
 extension FalconStringNullExtension on String? {
-  /// Returns true if the string is null, empty, or contains only whitespace.
-  bool get isNullOrBlank => this == null || this!.trim().isEmpty;
-
-  /// Returns true if the string is not null and contains
-  /// non-whitespace characters.
-  bool get isNotNullOrBlank => !isNullOrBlank;
 
   /// Returns the string or the default value if null.
   String orEmpty() => this ?? '';

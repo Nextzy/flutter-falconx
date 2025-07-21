@@ -403,21 +403,6 @@ extension FalconToolIntToDateTimeExtensions on int {
   DateTime get fromJsToLocalDateTime {
     return DateTime.fromMillisecondsSinceEpoch(this, isUtc: false);
   }
-
-  /// Creates a Duration of the specified number of days.
-  Duration get days => Duration(days: this);
-
-  /// Creates a Duration of the specified number of hours.
-  Duration get hours => Duration(hours: this);
-
-  /// Creates a Duration of the specified number of minutes.
-  Duration get minutes => Duration(minutes: this);
-
-  /// Creates a Duration of the specified number of seconds.
-  Duration get seconds => Duration(seconds: this);
-
-  /// Creates a Duration of the specified number of milliseconds.
-  Duration get milliseconds => Duration(milliseconds: this);
 }
 
 /// Extension methods for nullable DateTime handling.
