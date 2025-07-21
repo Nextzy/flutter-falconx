@@ -1,14 +1,14 @@
 import 'package:faltool/lib.dart';
 
 /// Extension methods for Map type with enhanced functionality.
-/// 
+///
 /// Provides comprehensive utilities for map operations including
 /// safe transformations, filtering, merging, and advanced operations.
 extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// Returns a new map with null values and empty strings removed.
-  /// 
+  ///
   /// Recursively removes nulls and empty strings from nested collections.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final data = {
@@ -21,18 +21,18 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// // {'name': 'John', 'address': {'city': 'NYC'}}
   /// ```
   Map<K, V> removeNullOrEmptyString() => Map<K, V>.fromEntries(
-    entries
-        .where((entry) =>
-    !_isNullOrEmptyString(entry.key) &&
-        !_isNullOrEmptyString(entry.value))
-        .map((entry) => MapEntry(
-      entry.key,
-      _removeNullsDeep(entry.value),
-    )),
-  );
+        entries
+            .where((entry) =>
+                !_isNullOrEmptyString(entry.key) &&
+                !_isNullOrEmptyString(entry.value))
+            .map((entry) => MapEntry(
+                  entry.key,
+                  _removeNullsDeep(entry.value),
+                )),
+      );
 
   /// Gets a value by key with a default if not found.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final config = {'timeout': 30, 'retries': 3};
@@ -43,10 +43,10 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   }
 
   /// Gets a value by key, calling a function to provide default if not found.
-  /// 
+  ///
   /// This method is now provided by dartx package.
   /// Use: map.getOrElse(key, defaultProvider)
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final cache = {'user1': User('Alice')};
@@ -54,10 +54,10 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// ```
 
   /// Maps keys while preserving values.
-  /// 
+  ///
   /// This method is now provided by dartx package.
   /// Use: map.mapKeys((key, value) => newKey)
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final scores = {'alice': 95, 'bob': 87};
@@ -66,10 +66,10 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// ```
 
   /// Maps values while preserving keys.
-  /// 
+  ///
   /// This method is now provided by dartx package.
   /// Use: map.mapValues((key, value) => newValue)
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final prices = {'apple': 1.5, 'banana': 0.8};
@@ -78,9 +78,9 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// ```
 
   /// Filters entries based on a predicate.
-  /// 
+  ///
   /// Similar to dartx's filter method but with different name.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final scores = {'alice': 95, 'bob': 87, 'charlie': 92};
@@ -94,10 +94,10 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   }
 
   /// Filters entries based on key predicate.
-  /// 
+  ///
   /// This method is similar to dartx's filterKeys method.
   /// Use: map.filterKeys((key) => condition)
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final data = {'name': 'John', '_id': '123', '_temp': 'value'};
@@ -106,10 +106,10 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// ```
 
   /// Filters entries based on value predicate.
-  /// 
+  ///
   /// This method is similar to dartx's filterValues method.
   /// Use: map.filterValues((value) => condition)
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final inventory = {'apples': 10, 'bananas': 0, 'oranges': 5};
@@ -118,7 +118,7 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// ```
 
   /// Merges another map into this one, with custom conflict resolution.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final defaults = {'timeout': 30, 'retries': 3};
@@ -142,9 +142,9 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   }
 
   /// Inverts the map, swapping keys and values.
-  /// 
+  ///
   /// Note: If multiple keys have the same value, only the last one is kept.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final codes = {'US': 'United States', 'UK': 'United Kingdom'};
@@ -158,7 +158,7 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   }
 
   /// Groups values by their keys using a key extractor.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final data = {'a1': 10, 'a2': 20, 'b1': 30, 'b2': 40};
@@ -175,7 +175,7 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   }
 
   /// Returns a sorted map by keys.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final scores = {'charlie': 92, 'alice': 95, 'bob': 87};
@@ -190,7 +190,7 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   }
 
   /// Returns a sorted map by values.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final scores = {'alice': 95, 'bob': 87, 'charlie': 92};
@@ -212,7 +212,7 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   }
 
   /// Picks specific keys from the map.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final user = {
@@ -231,7 +231,7 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   }
 
   /// Omits specific keys from the map.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final user = {'id': 1, 'name': 'John', 'password': 'secret'};
@@ -245,10 +245,10 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   }
 
   /// Transforms the map into a list using a transformer function.
-  /// 
+  ///
   /// This method is now provided by dartx package.
   /// Use: map.toList() for list of entries
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final scores = {'alice': 95, 'bob': 87};
@@ -259,10 +259,10 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// ```
 
   /// Checks if any entry satisfies the predicate.
-  /// 
+  ///
   /// This method is now provided by dartx package.
   /// Use: map.any((key, value) => condition)
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final scores = {'alice': 95, 'bob': 87};
@@ -270,10 +270,10 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// ```
 
   /// Checks if every entry satisfies the predicate.
-  /// 
+  ///
   /// This method is similar to dartx's all method.
   /// Use: map.all((key, value) => condition)
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final scores = {'alice': 95, 'bob': 87};
@@ -281,7 +281,7 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// ```
 
   /// Creates a nested path in the map and sets a value.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final config = <String, dynamic>{};
@@ -290,7 +290,7 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// ```
   void setPath(List<K> path, V value) {
     if (path.isEmpty) return;
-    
+
     Map<dynamic, dynamic> current = this;
     for (var i = 0; i < path.length - 1; i++) {
       final key = path[i];
@@ -303,7 +303,7 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   }
 
   /// Gets a value from a nested path in the map.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final config = {'database': {'host': 'localhost', 'port': 5432}};
@@ -333,26 +333,11 @@ extension FalconToolNullableMapExtension<K, V> on Map<K, V>? {
   /// Returns the map or an empty map if null.
   Map<K, V> get orEmpty => this ?? {};
 
-  /// Gets a value by key, returning null if map is null.
-  V? getOrNull(K key) => this?[key];
-
   /// Executes an action if the map is not null and not empty.
   void ifNotEmpty(void Function(Map<K, V> map) action) {
     if (this != null && this!.isNotEmpty) {
       action(this!);
     }
-  }
-
-  /// Maps entries if not null, otherwise returns null.
-  Map<K2, V2>? mapOrNull<K2, V2>(
-    MapEntry<K2, V2> Function(K key, V value) transform,
-  ) {
-    return this?.map((key, value) => transform(key, value));
-  }
-
-  /// Filters entries if not null, otherwise returns null.
-  Map<K, V>? whereOrNull(bool Function(K key, V value) test) {
-    return this?.where(test);
   }
 }
 
@@ -390,18 +375,14 @@ Map<K, V> removeNullsFromMap<K, V>(Map<K, V> map) {
   return Map<K, V>.fromEntries(
     map.entries
         .where((entry) =>
-    !_isNullOrEmptyString(entry.key) &&
-        !_isNullOrEmptyString(entry.value))
+            !_isNullOrEmptyString(entry.key) &&
+            !_isNullOrEmptyString(entry.value))
         .map((entry) => MapEntry(
-      entry.key,
-      _removeNullsDeep(entry.value),
-    )),
+              entry.key,
+              _removeNullsDeep(entry.value),
+            )),
   );
 }
 
 /// Public API for removing nulls and empty strings from any data structure
 T removeNullsAndEmptyStrings<T>(T data) => _removeNullsDeep(data);
-
-
-
-

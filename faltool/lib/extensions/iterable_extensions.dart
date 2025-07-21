@@ -399,22 +399,6 @@ extension FalconToolNullIterableExtensions<T> on Iterable<T>? {
   /// Returns the iterable as a set or an empty set if null.
   Set<T> get orEmptySet => this?.toSet() ?? {};
 
-  /// Maps elements if not null, otherwise returns null.
-  Iterable<R>? mapOrNull<R>(R Function(T element) toElement) {
-    return this?.map(toElement);
-  }
-
-  /// Filters elements if not null, otherwise returns null.
-  Iterable<T>? whereOrNull(bool Function(T element) test) {
-    return this?.where(test);
-  }
-
-  /// Returns the first element or null if the iterable is null or empty.
-  T? get firstOrNull => this?.firstOrNull;
-
-  /// Returns the last element or null if the iterable is null or empty.
-  T? get lastOrNull => this?.lastOrNull;
-
   /// Executes an action if the iterable is not null and not empty.
   void ifNotEmpty(void Function(Iterable<T> iterable) action) {
     if (this != null && this!.isNotEmpty) {
