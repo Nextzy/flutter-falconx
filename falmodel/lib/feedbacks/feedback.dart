@@ -40,7 +40,7 @@ sealed class UserFeedback<T> extends Equatable {
 }
 
 /// Represents a successful operation.
-final class Success<T> extends UserFeedback<T> {
+class Success<T> extends UserFeedback<T> {
   const Success({
     super.code,
     super.message,
@@ -61,7 +61,7 @@ final class Success<T> extends UserFeedback<T> {
 }
 
 /// Represents an informational message.
-final class Information<T> extends UserFeedback<T> {
+class Information<T> extends UserFeedback<T> {
   const Information({
     super.code,
     super.message,
@@ -82,7 +82,7 @@ final class Information<T> extends UserFeedback<T> {
 }
 
 /// Represents a warning that doesn't prevent operation completion.
-final class Warning<T> extends UserFeedback<T> {
+class Warning<T> extends UserFeedback<T> {
   const Warning({
     super.code,
     super.message,
@@ -186,8 +186,9 @@ final class Warning<T> extends UserFeedback<T> {
       ];
 }
 
+
 /// Represents a failure or error condition.
-final class Failure<T> extends UserFeedback<T> {
+class Failure<T> extends UserFeedback<T> {
   const Failure({
     super.code,
     super.message,
