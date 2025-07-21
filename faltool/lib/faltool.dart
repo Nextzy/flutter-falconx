@@ -1,4 +1,4 @@
-
+export 'dart:typed_data';
 export 'package:crypto/crypto.dart' hide Hash;
 export 'package:dartx/dartx.dart' hide IterableAll;
 export 'package:device_info_plus/device_info_plus.dart';
@@ -22,6 +22,5 @@ export 'package:version/version.dart';
 
 export 'extensions/extensions.dart';
 export 'logger.dart';
-export 'tools/tools.dart';
 export 'type_def.dart';
 export 'utils/utils.dart';

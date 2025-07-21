@@ -1,4 +1,3 @@
-
 export 'dart:async';
 export 'dart:convert';
 export 'dart:math';
@@ -15,7 +14,7 @@ export 'dart:ui'
 export 'package:app_links/app_links.dart';
 export 'package:bloc_concurrency/bloc_concurrency.dart';
 export 'package:falconnect/falconnect.dart' hide Path;
-export 'package:falkit/falkit.dart';
+export 'package:falkit/falkit.dart' hide BaseResponse;
 export 'package:falmodel/falmodel.dart';
 export 'package:falstore/falstore.dart';
 export 'package:faltool/faltool.dart';
@@ -33,4 +32,3 @@ export 'networks/internet_connection_bloc.dart';
 export 'notifications/notifications.dart';
 export 'routers/routers.dart';
 export 'views/views.dart';
-export 'widgets/widgets.dart';

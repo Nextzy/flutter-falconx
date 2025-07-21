@@ -90,12 +90,11 @@ abstract class FalconState<T extends StatefulWidget> extends State<T>
   Widget stateBuilder(
     Widget Function(BuildContext context, FullWidgetState state, Widget? child)
         builder,
-  ) {
-    return FullWidgetStateBuilder(
-      create: stateNotifier,
-      builder: builder,
-    );
-  }
+  ) =>
+      FullWidgetStateBuilder(
+        create: stateNotifier,
+        builder: builder,
+      );
 
   @override
   void dispose() {
@@ -163,25 +162,32 @@ abstract class FalconState<T extends StatefulWidget> extends State<T>
 
   void clearFocus() => FocusScope.of(context).unfocus();
 
-  /// Updates the widget state using [stateNotifier] if the widget is still mounted.
+  /// Updates the widget state using [stateNotifier] if widget is mounted.
   ///
   /// The [state] parameter represents the new [FullWidgetState] to be set.
+  /// Optionally executes a callback before setting the state.
   ///
   /// Example usage:
   /// ```dart
-  /// changeToFullWidgetState(FullWidgetState.loading); // Set loading state
+  /// changeState(FullWidgetState.loading); // Set loading state
+  ///
+  /// // With callback
+  /// changeState(FullWidgetState.loading, () {
+  ///   // Prepare for loading
+  ///   data.clear();
+  /// });
   ///
   /// // In async operations
   /// try {
-  ///   changeToFullWidgetState(FullWidgetState.loading);
+  ///   changeState(FullWidgetState.loading);
   ///   await someOperation();
-  ///   changeToFullWidgetState(FullWidgetState.success);
+  ///   changeState(FullWidgetState.success);
   /// } catch (e) {
-  ///   changeToFullWidgetState(FullWidgetState.error);
+  ///   changeState(FullWidgetState.fail);
   /// }
   /// ```
   ///
-  /// To handle change state in the UI:
+  /// To handle states in the UI:
   /// ```dart
   /// buildState(context, state) {
   ///   switch (state) {
@@ -189,428 +195,97 @@ abstract class FalconState<T extends StatefulWidget> extends State<T>
   ///       return LoadingWidget();
   ///     case FullWidgetState.success:
   ///       return SuccessWidget();
-  ///     case FullWidgetState.error:
+  ///     case FullWidgetState.fail:
   ///       return ErrorWidget();
   ///   }
   /// }
   /// ```
-  ///
-  /// Or use [FullWidgetStateBuilder] with [stateNotifier] directly:
-  /// ```dart
-  /// FullWidgetStateBuilder(
-  ///   stateNotifier: stateNotifier,
-  ///   builder: (context, state) {
-  ///     // Handle different states
-  ///   },
-  /// )
-  /// ```
-  void changeToFullWidgetState(FullWidgetState state) {
+  void changeFullWidgetState(FullWidgetState state, [VoidCallback? fn]) {
     if (mounted) {
+      fn?.call();
       stateNotifier.value = state;
     }
   }
 
-  void setFullWidgetState(FullWidgetState state) {
+  void setFullWidgetState(FullWidgetState state, [VoidCallback? fn]) {
     if (mounted) {
       setState(() {
+        fn?.call();
         stateNotifier.value = state;
       });
     }
   }
 
-  /// Sets the widget state to normal and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to normal.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToNormalState();
-  ///
-  /// // With callback
-  /// changeToNormalState(() {
-  ///   // Do something before setting normal state
-  ///   data.clear();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToNormalState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.normal;
-    }
-  }
+  void setNormalState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.normal, fn);
 
-  void setNormalState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.normal;
-      });
-    }
-  }
+  void setLoadingState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.loading, fn);
 
-  /// Sets the widget state to loading and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to loading.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToLoadingState();
-  ///
-  /// // With callback
-  /// changeToLoadingState(() {
-  ///   // Do something before setting loading state
-  ///   data.changeToLoadingState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToLoadingState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.loading;
-    }
-  }
+  void setHoveredState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.hovered, fn);
 
-  void setLoadingState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.loading;
-      });
-    }
-  }
+  void setFocusedState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.focused, fn);
 
-  /// Sets the widget state to hovered and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to hovered.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToHoveredState();
-  ///
-  /// // With callback
-  /// changeToHoveredState(() {
-  ///   // Do something before setting hovered state
-  ///   data.changeToHoveredState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToHoveredState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.hovered;
-    }
-  }
+  void setFocusedVisibleState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.focusedVisible, fn);
 
-  void setHoveredState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.hovered;
-      });
-    }
-  }
+  void setDisabledState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.disabled, fn);
 
-  /// Sets the widget state to focused and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to focused.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToFocusedState();
-  ///
-  /// // With callback
-  /// changeToFocusedState(() {
-  ///   // Do something before setting focused state
-  ///   data.changeToFocusedState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToFocusedState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.focused;
-    }
-  }
+  void setWarningState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.warning, fn);
 
-  void setFocusedState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.focused;
-      });
-    }
-  }
+  void setEmptyState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.empty, fn);
 
-  /// Sets the widget state to focus-visible and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to focus-visible.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToFocusedVisibleState();
-  ///
-  /// // With callback
-  /// changeToFocusedVisibleState(() {
-  ///   // Do something before setting focused state
-  ///   data.changeToFocusedVisibleState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToFocusedVisibleState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.focusedVisible;
-    }
-  }
+  void setSelectedState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.selected, fn);
 
-  void setFocusedVisibleState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.focusedVisible;
-      });
-    }
-  }
+  void setSuccessState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.success, fn);
 
-  /// Sets the widget state to disabled and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to disabled.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToDisabledState();
-  ///
-  /// // With callback
-  /// changeToDisabledState(() {
-  ///   // Do something before setting disabled state
-  ///   data.changeToDisabledState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToDisabledState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.disabled;
-    }
-  }
+  void setCancelState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.cancel, fn);
 
-  void setDisabledState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.disabled;
-      });
-    }
-  }
+  void setFailState([VoidCallback? fn]) =>
+      setFullWidgetState(FullWidgetState.fail, fn);
 
-  /// Sets the widget state to warning and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to warning.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToWarningState();
-  ///
-  /// // With callback
-  /// changeToWarningState(() {
-  ///   // Do something before setting warning state
-  ///   data.changeToWarningState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToWarningState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.warning;
-    }
-  }
+  // Convenience methods for common states
+  void changeToNormalState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.normal, fn);
 
-  void setWarningState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.warning;
-      });
-    }
-  }
+  void changeToLoadingState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.loading, fn);
 
-  /// Sets the widget state to empty and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to empty.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToEmptyState();
-  ///
-  /// // With callback
-  /// changeToEmptyState(() {
-  ///   // Do something before setting empty state
-  ///   data.changeToEmptyState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToEmptyState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.empty;
-    }
-  }
+  void changeToSuccessState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.success, fn);
 
-  void setEmptyState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.empty;
-      });
-    }
-  }
+  void changeToFailState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.fail, fn);
 
-  /// Sets the widget state to selected and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to selected.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// setSelectedState();
-  ///
-  /// // With callback
-  /// setSelectedState(() {
-  ///   // Do something before setting selected state
-  ///   data.setSelectedState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToSelectedState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.selected;
-    }
-  }
+  void changeToEmptyState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.empty, fn);
 
-  void setSelectedState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.selected;
-      });
-    }
-  }
+  void changeToWarningState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.warning, fn);
 
-  /// Sets the widget state to success and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to success.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToSuccessState();
-  ///
-  /// // With callback
-  /// changeToSuccessState(() {
-  ///   // Do something before setting success state
-  ///   data.changeToSuccessState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToSuccessState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.success;
-    }
-  }
+  void changeToDisabledState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.disabled, fn);
 
-  void setSuccessState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.success;
-      });
-    }
-  }
+  void changeToSelectedState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.selected, fn);
 
-  /// Sets the widget state to cancel and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to cancel.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToCancelState();
-  ///
-  /// // With callback
-  /// changeToCancelState(() {
-  ///   // Do something before setting cancel state
-  ///   data.changeToCancelState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToCancelState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.cancel;
-    }
-  }
+  void changeToCancelState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.cancel, fn);
 
-  void setCancelState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.cancel;
-      });
-    }
-  }
+  void changeToHoveredState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.hovered, fn);
 
-  /// Sets the widget state to fail and optionally executes a callback function.
-  ///
-  /// The optional [fn] parameter is a callback that will be executed before setting the state to fail.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// // Simple usage
-  /// changeToFailState();
-  ///
-  /// // With callback
-  /// changeToFailState(() {
-  ///   // Do something before setting fail state
-  ///   data.changeToFailState();
-  /// });
-  /// ```
-  ///
-  /// See how to handle states in UI at `setFullWidgetState()`
-  void changeToFailState([VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.value = FullWidgetState.fail;
-    }
-  }
+  void changeToFocusedState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.focused, fn);
 
-  void setFailState([VoidCallback? fn]) {
-    if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetState.fail;
-      });
-    }
-  }
+  void changeToFocusedVisibleState([VoidCallback? fn]) =>
+      changeFullWidgetState(FullWidgetState.focusedVisible, fn);
 }

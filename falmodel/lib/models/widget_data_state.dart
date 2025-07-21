@@ -1,221 +1,165 @@
 import 'package:falmodel/lib.dart';
+import 'package:flutter/widgets.dart';
 
+/// An optimized version of WidgetDataState that reduces code duplication
+/// and improves performance using Dart 3 features.
+///
+/// This state management class combines widget state, data, and feedback
+/// into a single immutable object suitable for BLoC pattern.
+///
+/// Example:
+/// ```dart
+/// // Create initial state
+/// final state = WidgetDataState.initial(UserData());
+///
+/// // Transition to loading
+/// final loadingState = state.toState(FullWidgetState.loading);
+///
+/// // Update with success and new data
+/// final successState = state.toSuccess(
+///   data: updatedUserData,
+///   feedback: Success(message: 'Profile updated'),
+/// );
+/// ```
 @immutable
-class WidgetDataState<DATA> {
-  factory WidgetDataState.initial(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.initial,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
+class WidgetDataState<T> {
 
-  factory WidgetDataState.normal(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.normal,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.empty(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.empty,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.hovered(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.hovered,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.focused(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.focused,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.focusedVisible(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.focusedVisible,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.pressed(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.pressed,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.dragged(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.dragged,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.selected(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.selected,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.scrolledUnder(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.scrolledUnder,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.disabled(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.disabled,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.loading(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.loading,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.success(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.success,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.cancel(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.cancel,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.warning(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.warning,
-          id: id,
-          feedback: feedback ?? const Warning(),
-          data: data,
-          build: build);
-
-  factory WidgetDataState.fail(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-    bool build = true,
-  }) =>
-      WidgetDataState._(FullWidgetState.fail,
-          id: id,
-          feedback: feedback ?? const Failure(),
-          data: data,
-          build: build);
-
-  const WidgetDataState._(
-    this.state, {
-    this.id,
+  /// Creates a widget data state with the specified parameters.
+  const WidgetDataState._({
+    required this.state,
     required this.data,
     required this.feedback,
+    this.id,
     this.event,
     this.build = true,
   });
 
+  /// Factory constructor that creates a state with default feedback based on state type.
+  factory WidgetDataState.create(
+      FullWidgetState state,
+      T data, {
+        String? id,
+        UserFeedback? feedback,
+        bool build = true,
+      }) {
+    // Default feedback based on state
+    final defaultFeedback = switch (state) {
+      FullWidgetState.warning => const Warning(),
+      FullWidgetState.fail => const Failure(),
+      _ => const Information(),
+    };
+
+    return WidgetDataState._(
+      state: state,
+      id: id,
+      data: data,
+      feedback: feedback ?? defaultFeedback,
+      build: build,
+    );
+  }
+
+  // Optimized factory constructors using the create method
+  factory WidgetDataState.initial(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.initial, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.normal(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.normal, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.empty(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.empty, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.loading(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.loading, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.success(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.success, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.warning(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.warning, data,
+          id: id, feedback: feedback ?? const Warning(), build: build);
+
+  factory WidgetDataState.fail(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.fail, data,
+          id: id, feedback: feedback ?? const Failure(), build: build);
+
+  // Additional factory constructors for all FullWidgetState values
+  factory WidgetDataState.hovered(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.hovered, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.focused(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.focused, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.focusedVisible(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.focusedVisible, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.pressed(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.pressed, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.dragged(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.dragged, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.selected(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.selected, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.scrolledUnder(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.scrolledUnder, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.disabled(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.disabled, data,
+          id: id, feedback: feedback, build: build);
+
+  factory WidgetDataState.cancel(T data,
+      {String? id, UserFeedback? feedback, bool build = true}) =>
+      WidgetDataState.create(FullWidgetState.cancel, data,
+          id: id, feedback: feedback, build: build);
+
+  /// The current widget state.
   final FullWidgetState state;
+
+  /// Optional identifier for this state instance.
   final String? id;
 
-  /// Purpose to [UserFeedback] for show the message or data on the widgets
+  /// User feedback associated with this state.
   final UserFeedback feedback;
 
-  /// Purpose to [WidgetEvent] for communicate BLoC --> Widget
-  /// Important: [event] not copy because event must use for one time.
-  /// if you want to send [event] to view, please use [addEvent]
+  /// Optional event for BLoC to Widget communication.
+  /// Note: Events are not copied during state transitions.
   final WidgetEvent? event;
-  final DATA data;
+
+  /// The data contained in this state.
+  final T data;
+
+  /// Whether this state change should trigger a widget rebuild.
   final bool build;
 
+  // State check getters using pattern matching
   bool get isInitial => state.isInitial; //
   bool get isNormal => state.isNormal; //
   bool get isEmpty => state.isEmpty; //
@@ -250,241 +194,203 @@ class WidgetDataState<DATA> {
   bool get isNotWarning => !isWarning; //
   bool get isNotCancel => !isCancel; //
 
+  // Data check getters
   bool get hasData => data != null; //
-  bool get noData => data == null; //
+  bool get hasNoData => data == null; //
 
-  R apply<R>(Function2<FullWidgetState, DATA, R> f) => f(state, data);
+  /// Applies a function to the state and data.
+  R apply<R>(R Function(FullWidgetState state, T data) f) => f(state, data);
 
-  WidgetDataState<NT2> mapData<NT2>(Function1<DATA, NT2> f,
-          {String? id, UserFeedback? feedback, bool? build}) =>
-      WidgetDataState._(state,
-          data: f(data),
-          id: id ?? this.id,
-          feedback: feedback ?? this.feedback,
-          build: build ?? true);
+  /// Converts the current FullWidgetState to Flutter's WidgetState if applicable.
+  WidgetState? get toWidgetState => state.toWidgetState;
 
-  WidgetDataState<DATA> mapState(Function1<FullWidgetState, FullWidgetState> f,
-          {String? id, UserFeedback? feedback, bool? build}) =>
-      WidgetDataState._(f(state),
-          id: id ?? this.id,
+  /// Maps the data to a new type.
+  WidgetDataState<R> mapData<R>(R Function(T data) mapper) {
+    return WidgetDataState._(
+      state: state,
+      id: id,
+      data: mapper(data),
+      feedback: feedback,
+      build: build,
+      event: event,
+    );
+  }
+
+  /// Maps the state using a transformation function.
+  WidgetDataState<T> mapState(
+      FullWidgetState Function(FullWidgetState) mapper) {
+    return WidgetDataState._(
+      state: mapper(state),
+      id: id,
+      data: data,
+      feedback: feedback,
+      build: build,
+      event: event,
+    );
+  }
+
+  /// Generic state transition method that reduces duplication.
+  WidgetDataState<T> toState(
+      FullWidgetState newState, {
+        T? data,
+        String? id,
+        UserFeedback? feedback,
+        bool? build,
+      }) {
+    return WidgetDataState.create(
+      newState,
+      data ?? this.data,
+      id: id ?? this.id,
+      feedback: feedback,
+      build: build ?? true,
+    );
+  }
+
+  /// Convenience methods for common state transitions.
+  WidgetDataState<T> toInitial(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.initial,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toNormal(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.normal,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toEmpty(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.empty,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toLoading(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.loading,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toSuccess(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.success,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toWarning(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.warning,
           data: data,
-          feedback: feedback ?? this.feedback,
-          build: build ?? true);
-
-  WidgetDataState<DATA> toState(FullWidgetState state,
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: state,
-          id: id,
-          data: data,
-          feedback: feedback ?? const Information(),
-          build: build);
-
-  WidgetDataState<DATA> toInitial(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.initial,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toNormal(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.normal,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toEmpty(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.empty,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toHovered(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.hovered,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toFocused(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.focused,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toFocusedVisible(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.focusedVisible,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toPressed(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.pressed,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toDragged(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.dragged,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toSelected(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.selected,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toScrolledUnder(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.scrolledUnder,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toDisabled(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.disabled,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toLoading(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.loading,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toSuccess(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.success,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toCancel(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.cancel,
-          id: id,
-          feedback: feedback ?? const Information(),
-          data: data,
-          build: build);
-
-  WidgetDataState<DATA> toWarning(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.warning,
           id: id,
           feedback: feedback ?? const Warning(),
-          data: data,
           build: build);
 
-  WidgetDataState<DATA> toFail(
-          {DATA? data, String? id, UserFeedback? feedback, bool? build}) =>
-      copy(
-          state: FullWidgetState.fail,
+  WidgetDataState<T> toFail(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.fail,
+          data: data,
           id: id,
           feedback: feedback ?? const Failure(),
-          data: data,
           build: build);
 
-  /// Important: Do not copy [event] because event must use that one time.
-  /// [event] if you want to send event to view, please use [addEvent]
-  /// [build] this flag use for control rebuild at widget.
-  WidgetDataState<DATA> copy({
+  // Additional convenience methods for all state transitions
+  WidgetDataState<T> toHovered(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.hovered,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toFocused(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.focused,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toFocusedVisible(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.focusedVisible,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toPressed(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.pressed,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toDragged(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.dragged,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toSelected(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.selected,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toScrolledUnder(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.scrolledUnder,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toDisabled(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.disabled,
+          data: data, id: id, feedback: feedback, build: build);
+
+  WidgetDataState<T> toCancel(
+      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
+      toState(FullWidgetState.cancel,
+          data: data, id: id, feedback: feedback, build: build);
+
+  /// Creates a copy of this state with optional parameter updates.
+  /// Note: Events are never copied as they should be used only once.
+  WidgetDataState<T> copyWith({
     FullWidgetState? state,
     String? id,
     UserFeedback? feedback,
-    DATA? data,
+    T? data,
     bool? build,
-  }) =>
-      WidgetDataState<DATA>._(
-        state ?? this.state,
-        id: id ?? this.id,
-        data: data ?? this.data,
-        feedback: feedback ?? this.feedback,
-        build: build ?? true,
-        // Always true if build == null
-        event: null, // Clear event
-      );
+  }) {
+    return WidgetDataState._(
+      state: state ?? this.state,
+      id: id ?? this.id,
+      data: data ?? this.data,
+      feedback: feedback ?? this.feedback,
+      build: build ?? true,
+      event: null, // Events are not copied
+    );
+  }
 
-  /// In your [buildWhen] in BLoC
-  /// Recommend:
-  /// ```
-  /// if (current is FullWidgetState && current.event != null) {
-  ///   return false;
-  /// } else if (current is FullWidgetState && current.event == null) {
-  ///   return current.build;
-  /// } else {
-  ///   return true;
-  /// }
-  /// ```
-  WidgetDataState<DATA> addEvent(
-    Object event, [
-    Object? data,
-  ]) =>
-      WidgetDataState<DATA>._(
-        this.state,
-        id: this.id,
-        data: this.data,
-        build: this.build,
-        feedback: this.feedback,
-        event: WidgetEvent(event, data),
-      );
+  /// Adds a one-time event to this state.
+  ///
+  /// Events are used for BLoC to Widget communication and should not
+  /// trigger rebuilds. Configure your BLoC's buildWhen accordingly.
+  WidgetDataState<T> addEvent(Object eventName, [Object? eventData]) {
+    return WidgetDataState._(
+      state: state,
+      id: id,
+      data: data,
+      feedback: feedback,
+      build: build,
+      event: WidgetEvent(eventName, eventData),
+    );
+  }
 
   @override
-  String toString() {
-    return 'WidgetDataState{state: $state, id: $id, data: $data, feedback: $feedback, event: $event, build: $build}';
-  }
+  String toString() => 'WidgetDataStateV2('
+      'state: $state, '
+      'id: $id, '
+      'data: $data, '
+      'feedback: $feedback, '
+      'event: $event, '
+      'build: $build)';
 }
 
+/// Event class for one-time communication from BLoC to Widget.
+@immutable
 class WidgetEvent {
-  WidgetEvent(
-    this.name, [
-    this.data,
-  ]);
+  const WidgetEvent(this.name, [this.data]);
 
+  /// The name/type of the event.
   final Object name;
+
+  /// Optional data associated with the event.
   final Object? data;
 
   @override
-  String toString() {
-    return 'WidgetEvent{event: $name, data: $data}';
-  }
+  String toString() => 'WidgetEvent(name: $name, data: $data)';
 }
+
+

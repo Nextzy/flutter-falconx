@@ -38,7 +38,7 @@ class SocketBoundResource<EntityType, ResponseType> {
             sink.add(Left(Failure(
               message: newException.toString(),
               exception: newException,
-              stacktrace: stackTrace,
+              stackTrace: stackTrace,
             )));
           }
         }

@@ -11,4 +11,5 @@ export 'package:smooth_page_indicator/smooth_page_indicator.dart'
 export 'animations/animations.dart';
 export 'extensions/extensions.dart';
 export 'styles/styles.dart';
+export 'tools/tools.dart';
 export 'widgets/widgets.dart';

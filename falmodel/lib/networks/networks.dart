@@ -1,14 +1,17 @@
+// Base classes
 export 'base_request.dart';
 
+// HTTP request bodies
 export 'https/body/request_body.dart';
 export 'https/body/request_formdata.dart';
-export 'https/responses/empty_data_response.dart';
-export 'https/responses/bool_response.dart';
-export 'https/responses/string_response.dart';
-export 'https/responses/int_response.dart';
-export 'https/responses/double_response.dart';
 
+// HTTP responses - new generic approach (recommended)
+export 'https/responses/base_response.dart';
+export 'https/responses/error_response.dart';
+export 'https/responses/paginated_response.dart';
+
+// WebSocket models - new approach (recommended)
+export 'sockets/base_socket_models.dart';
+
+// WebSocket models - legacy (deprecated but maintained for compatibility)
 export 'sockets/socket_options.dart';
-export 'sockets/body/socket_body.dart';
-export 'sockets/responses/socket_response.dart';
-export 'sockets/responses/socket_response_data.dart';

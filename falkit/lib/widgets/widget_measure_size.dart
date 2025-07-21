@@ -31,12 +31,12 @@ class _WidgetMeasureSizeState extends State<WidgetMeasureSize> {
   GlobalKey<State<StatefulWidget>> widgetKey = GlobalKey();
   Size? oldSize;
 
-  void postFrameCallback(_) async {
+  void postFrameCallback(_) {
     final context = widgetKey.currentContext;
-    if (!mounted || context == null) return; // not yet attached to layout
+    if (!mounted || context == null) return;
 
-    final newSize = context.size!;
-    if (oldSize == newSize) return;
+    final newSize = context.size;
+    if (newSize == null || oldSize == newSize) return;
 
     oldSize = newSize;
     widget.onChange(newSize);

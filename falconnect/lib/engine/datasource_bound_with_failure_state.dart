@@ -40,7 +40,7 @@ class DatasourceBoundWithFailureState<DataType, ResponseType> {
   /// ```
   static Stream<Either<Failure, DataType>> asLocalStream<DataType>({
     required Future<DataType> Function() loadFromDbFuture,
-    Failure Function(Object error, StackTrace? stacktrace)? handleError,
+    Failure Function(Object error, StackTrace? stackTrace)? handleError,
   }) async* {
     try {
       final dataFromDb = await loadFromDbFuture();
@@ -54,7 +54,7 @@ class DatasourceBoundWithFailureState<DataType, ResponseType> {
           Failure(
             message: exception.toString(),
             exception: exception,
-            stacktrace: stackTrace,
+            stackTrace: stackTrace,
           ));
       return;
     }
@@ -62,7 +62,7 @@ class DatasourceBoundWithFailureState<DataType, ResponseType> {
 
   static Future<Either<Failure, DataType>> asLocalFuture<DataType>({
     required Future<DataType> Function() loadFromDbFuture,
-    Failure Function(Object error, StackTrace? stacktrace)? handleError,
+    Failure Function(Object error, StackTrace? stackTrace)? handleError,
   }) =>
       asLocalStream(
         loadFromDbFuture: loadFromDbFuture,
@@ -110,7 +110,7 @@ class DatasourceBoundWithFailureState<DataType, ResponseType> {
       asRemoteStream<ResponseType, DataType>({
     required Future<ResponseType> Function() createCallFuture,
     FutureOr<DataType> Function(ResponseType response)? processResponse,
-    Failure Function(Object error, StackTrace? stacktrace)? handleError,
+    Failure Function(Object error, StackTrace? stackTrace)? handleError,
   }) async* {
     assert(
       ResponseType == DataType ||
@@ -139,7 +139,7 @@ class DatasourceBoundWithFailureState<DataType, ResponseType> {
           Failure(
             message: exception.toString(),
             exception: exception,
-            stacktrace: stackTrace,
+            stackTrace: stackTrace,
           ));
       return;
     }
@@ -149,7 +149,7 @@ class DatasourceBoundWithFailureState<DataType, ResponseType> {
       asRemoteFuture<ResponseType, DataType>({
     required Future<ResponseType> Function() createCallFuture,
     FutureOr<DataType> Function(ResponseType response)? processResponse,
-    Failure Function(Object error, StackTrace? stacktrace)? handleError,
+    Failure Function(Object error, StackTrace? stackTrace)? handleError,
   }) =>
           asRemoteStream(
             createCallFuture: createCallFuture,
@@ -218,7 +218,7 @@ class DatasourceBoundWithFailureState<DataType, ResponseType> {
     Future<ResponseType> Function()? createCallFuture,
     Future? Function(ResponseType response)? saveCallResult,
     FutureOr<DataType> Function(ResponseType response)? processResponse,
-    Failure Function(Object error, StackTrace? stacktrace)? handleError,
+    Failure Function(Object error, StackTrace? stackTrace)? handleError,
   }) async* {
     assert(
       ResponseType == DataType ||
@@ -254,7 +254,7 @@ class DatasourceBoundWithFailureState<DataType, ResponseType> {
               Failure(
                 message: exception.toString(),
                 exception: exception,
-                stacktrace: stackTrace,
+                stackTrace: stackTrace,
               ));
         }
       }
@@ -271,7 +271,7 @@ class DatasourceBoundWithFailureState<DataType, ResponseType> {
             Failure(
               message: exception.toString(),
               exception: exception,
-              stacktrace: stackTrace,
+              stackTrace: stackTrace,
             );
       }
     }

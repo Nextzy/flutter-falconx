@@ -326,8 +326,5 @@ class ScreenTransition<T> extends PageRouteBuilder<T> {
                 );
             }
           },
-        ) {
-    // TODO(username): implement ScreenTransition
-    throw UnimplementedError();
-  }
+        );
 }
