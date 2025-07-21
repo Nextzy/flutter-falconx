@@ -7,9 +7,6 @@ library;
 // Date and time utilities
 export 'date_time_extension.dart';
 
-// Dynamic type handling
-export 'dynamic_extensions.dart';
-
 // Enum utilities
 export 'enum_extensions.dart';
 

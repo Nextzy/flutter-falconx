@@ -1,5 +1,6 @@
 import 'package:faltool/lib.dart';
-// import 'package:web/web.dart' as web;
+import 'package:faltool/utils/platform_checker_web.dart'
+    if (dart.library.io) 'platform_checker_stub.dart' as web_impl;
 import 'package:flutter/foundation.dart';
 
 enum DevicePlatform { android, ios, windows, macOs, linux, web }
@@ -60,10 +61,10 @@ class PlatformChecker {
 
   static bool get isNotAndroidNative => !isAndroidNative;
 
-  // static bool get isAndroidOnWeb =>
-  //     isWeb && userAgent.toLowerCase().contains('android');
-  //
-  // static bool get isNotAndroidOnWeb => !isAndroidOnWeb;
+  static bool get isAndroidOnWeb =>
+      isWeb && userAgent.toLowerCase().contains('android');
+
+  static bool get isNotAndroidOnWeb => !isAndroidOnWeb;
 
   static bool get isIos => Platform.isIOS;
 
@@ -73,10 +74,10 @@ class PlatformChecker {
 
   static bool get isNotIosNative => !isIosNative;
 
-  // static bool get isIosOnWeb =>
-  //     isWeb && userAgent.toLowerCase().contains('iphone');
-  //
-  // static bool get isNotIosOnWeb => !isIosOnWeb;
+  static bool get isIosOnWeb =>
+      isWeb && userAgent.toLowerCase().contains('iphone');
+
+  static bool get isNotIosOnWeb => !isIosOnWeb;
 
   static bool get isLinux => Platform.isLinux;
 
@@ -86,10 +87,10 @@ class PlatformChecker {
 
   static bool get isNotLinuxNative => !isLinuxNative;
 
-  // static bool get isLinuxOnWeb =>
-  //     isWeb && userAgent.toLowerCase().contains('linux');
-  //
-  // static bool get isNotLinuxOnWeb => !isLinuxOnWeb;
+  static bool get isLinuxOnWeb =>
+      isWeb && userAgent.toLowerCase().contains('linux');
+
+  static bool get isNotLinuxOnWeb => !isLinuxOnWeb;
 
   static bool get isWindows => Platform.isWindows;
 
@@ -99,10 +100,10 @@ class PlatformChecker {
 
   static bool get isNotWindowsNative => !isWindowsNative;
 
-  // static bool get isWindowsOnWeb =>
-  //     isWeb && userAgent.toLowerCase().contains('windows');
-  //
-  // static bool get isNotWindowsOnWeb => !isWindowsOnWeb;
+  static bool get isWindowsOnWeb =>
+      isWeb && userAgent.toLowerCase().contains('windows');
+
+  static bool get isNotWindowsOnWeb => !isWindowsOnWeb;
 
   static bool get isMacOs => Platform.isMacOS;
 
@@ -112,10 +113,10 @@ class PlatformChecker {
 
   static bool get isNotMacOsNative => !isMacOsNative;
 
-  // static bool get isMacOsOnWeb =>
-  //     isWeb && userAgent.toLowerCase().contains('macintosh');
-  //
-  // static bool get isNotMacOsOnWeb => !isMacOsOnWeb;
+  static bool get isMacOsOnWeb =>
+      isWeb && userAgent.toLowerCase().contains('macintosh');
+
+  static bool get isNotMacOsOnWeb => !isMacOsOnWeb;
 
   static bool get isFuchsia => Platform.isFuchsia;
 
@@ -143,24 +144,23 @@ class PlatformChecker {
 
   ///========================= WEBSITE =========================///
 
-// static String get userAgent =>
-  //     (kIsWeb) ? web.window.navigator.userAgent : '';
-  //
-  // static bool get isChromeWeb =>
-  //     userAgent.contains('Chrome') && !userAgent.contains('Chromium');
-  //
-  // static bool get isChromiumWeb => !userAgent.contains('Chromium');
-  //
-  // static bool get isFirefoxWeb => userAgent.contains('Firefox');
-  //
-  // static bool get isInternetExplorerWeb => userAgent.contains('Trident/7.0');
-  //
-  // static bool get isBraveWeb => userAgent.contains('Brave');
-  //
-  // static bool get isInAppBrowser =>
-  //     userAgent.contains('instagram') ||
-  //     userAgent.contains('fbav') ||
-  //     userAgent.contains('kakaotalk') ||
-  //     userAgent.contains('whatsapp') ||
-  //     userAgent.contains('line');
+  static String get userAgent => kIsWeb ? web_impl.getUserAgent() : '';
+
+  static bool get isChromeWeb =>
+      userAgent.contains('Chrome') && !userAgent.contains('Chromium');
+
+  static bool get isChromiumWeb => !userAgent.contains('Chromium');
+
+  static bool get isFirefoxWeb => userAgent.contains('Firefox');
+
+  static bool get isInternetExplorerWeb => userAgent.contains('Trident/7.0');
+
+  static bool get isBraveWeb => userAgent.contains('Brave');
+
+  static bool get isInAppBrowser =>
+      userAgent.contains('instagram') ||
+      userAgent.contains('fbav') ||
+      userAgent.contains('kakaotalk') ||
+      userAgent.contains('whatsapp') ||
+      userAgent.contains('line');
 }

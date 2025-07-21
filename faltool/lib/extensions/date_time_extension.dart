@@ -23,14 +23,6 @@ extension FalconToolDateTimeExtensions on DateTime {
   /// ```
   DateTime get startOfDay => DateTime(year, month, day);
 
-  /// Gets the end of the day (23:59:59.999).
-  /// 
-  /// Example:
-  /// ```dart
-  /// DateTime(2023, 5, 15, 14, 30).endOfDay; // 2023-05-15 23:59:59.999
-  /// ```
-  DateTime get endOfDay => DateTime(year, month, day, 23, 59, 59, 999);
-
   /// Gets the start of the month.
   DateTime get startOfMonth => DateTime(year, month, 1);
 
@@ -48,24 +40,29 @@ extension FalconToolDateTimeExtensions on DateTime {
 
   /// Gets the week number in the year (ISO 8601).
   int get weekOfYear {
-    final firstDayOfYear = DateTime(year, 1, 1);
-    final daysSinceFirstDay = difference(firstDayOfYear).inDays;
-    return ((daysSinceFirstDay + firstDayOfYear.weekday - 1) / 7).ceil();
-  }
-
-  /// Gets the number of days in the current month.
-  int get daysInMonth => DateTime(year, month + 1, 0).day;
-
-  /// Checks if the year is a leap year.
-  bool get isLeapYear =>
-      (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-
-  // Comparison Methods
-
-  /// Checks if this date is today.
-  bool get isToday {
-    final now = DateTime.now();
-    return year == now.year && month == now.month && day == now.day;
+    // Find the Thursday of the week containing January 1st
+    final jan1 = DateTime(year, 1, 1);
+    final daysToThursday = (4 - jan1.weekday + 7) % 7;
+    final firstThursday = jan1.add(Duration(days: daysToThursday));
+    
+    // If this date is before the first Thursday, it belongs to the previous year's last week
+    if (isBefore(firstThursday.subtract(const Duration(days: 3)))) {
+      // This is week 52 or 53 of the previous year
+      final prevYearJan1 = DateTime(year - 1, 1, 1);
+      final prevDaysToThursday = (4 - prevYearJan1.weekday + 7) % 7;
+      final prevFirstThursday = prevYearJan1.add(Duration(days: prevDaysToThursday));
+      final lastWeekStart = DateTime(year - 1, 12, 31).subtract(
+        Duration(days: (DateTime(year - 1, 12, 31).weekday - 1 + 7) % 7),
+      );
+      return 1 + lastWeekStart.difference(prevFirstThursday).inDays ~/ 7;
+    }
+    
+    // Calculate the Monday of the week containing the first Thursday
+    final firstWeekMonday = firstThursday.subtract(Duration(days: 3));
+    
+    // Calculate weeks from the first week's Monday
+    final daysSinceFirstWeek = difference(firstWeekMonday).inDays;
+    return 1 + (daysSinceFirstWeek / 7).floor();
   }
 
   /// Checks if this date is yesterday.
@@ -76,26 +73,14 @@ extension FalconToolDateTimeExtensions on DateTime {
         day == yesterday.day;
   }
 
-  /// Checks if this date is tomorrow.
-  bool get isTomorrow {
-    final tomorrow = DateTime.now().add(const Duration(days: 1));
-    return year == tomorrow.year &&
-        month == tomorrow.month &&
-        day == tomorrow.day;
-  }
-
   /// Checks if this date is in the past.
   bool get isPast => isBefore(DateTime.now());
 
   /// Checks if this date is in the future.
   bool get isFuture => isAfter(DateTime.now());
 
-  /// Checks if this date is on a weekend.
-  bool get isWeekend => 
-      weekday == DateTime.saturday || weekday == DateTime.sunday;
-
   /// Checks if this date is on a weekday.
-  bool get isWeekday => !isWeekend;
+  bool get isWeekday => weekday != DateTime.saturday && weekday != DateTime.sunday;
 
   /// Checks if this date is in the same day as another date.
   bool isSameDay(DateTime other) =>
@@ -111,8 +96,6 @@ extension FalconToolDateTimeExtensions on DateTime {
   /// Checks if this date is between two other dates.
   bool isBetween(DateTime start, DateTime end) =>
       isAfter(start) && isBefore(end);
-
-  // Date Calculations
 
   /// Adds the specified number of days.
   DateTime addDays(int days) => add(Duration(days: days));
@@ -171,29 +154,6 @@ extension FalconToolDateTimeExtensions on DateTime {
     return subtractDays(days);
   }
 
-  /// Copies the DateTime with optional parameter changes.
-  DateTime copyWith({
-    int? year,
-    int? month,
-    int? day,
-    int? hour,
-    int? minute,
-    int? second,
-    int? millisecond,
-    int? microsecond,
-  }) {
-    return DateTime(
-      year ?? this.year,
-      month ?? this.month,
-      day ?? this.day,
-      hour ?? this.hour,
-      minute ?? this.minute,
-      second ?? this.second,
-      millisecond ?? this.millisecond,
-      microsecond ?? this.microsecond,
-    );
-  }
-
   // Formatting
 
   /// Formats the date using the specified pattern.
@@ -233,98 +193,133 @@ extension FalconToolDateTimeExtensions on DateTime {
   /// DateTime.now().add(Duration(hours: 2)).toRelative(); // 'in 2 hours'
   /// ```
   String toRelative({String? locale}) {
+    if (locale != null) {
+      Intl.defaultLocale = locale;
+    }
+    
     final now = DateTime.now();
     final difference = now.difference(this);
     final isInPast = !difference.isNegative;
     final duration = difference.abs();
 
-    // Use intl package for localized relative time
-    if (locale != null) {
-      Intl.defaultLocale = locale;
-    }
-
     if (duration.inSeconds < 60) {
       return isInPast 
-          ? Intl.message('just now', name: 'justNow')
-          : Intl.message('in a moment', name: 'inAMoment');
+          ? DateTimeLocalizations.justNow(locale: locale)
+          : DateTimeLocalizations.inAMoment(locale: locale);
     } else if (duration.inMinutes < 60) {
       final minutes = duration.inMinutes;
       return isInPast
-          ? Intl.plural(minutes,
-              one: '$minutes minute ago',
-              other: '$minutes minutes ago',
-              name: 'minutesAgo',
-              args: [minutes])
-          : Intl.plural(minutes,
-              one: 'in $minutes minute',
-              other: 'in $minutes minutes',
-              name: 'inMinutes',
-              args: [minutes]);
+          ? Intl.plural(
+              minutes,
+              one: Intl.message('$minutes minute ago', 
+                  name: 'minuteAgo', args: [minutes]),
+              other: Intl.message('$minutes minutes ago', 
+                  name: 'minutesAgo', args: [minutes]),
+              locale: locale,
+            )
+          : Intl.plural(
+              minutes,
+              one: Intl.message('in $minutes minute', 
+                  name: 'inMinute', args: [minutes]),
+              other: Intl.message('in $minutes minutes', 
+                  name: 'inMinutes', args: [minutes]),
+              locale: locale,
+            );
     } else if (duration.inHours < 24) {
       final hours = duration.inHours;
       return isInPast
-          ? Intl.plural(hours,
-              one: '$hours hour ago',
-              other: '$hours hours ago',
-              name: 'hoursAgo',
-              args: [hours])
-          : Intl.plural(hours,
-              one: 'in $hours hour',
-              other: 'in $hours hours',
-              name: 'inHours',
-              args: [hours]);
+          ? Intl.plural(
+              hours,
+              one: Intl.message('$hours hour ago', 
+                  name: 'hourAgo', args: [hours]),
+              other: Intl.message('$hours hours ago', 
+                  name: 'hoursAgo', args: [hours]),
+              locale: locale,
+            )
+          : Intl.plural(
+              hours,
+              one: Intl.message('in $hours hour', 
+                  name: 'inHour', args: [hours]),
+              other: Intl.message('in $hours hours', 
+                  name: 'inHours', args: [hours]),
+              locale: locale,
+            );
     } else if (duration.inDays < 7) {
       final days = duration.inDays;
       return isInPast
-          ? Intl.plural(days,
-              one: '$days day ago',
-              other: '$days days ago',
-              name: 'daysAgo',
-              args: [days])
-          : Intl.plural(days,
-              one: 'in $days day',
-              other: 'in $days days',
-              name: 'inDays',
-              args: [days]);
+          ? Intl.plural(
+              days,
+              one: Intl.message('$days day ago', 
+                  name: 'dayAgo', args: [days]),
+              other: Intl.message('$days days ago', 
+                  name: 'daysAgo', args: [days]),
+              locale: locale,
+            )
+          : Intl.plural(
+              days,
+              one: Intl.message('in $days day', 
+                  name: 'inDay', args: [days]),
+              other: Intl.message('in $days days', 
+                  name: 'inDays', args: [days]),
+              locale: locale,
+            );
     } else if (duration.inDays < 30) {
       final weeks = (duration.inDays / 7).round();
       return isInPast
-          ? Intl.plural(weeks,
-              one: '$weeks week ago',
-              other: '$weeks weeks ago',
-              name: 'weeksAgo',
-              args: [weeks])
-          : Intl.plural(weeks,
-              one: 'in $weeks week',
-              other: 'in $weeks weeks',
-              name: 'inWeeks',
-              args: [weeks]);
+          ? Intl.plural(
+              weeks,
+              one: Intl.message('$weeks week ago', 
+                  name: 'weekAgo', args: [weeks]),
+              other: Intl.message('$weeks weeks ago', 
+                  name: 'weeksAgo', args: [weeks]),
+              locale: locale,
+            )
+          : Intl.plural(
+              weeks,
+              one: Intl.message('in $weeks week', 
+                  name: 'inWeek', args: [weeks]),
+              other: Intl.message('in $weeks weeks', 
+                  name: 'inWeeks', args: [weeks]),
+              locale: locale,
+            );
     } else if (duration.inDays < 365) {
       final months = (duration.inDays / 30).round();
       return isInPast
-          ? Intl.plural(months,
-              one: '$months month ago',
-              other: '$months months ago',
-              name: 'monthsAgo',
-              args: [months])
-          : Intl.plural(months,
-              one: 'in $months month',
-              other: 'in $months months',
-              name: 'inMonths',
-              args: [months]);
+          ? Intl.plural(
+              months,
+              one: Intl.message('$months month ago', 
+                  name: 'monthAgo', args: [months]),
+              other: Intl.message('$months months ago', 
+                  name: 'monthsAgo', args: [months]),
+              locale: locale,
+            )
+          : Intl.plural(
+              months,
+              one: Intl.message('in $months month', 
+                  name: 'inMonth', args: [months]),
+              other: Intl.message('in $months months', 
+                  name: 'inMonths', args: [months]),
+              locale: locale,
+            );
     } else {
       final years = (duration.inDays / 365).round();
       return isInPast
-          ? Intl.plural(years,
-              one: '$years year ago',
-              other: '$years years ago',
-              name: 'yearsAgo',
-              args: [years])
-          : Intl.plural(years,
-              one: 'in $years year',
-              other: 'in $years years',
-              name: 'inYears',
-              args: [years]);
+          ? Intl.plural(
+              years,
+              one: Intl.message('$years year ago', 
+                  name: 'yearAgo', args: [years]),
+              other: Intl.message('$years years ago', 
+                  name: 'yearsAgo', args: [years]),
+              locale: locale,
+            )
+          : Intl.plural(
+              years,
+              one: Intl.message('in $years year', 
+                  name: 'inYear', args: [years]),
+              other: Intl.message('in $years years', 
+                  name: 'inYears', args: [years]),
+              locale: locale,
+            );
     }
   }
 
@@ -370,11 +365,11 @@ extension FalconToolDateTimeExtensions on DateTime {
 
   /// Gets the number of days until this date.
   /// 
-  /// Returns negative values for dates in the past.
-  int get daysUntil => difference(DateTime.now()).inDays;
+  /// Returns negative values for dates in the future.
+  int get daysUntil => DateTime.now().difference(this).inDays;
 
   /// Gets the number of hours until this date.
-  int get hoursUntil => difference(DateTime.now()).inHours;
+  int get hoursUntil => DateTime.now().difference(this).inHours;
 }
 
 /// Extension methods for int to DateTime conversions.
@@ -483,7 +478,15 @@ extension FalconToolDurationExtensions on Duration {
   }
 
   /// Gets the total number of weeks in the duration.
-  double get inWeeks => inDays / 7;
+  /// 
+  /// This property is now provided by dartx package (via time package).
+  /// Use: duration.inWeeks
+  /// 
+  /// Example:
+  /// ```dart
+  /// Duration(days: 14).inWeeks; // 2
+  /// ```
+  // double get inWeeks => inDays / 7.0;
 
   /// Gets the total number of years in the duration (approximate).
   double get inYears => inDays / 365.25;

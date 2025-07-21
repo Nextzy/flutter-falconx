@@ -7,9 +7,7 @@ import 'package:faltool/lib.dart';
 extension FalconToolStringExtension on String {
   /// URL validation pattern that matches http and https URLs.
   static final _urlRegex = RegExp(
-    '^(https?|http)://([-A-Z0-9.]+)'
-    '(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?'
-    r'(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?$',
+    r'^https?://[-A-Z0-9.]+(\:[0-9]+)?(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:,.;]*)?$',
     caseSensitive: false,
   );
 
@@ -223,11 +221,17 @@ extension FalconToolStringExtension on String {
   /// 'HELLO-WORLD'.toCamelCase(); // 'helloWorld'
   /// ```
   String toCamelCase() {
-    final words = split(RegExp(r'[_\-\s]+'));
-    if (words.isEmpty) return this;
+    // Handle camelCase strings by inserting underscores before capitals
+    var normalized = replaceAllMapped(
+      RegExp('([a-z])([A-Z])'),
+      (match) => '${match[1]}_${match[2]}',
+    );
+
+    final words = normalized.split(RegExp(r'[_\-\s]+'));
+    if (words.isEmpty) return toLowerCase();
 
     return words.first.toLowerCase() +
-        words.skip(1).map((w) => w.capitalize).join();
+        words.skip(1).map((w) => w.toLowerCase().capitalize).join();
   }
 
   /// Converts the string to snake_case.
@@ -252,8 +256,14 @@ extension FalconToolStringExtension on String {
   /// 'hello-world'.toPascalCase(); // 'HelloWorld'
   /// ```
   String toPascalCase() {
-    final words = split(RegExp(r'[_\-\s]+'));
-    return words.map((w) => w.capitalize).join();
+    // Handle camelCase strings by inserting underscores before capitals
+    var normalized = replaceAllMapped(
+      RegExp('([a-z])([A-Z])'),
+      (match) => '${match[1]}_${match[2]}',
+    );
+
+    final words = normalized.split(RegExp(r'[_\-\s]+'));
+    return words.map((w) => w.toLowerCase().capitalize).join();
   }
 
   /// Converts the string to kebab-case.
@@ -292,7 +302,6 @@ extension FalconToolStringExtension on String {
   /// ```dart
   /// 'hello'.reversed; // 'olleh'
   /// ```
-  String reverse() => split('').reversed.join();
 
   /// Truncates the string to the specified length.
   ///
@@ -368,13 +377,29 @@ extension FalconToolStringExtension on String {
         .replaceAll('&quot;', '"')
         .replaceAll('&#39;', "'");
   }
+
+  /// Returns a copy of this string having its first letter uppercased, or the
+  /// original string, if it's empty or already starts with an upper case
+  /// letter.
+  ///
+  /// ```dart
+  /// print('abcd'.capitalize()) // Abcd
+  /// print('Abcd'.capitalize()) // Abcd
+  /// ```
+  String get capitalize {
+    switch (length) {
+      case 0:
+        return this;
+      case 1:
+        return toUpperCase();
+      default:
+        return substring(0, 1).toUpperCase() + substring(1);
+    }
+  }
 }
 
 /// Extension methods for nullable String manipulation and validation.
 extension FalconStringNullExtension on String? {
-  /// Returns the string or the default value if null.
-  String orEmpty() => this ?? '';
-
   /// Returns the string or the provided default value if null.
   String or(String defaultValue) => this ?? defaultValue;
 

@@ -1,12 +1,12 @@
 import 'package:faltool/lib.dart';
 
 /// Extension methods for Future type with enhanced functionality.
-/// 
+///
 /// Provides comprehensive utilities for Future operations including
 /// error handling, timeout management, retries, and transformations.
 extension FalconToolFutureExtensions<T> on Future<T> {
   /// Executes the future with a timeout, returning a default value on timeout.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await fetchData()
@@ -17,7 +17,7 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Executes the future with a timeout, calling a callback on timeout.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await fetchData()
@@ -34,12 +34,12 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Retries the future operation with exponential backoff.
-  /// 
+  ///
   /// [maxAttempts] - Maximum number of retry attempts (default: 3)
   /// [delay] - Initial delay between retries (default: 1 second)
   /// [maxDelay] - Maximum delay between retries (default: 30 seconds)
   /// [retryIf] - Optional condition to determine if retry should occur
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await apiCall().retryWithBackoff(
@@ -62,14 +62,13 @@ extension FalconToolFutureExtensions<T> on Future<T> {
         return await this;
       } catch (error) {
         attempt++;
-        
-        if (attempt >= maxAttempts || 
-            (retryIf != null && !retryIf(error))) {
+
+        if (attempt >= maxAttempts || (retryIf != null && !retryIf(error))) {
           rethrow;
         }
 
         await Future.delayed(currentDelay);
-        
+
         // Exponential backoff with max delay
         currentDelay = Duration(
           milliseconds: (currentDelay.inMilliseconds * 2)
@@ -80,7 +79,7 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Executes the future and ignores any errors.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// await saveToCache(data).ignoreErrors();
@@ -94,7 +93,7 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Executes the future and calls a callback on error.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await fetchData()
@@ -110,7 +109,7 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Transforms the result of the future if successful.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final userName = await fetchUser()
@@ -121,18 +120,19 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Transforms errors from the future.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await riskyOperation()
   ///     .mapError((error) => CustomException(error.toString()));
   /// ```
   Future<T> mapError(Object Function(Object error) transform) {
-    return catchError((Object error) => Error.throwWithStackTrace(transform(error), StackTrace.current));
+    return catchError((Object error) =>
+        Error.throwWithStackTrace(transform(error), StackTrace.current));
   }
 
   /// Executes a callback regardless of success or failure.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await fetchData()
@@ -143,11 +143,11 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Guards the future execution with a condition.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await expensiveOperation()
-  ///     .guard(() => isNetworkAvailable, 
+  ///     .guard(() => isNetworkAvailable,
   ///            fallback: cachedData);
   /// ```
   Future<T> guard(
@@ -161,7 +161,7 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Wraps the future result in a Result type for better error handling.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await fetchData().toResult();
@@ -180,7 +180,7 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Delays the execution of the future.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await fetchData()
@@ -191,9 +191,9 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Cancels the future if it takes longer than the specified duration.
-  /// 
+  ///
   /// Unlike timeout, this returns null instead of throwing.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await longRunningOperation()
@@ -201,13 +201,13 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   /// ```
   Future<T?> cancelAfter(Duration duration) {
     return timeout(duration).then<T?>((value) => value).catchError(
-      (Object error) => null,
-      test: (error) => error is TimeoutException,
-    );
+          (Object error) => null,
+          test: (error) => error is TimeoutException,
+        );
   }
 
   /// Measures the execution time of the future.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final result = await fetchData().timed((duration) {
@@ -229,7 +229,7 @@ extension FalconToolFutureExtensions<T> on Future<T> {
   }
 
   /// Converts the future to a stream that emits once.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final stream = fetchData().asStream();
@@ -239,24 +239,8 @@ extension FalconToolFutureExtensions<T> on Future<T> {
 
 /// Extension methods for Future with Either type integration.
 extension FalconToolEitherFutureExtensions<L, R> on Future<R> {
-  /// Wraps the successful result in a Right.
-  /// 
-  /// Example:
-  /// ```dart
-  /// final either = await fetchData().right;
-  /// ```
-  Future<Either<L, R>> get right => then(Right.new);
-
-  /// Wraps the successful result in a Right with a specific left type.
-  /// 
-  /// Example:
-  /// ```dart
-  /// final either = await fetchData().toRight<String>();
-  /// ```
-  Future<Either<L, R>> toRight() => then(Right<L, R>.new);
-
   /// Converts the future to an Either, catching errors as Left.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final either = await riskyOperation()
@@ -275,7 +259,7 @@ extension FalconToolEitherFutureExtensions<L, R> on Future<R> {
 /// Extension methods for nullable Future type.
 extension FalconToolFutureNullExtensions<T> on Future<T>? {
   /// Returns a future that completes with the default value if null.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// Future<String>? maybeFetch;
@@ -286,7 +270,7 @@ extension FalconToolFutureNullExtensions<T> on Future<T>? {
   }
 
   /// Returns a future that completes with null if the original is null.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// Future<String>? maybeFetch;
@@ -297,7 +281,7 @@ extension FalconToolFutureNullExtensions<T> on Future<T>? {
   }
 
   /// Executes the future if not null, otherwise returns the default.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// Future<String>? maybeFetch;
@@ -313,7 +297,7 @@ extension FalconToolFutureNullExtensions<T> on Future<T>? {
 /// Extension methods for Future of nullable type with null handling.
 extension FalconToolFutureNullableExtensions<T> on Future<T?> {
   /// Maps the value if not null, otherwise returns null.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final length = await fetchNullableString()
@@ -324,7 +308,7 @@ extension FalconToolFutureNullableExtensions<T> on Future<T?> {
   }
 
   /// Returns a default value if the future completes with null.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final value = await fetchNullableData()
@@ -335,9 +319,9 @@ extension FalconToolFutureNullableExtensions<T> on Future<T?> {
   }
 
   /// Filters the result based on a predicate.
-  /// 
+  ///
   /// Returns null if the predicate returns false.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final validUser = await fetchUser()

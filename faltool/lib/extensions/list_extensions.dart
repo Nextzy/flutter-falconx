@@ -13,7 +13,7 @@ extension FalconToolListExtensions<V> on List<V> {
   /// final items = [1, null, 2, null, 3];
   /// final cleaned = items.removeNulls(); // [1, 2, 3]
   /// ```
-  List<V> removeNulls() => removeNullsFromList(this);
+  List<V> removeNulls() => removeNullsFromList(this).cast<V>();
 
   /// Maps each element to a future and waits for all to complete.
   /// 
@@ -111,7 +111,7 @@ extension FalconToolListExtensions<V> on List<V> {
   /// final item = list.getOrDefault(5, -1); // -1
   /// ```
   V getOrDefault(int index, V defaultValue) {
-    return getOrNull(index) ?? defaultValue;
+    return (index >= 0 && index < length) ? this[index] : defaultValue;
   }
 
   /// Removes the first element matching the predicate.
@@ -158,7 +158,7 @@ extension FalconToolListExtensions<V> on List<V> {
   /// ```
   List<V> removeDuplicates() {
     final seen = <V>{};
-    return where((element) => seen.add(element)).toList();
+    return where(seen.add).toList();
   }
 
   /// Removes duplicates based on a key function.
@@ -200,7 +200,7 @@ extension FalconToolListExtensions<V> on List<V> {
     if (fromIndex == toIndex) return;
     
     final element = removeAt(fromIndex);
-    insert(toIndex > fromIndex ? toIndex - 1 : toIndex, element);
+    insert(toIndex, element);
   }
 
   /// Rotates the list by the specified number of positions.
@@ -275,33 +275,17 @@ extension FalconToolListExtensions<V> on List<V> {
 
   /// Binary search for a sorted list.
   /// 
+  /// This method is now provided by dartx package.
+  /// Use: list.binarySearch(element, compare: (a, b) => a.compareTo(b))
+  /// 
   /// Returns the index of the element, or -1 if not found.
   /// The list must be sorted according to the comparator.
   /// 
   /// Example:
   /// ```dart
   /// final sorted = [1, 3, 5, 7, 9];
-  /// final index = sorted.binarySearch(5); // 2
+  /// final index = sorted.binarySearch(5, compare: (a, b) => a.compareTo(b)); // 2
   /// ```
-  int binarySearch(V element, [int Function(V a, V b)? compare]) {
-    final comparator = compare ?? _defaultCompare;
-    var min = 0;
-    var max = length - 1;
-    
-    while (min <= max) {
-      final mid = min + ((max - min) >> 1);
-      final comparison = comparator(this[mid], element);
-      
-      if (comparison == 0) return mid;
-      if (comparison < 0) {
-        min = mid + 1;
-      } else {
-        max = mid - 1;
-      }
-    }
-    
-    return -1;
-  }
 
   /// Inserts an element in a sorted list maintaining order.
   /// 
@@ -311,7 +295,7 @@ extension FalconToolListExtensions<V> on List<V> {
   /// sorted.insertSorted(4); // [1, 3, 4, 5, 7]
   /// ```
   void insertSorted(V element, [int Function(V a, V b)? compare]) {
-    final comparator = compare ?? _defaultCompare;
+    final comparator = compare ?? _defaultCompare<V>;
     var index = 0;
     
     while (index < length && comparator(this[index], element) < 0) {
@@ -380,8 +364,8 @@ extension FalconToolListExtensions<V> on List<V> {
   }
 
   static int _defaultCompare<T>(T a, T b) {
-    if (a is Comparable<T>) {
-      return a.compareTo(b);
+    if (a is Comparable) {
+      return (a as Comparable).compareTo(b);
     }
     throw ArgumentError('Elements must be Comparable');
   }
@@ -425,6 +409,3 @@ extension FalconToolListNullableExtensions<V> on List<V>? {
     }
   }
 }
-
-
-
