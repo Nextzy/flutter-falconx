@@ -1,6 +1,6 @@
 name: falconx
 description: A FalconX package project.
-version: 3.11.2
+version: 3.11.3
 publish_to: none
 
 environment:

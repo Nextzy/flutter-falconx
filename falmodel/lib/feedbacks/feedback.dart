@@ -321,21 +321,6 @@ extension UserFeedbackX<T> on UserFeedback<T> {
     };
   }
 
-  /// Executes a callback only if the feedback is of a specific type.
-  R? whenOrNull<R>({
-    R Function(Success<T> success)? success,
-    R Function(Warning<T> warning)? warning,
-    R Function(Failure<T> failure)? failure,
-    R Function(Information<T> information)? information,
-  }) {
-    return switch (this) {
-      Success() => success?.call(this as Success<T>),
-      Warning() => warning?.call(this as Warning<T>),
-      Failure() => failure?.call(this as Failure<T>),
-      Information() => information?.call(this as Information<T>),
-    };
-  }
-
   /// Maps the data contained in the feedback to a new type.
   UserFeedback<R> mapData<R>(R Function(T? data) mapper) {
     return switch (this) {

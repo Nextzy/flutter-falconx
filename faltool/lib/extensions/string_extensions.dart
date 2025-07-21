@@ -1,8 +1,7 @@
 import 'package:faltool/lib.dart';
 
-
 /// Extension methods for String manipulation and validation.
-/// 
+///
 /// Provides comprehensive string utilities including conversions, validations,
 /// formatting, and transformations.
 extension FalconToolStringExtension on String {
@@ -22,7 +21,7 @@ extension FalconToolStringExtension on String {
   // Whitespace and Formatting
 
   /// Removes all whitespace characters from the string.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'hello world'.removeWhiteSpace; // 'helloworld'
@@ -31,7 +30,7 @@ extension FalconToolStringExtension on String {
   String get removeWhiteSpace => replaceAll(RegExp(r'\s+'), '');
 
   /// Removes leading and trailing whitespace and collapses internal whitespace.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// '  hello   world  '.normalizeWhitespace; // 'hello world'
@@ -44,9 +43,9 @@ extension FalconToolStringExtension on String {
   // Validation Methods
 
   /// Returns true if the string is a valid URL.
-  /// 
+  ///
   /// Validates against http and https protocols.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'https://example.com'.isUrl; // true
@@ -58,7 +57,7 @@ extension FalconToolStringExtension on String {
   bool get isNotUrl => !isUrl;
 
   /// Returns true if the string is a valid email address.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'user@example.com'.isEmail; // true
@@ -70,9 +69,9 @@ extension FalconToolStringExtension on String {
   bool get isNotEmail => !isEmail;
 
   /// Returns true if the string contains only numeric characters.
-  /// 
+  ///
   /// Allows optional leading minus sign and decimal point.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// '123'.isNumeric; // true
@@ -82,7 +81,7 @@ extension FalconToolStringExtension on String {
   bool get isNumeric => RegExp(r'^-?\d*\.?\d+$').hasMatch(this);
 
   /// Returns true if the string is valid JSON.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// '{"key": "value"}'.isJson; // true
@@ -106,9 +105,9 @@ extension FalconToolStringExtension on String {
   // Use: string.toInt() and string.toIntOrNull()
 
   /// Converts the string to an integer, returning 0 if parsing fails.
-  /// 
+  ///
   /// Removes whitespace before parsing.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// ' 123 '.toIntOrZero(); // 123
@@ -127,10 +126,10 @@ extension FalconToolStringExtension on String {
   double toDoubleOrZero() => double.tryParse(this) ?? 0.0;
 
   /// Converts the string to a boolean value.
-  /// 
+  ///
   /// Returns true for 'true' or '1', false for 'false' or '0'.
   /// Throws [UnsupportedError] for other values.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'true'.toBoolean(); // true
@@ -146,7 +145,7 @@ extension FalconToolStringExtension on String {
   }
 
   /// Converts the string to a boolean, returning null if conversion fails.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'true'.toBooleanOrNull(); // true
@@ -160,9 +159,9 @@ extension FalconToolStringExtension on String {
   }
 
   /// Parses the string as JSON and returns a Map.
-  /// 
+  ///
   /// Throws [FormatException] if the string is not valid JSON.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// '{"key": "value"}'.toMap(); // {'key': 'value'}
@@ -194,7 +193,7 @@ extension FalconToolStringExtension on String {
   Map<String, dynamic> toMapOrEmpty() => toMapOrNull() ?? {};
 
   /// Encodes the string to base64.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'Hello'.toBase64(); // 'SGVsbG8='
@@ -202,9 +201,9 @@ extension FalconToolStringExtension on String {
   String toBase64() => base64.encode(utf8.encode(this));
 
   /// Decodes the string from base64.
-  /// 
+  ///
   /// Throws [FormatException] if the string is not valid base64.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'SGVsbG8='.fromBase64(); // 'Hello'
@@ -217,7 +216,7 @@ extension FalconToolStringExtension on String {
   // Case Conversions
 
   /// Converts the string to camelCase.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'hello_world'.toCamelCase(); // 'helloWorld'
@@ -226,13 +225,13 @@ extension FalconToolStringExtension on String {
   String toCamelCase() {
     final words = split(RegExp(r'[_\-\s]+'));
     if (words.isEmpty) return this;
-    
-    return words.first.toLowerCase() + 
-           words.skip(1).map((w) => w.capitalize).join();
+
+    return words.first.toLowerCase() +
+        words.skip(1).map((w) => w.capitalize).join();
   }
 
   /// Converts the string to snake_case.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'helloWorld'.toSnakeCase(); // 'hello_world'
@@ -246,7 +245,7 @@ extension FalconToolStringExtension on String {
   }
 
   /// Converts the string to PascalCase.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'hello_world'.toPascalCase(); // 'HelloWorld'
@@ -258,7 +257,7 @@ extension FalconToolStringExtension on String {
   }
 
   /// Converts the string to kebab-case.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'helloWorld'.toKebabCase(); // 'hello-world'
@@ -272,20 +271,23 @@ extension FalconToolStringExtension on String {
   // Use: string.capitalize()
 
   /// Capitalizes the first letter of each word.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'hello world'.capitalizeWords(); // 'Hello World'
   /// ```
   String capitalizeWords() {
-    return split(' ').map((word) => word.isEmpty ? word : word[0].toUpperCase() + word.substring(1)).join(' ');
+    return split(' ')
+        .map((word) =>
+            word.isEmpty ? word : word[0].toUpperCase() + word.substring(1))
+        .join(' ');
   }
 
   /// Reverses the string.
-  /// 
+  ///
   /// This method is now provided by dartx package.
   /// Use: string.reversed
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'hello'.reversed; // 'olleh'
@@ -293,23 +295,24 @@ extension FalconToolStringExtension on String {
   String reverse() => split('').reversed.join();
 
   /// Truncates the string to the specified length.
-  /// 
+  ///
   /// [length] - Maximum length of the result
   /// [ellipsis] - String to append if truncated (default: '...')
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'Hello World'.truncate(8); // 'Hello...'
   /// 'Hello World'.truncate(8, ellipsis: '~'); // 'Hello W~'
   /// ```
-  String truncate(int length, {String ellipsis = '...'}) {
+  String truncate(int? length, {String ellipsis = '...'}) {
+    if (length == null) return this;
     if (this.length <= length) return this;
     if (length <= ellipsis.length) return ellipsis.substring(0, length);
     return substring(0, length - ellipsis.length) + ellipsis;
   }
 
   /// Removes the protocol (http:// or https://) from the URL.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'https://example.com'.removeHttp; // 'example.com'
@@ -318,7 +321,7 @@ extension FalconToolStringExtension on String {
   String get removeHttp => replaceFirst(RegExp('^https?://'), '');
 
   /// Returns true if the string contains the pattern (case-insensitive).
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'Hello World'.containsIgnoreCase('WORLD'); // true
@@ -328,7 +331,7 @@ extension FalconToolStringExtension on String {
   }
 
   /// Counts occurrences of a pattern in the string.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// 'hello hello world'.countOccurrences('hello'); // 2
@@ -339,7 +342,7 @@ extension FalconToolStringExtension on String {
   }
 
   /// Escapes HTML special characters.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// '<div>Hello</div>'.escapeHtml(); // '&lt;div&gt;Hello&lt;/div&gt;'
@@ -353,7 +356,7 @@ extension FalconToolStringExtension on String {
   }
 
   /// Unescapes HTML special characters.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// '&lt;div&gt;'.unescapeHtml(); // '<div>'
@@ -369,7 +372,6 @@ extension FalconToolStringExtension on String {
 
 /// Extension methods for nullable String manipulation and validation.
 extension FalconStringNullExtension on String? {
-
   /// Returns the string or the default value if null.
   String orEmpty() => this ?? '';
 
@@ -413,9 +415,11 @@ extension FalconStringNullExtension on String? {
   String? get normalizeWhitespace => this?.normalizeWhitespace;
 
   /// Safely capitalizes the string.
-  String? get capitalize => this == null || this!.isEmpty ? this : this![0].toUpperCase() + this!.substring(1);
+  String? get capitalize => this == null || this!.isEmpty
+      ? this
+      : this![0].toUpperCase() + this!.substring(1);
 
   /// Safely truncates the string.
-  String? truncate(int length, {String ellipsis = '...'}) =>
+  String? truncate(int? length, {String ellipsis = '...'}) =>
       this?.truncate(length, ellipsis: ellipsis);
 }

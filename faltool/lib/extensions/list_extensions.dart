@@ -388,17 +388,6 @@ extension FalconToolListExtensions<V> on List<V> {
 }
 
 extension FalconToolListNullableExtensions<V> on List<V>? {
-  /// Returns true if the list is null or empty.
-  bool get isEmptyOrNull => this == null || this!.isEmpty;
-
-  /// Returns true if the list is not null and not empty.
-  bool get isNotEmptyOrNull => !isEmptyOrNull;
-
-  /// Returns true if the list is null.
-  bool get isNull => this == null;
-
-  /// Returns true if the list is not null.
-  bool get isNotNull => this != null;
 
   /// Maps each element to a future or value asynchronously.
   /// 
@@ -421,18 +410,6 @@ extension FalconToolListNullableExtensions<V> on List<V>? {
   /// Returns the list or an empty list if null.
   List<V> get orEmpty => this ?? [];
 
-  /// Returns the first element or null if the list is null or empty.
-  V? get firstOrNull {
-    if (this == null || this!.isEmpty) return null;
-    return this!.first;
-  }
-
-  /// Returns the last element or null if the list is null or empty.
-  V? get lastOrNull {
-    if (this == null || this!.isEmpty) return null;
-    return this!.last;
-  }
-
   /// Safely gets an element at index, returning null if out of bounds or null.
   /// 
   /// For non-null lists, use dartx's elementAtOrNull(index) instead.
@@ -446,16 +423,6 @@ extension FalconToolListNullableExtensions<V> on List<V>? {
     if (this != null && this!.isNotEmpty) {
       action(this!);
     }
-  }
-
-  /// Maps elements if not null, otherwise returns null.
-  List<T>? mapOrNull<T>(T Function(V element) toElement) {
-    return this?.map(toElement).toList();
-  }
-
-  /// Filters elements if not null, otherwise returns null.
-  List<V>? whereOrNull(bool Function(V element) test) {
-    return this?.where(test).toList();
   }
 }
 
