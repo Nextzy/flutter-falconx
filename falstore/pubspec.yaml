@@ -1,5 +1,5 @@
 name: falstore
-description: A new Flutter package project.
+description: A secure storage solution for Flutter applications with comprehensive error handling and batch operations.
 version: 1.1.10
 publish_to: none
 
@@ -13,15 +13,14 @@ dependencies:
   faltool:
     path: ../faltool
 
-
-  #PLATFORM: All
-  flutter_secure_storage: ^9.2.4
+  # PLATFORM: All
   ansicolor: ^2.0.3
+  flutter_secure_storage: ^9.2.4
 
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   build_runner: ^2.5.4
   flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
   very_good_analysis: ^9.0.0

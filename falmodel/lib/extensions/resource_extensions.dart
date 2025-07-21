@@ -4,7 +4,8 @@
 
 import 'package:falmodel/lib.dart';
 
-extension ResourceExtension<T extends WidgetDataState> on Stream<T> {
+extension FalModelStreamResourceExtension<T extends WidgetDataState>
+    on Stream<T> {
   StreamSubscription<T> listen({
     required void Function(T data) onData,
     VoidErrorCallback? onError,

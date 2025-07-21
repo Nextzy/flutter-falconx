@@ -56,7 +56,7 @@ class HttpLogInterceptor extends Interceptor {
   void onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
-  ) async {
+  ) {
     if (!kReleaseMode) {
       logPrint(_title('*** Request ↗️ ***'));
       _printKV('URL', options.uri);
@@ -120,7 +120,7 @@ class HttpLogInterceptor extends Interceptor {
   }
 
   @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) async {
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
     if (!kReleaseMode) {
       logPrint(_title('*** Response ↙️ ***'));
       _printResponse(response);
@@ -129,7 +129,7 @@ class HttpLogInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     if (!kReleaseMode) {
       if (error) {
         logPrint(_error('*** DioError ❌ ***:'));
@@ -193,7 +193,7 @@ class HttpLogInterceptor extends Interceptor {
         'Length: ${file.length}';
   }
 
-  static void _logPrintLong(Object? object) async {
+  static void _logPrintLong(Object? object) {
     if (kDebugMode) {
       const defaultPrintLength = 1020;
       if (object == null || object.toString().length <= defaultPrintLength) {

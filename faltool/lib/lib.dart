@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 export 'dart:async';
 export 'dart:convert';
 export 'package:ansicolor/ansicolor.dart';
+export 'package:falmodel/falmodel.dart';
 export 'package:intl/intl.dart';
 export 'faltool.dart';
 

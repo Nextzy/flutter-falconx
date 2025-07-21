@@ -39,6 +39,8 @@ class TransparentPalette {
 
   final Color color;
 
+  Color get p0 => color.withValues(alpha: 0.0);
+
   Color get p1 => color.withValues(alpha: 0.01);
 
   Color get p2 => color.withValues(alpha: 0.02);
@@ -85,5 +87,6 @@ class TransparentPalette {
 
   Color get p98 => color.withValues(alpha: 0.98);
 
-  Color get p99 => color.withValues(alpha: 0.99);
+  Color get p100 => color.withValues(alpha: 1.0);
+
 }

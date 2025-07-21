@@ -2,7 +2,7 @@ import 'package:falconx/lib.dart';
 
 extension FalconFutureExtensions<T> on Future<T> {
   Future<Either<Failure, T>> toEitherFailure({
-    Failure Function(Object? error, StackTrace stacktrace)? handleError,
+    Failure Function(Object? error, StackTrace stackTrace)? handleError,
   }) =>
       then<Either<Failure, T>>(
         Right.new,
@@ -20,7 +20,7 @@ extension FalconFutureExtensions<T> on Future<T> {
                           networkException.statusMessage,
                       developerMessage: networkException.developerMessage,
                       exception: networkException,
-                      stacktrace: stackTrace,
+                      stackTrace: stackTrace,
                       failureList: networkException.errors
                           ?.whereType<NetworkException>()
                           .map(
@@ -31,7 +31,7 @@ extension FalconFutureExtensions<T> on Future<T> {
                               developerMessage:
                                   networkException.developerMessage,
                               exception: e,
-                              stacktrace: stackTrace,
+                              stackTrace: stackTrace,
                             ),
                           )
                           .toList(),
@@ -43,7 +43,7 @@ extension FalconFutureExtensions<T> on Future<T> {
                 handleError?.call(exception, stackTrace) ??
                     Failure.fromException(
                       tmpError,
-                      stacktrace: exception.stackTrace,
+                      stackTrace: exception.stackTrace,
                     ),
               );
             } else {
@@ -52,7 +52,7 @@ extension FalconFutureExtensions<T> on Future<T> {
                 handleError?.call(exception, stackTrace) ??
                     Failure.fromException(
                       exception,
-                      stacktrace: exception.stackTrace,
+                      stackTrace: exception.stackTrace,
                     ),
               );
             }
@@ -62,7 +62,7 @@ extension FalconFutureExtensions<T> on Future<T> {
               handleError?.call(exception, stackTrace) ??
                   Failure.fromException(
                     exception,
-                    stacktrace: stackTrace,
+                    stackTrace: stackTrace,
                   ),
             );
           } else {
@@ -71,7 +71,7 @@ extension FalconFutureExtensions<T> on Future<T> {
               handleError?.call(exception, stackTrace) ??
                   Failure.fromException(
                     exception,
-                    stacktrace: stackTrace,
+                    stackTrace: stackTrace,
                   ),
             );
           }
@@ -79,7 +79,7 @@ extension FalconFutureExtensions<T> on Future<T> {
       );
 
   Future<Either<Exception, T>> toEitherException({
-    Exception Function(Object? error, StackTrace stacktrace)? handleError,
+    Exception Function(Object? error, StackTrace stackTrace)? handleError,
   }) =>
       then<Either<Exception, T>>(
         Right.new,
