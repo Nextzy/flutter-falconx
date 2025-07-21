@@ -27,11 +27,11 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
                 !_isNullOrEmptyString(entry.value))
             .map((entry) => MapEntry(
                   entry.key,
-                  _removeNullsDeep(entry.value),
+                  _removeNullsDeep(entry.value) as V,
                 )),
       );
 
-  /// Gets a value by key with a default if not found.
+  /// Gets a value by key with a default if not found or null.
   ///
   /// Example:
   /// ```dart
@@ -39,7 +39,8 @@ extension FalconToolMapExtension<K, V> on Map<K, V> {
   /// final maxRetries = config.getOrDefault('maxRetries', 5); // 5
   /// ```
   V getOrDefault(K key, V defaultValue) {
-    return this[key] ?? defaultValue;
+    final value = this[key];
+    return (value == null) ? defaultValue : value;
   }
 
   /// Gets a value by key, calling a function to provide default if not found.
@@ -349,18 +350,18 @@ bool _isNullOrEmptyString(dynamic value) {
 }
 
 /// Recursively removes nulls and empty strings from collections
-T _removeNullsDeep<T>(T value) {
+dynamic _removeNullsDeep(dynamic value) {
   if (value is List) {
-    return removeNullsFromList(value) as T;
+    return removeNullsFromList(value);
   } else if (value is Map) {
-    return removeNullsFromMap(value) as T;
+    return removeNullsFromMap(value);
   }
   return value;
 }
 
 /// Removes nulls and empty strings from a list
-List<T> removeNullsFromList<T>(List<T> list) {
-  if (list.isEmpty) return <T>[];
+List<dynamic> removeNullsFromList(List<dynamic> list) {
+  if (list.isEmpty) return <dynamic>[];
 
   return list
       .where((item) => !_isNullOrEmptyString(item))
@@ -379,10 +380,10 @@ Map<K, V> removeNullsFromMap<K, V>(Map<K, V> map) {
             !_isNullOrEmptyString(entry.value))
         .map((entry) => MapEntry(
               entry.key,
-              _removeNullsDeep(entry.value),
+              _removeNullsDeep(entry.value) as V,
             )),
   );
 }
 
 /// Public API for removing nulls and empty strings from any data structure
-T removeNullsAndEmptyStrings<T>(T data) => _removeNullsDeep(data);
+dynamic removeNullsAndEmptyStrings(dynamic data) => _removeNullsDeep(data);

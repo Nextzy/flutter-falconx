@@ -3,29 +3,12 @@ import 'package:faltool/lib.dart';
 
 /// Extension methods for int type with null safety.
 extension FalconToolIntExtensions on int {
-  /// Converts the integer to a double.
-  /// 
-  /// This is just a wrapper for the built-in toDouble() method.
-  /// Consider using toDouble() directly.
-  double toDoubleValue() => toDouble();
-
-  /// Checks if the integer is even.
-  /// 
-  /// This is just a wrapper for the built-in isEven property.
-  /// Consider using isEven directly.
-  bool get isEvenNumber => isEven;
-
-  /// Checks if the integer is odd.
-  /// 
-  /// This is just a wrapper for the built-in isOdd property.
-  /// Consider using isOdd directly.
-  bool get isOddNumber => isOdd;
 
   /// Returns the absolute value.
   /// 
   /// This is just a wrapper for the built-in abs() method.
   /// Consider using abs() directly.
-  int get absoluteValue => abs();
+  int get absolute => abs();
 
   /// Clamps the value between min and max.
   /// 
@@ -70,66 +53,17 @@ extension FalconToolIntExtensions on int {
   /// ```
   bool inRange(int min, int max) => this >= min && this <= max;
 
-  /// Converts the integer to a Duration in various units.
-  /// 
-  /// These methods are now provided by dartx package.
-  /// Use: number.microseconds, number.milliseconds, etc.
-  Duration get microseconds => Duration(microseconds: this);
-  Duration get milliseconds => Duration(milliseconds: this);
-  Duration get seconds => Duration(seconds: this);
-  Duration get minutes => Duration(minutes: this);
-  Duration get hours => Duration(hours: this);
-  Duration get days => Duration(days: this);
-
-  /// Formats the integer with thousand separators.
-  /// 
-  /// Example:
-  /// ```dart
-  /// 1000000.formatted(); // '1,000,000'
-  /// 1000000.formatted(separator: '.'); // '1.000.000'
-  /// ```
-  String formatted({String separator = ','}) {
-    final isNegative = this < 0;
-    final absValue = absoluteValue.toString();
-    final buffer = StringBuffer();
-    
-    for (var i = 0; i < absValue.length; i++) {
-      if (i > 0 && (absValue.length - i) % 3 == 0) {
-        buffer.write(separator);
-      }
-      buffer.write(absValue[i]);
-    }
-    
-    return isNegative ? '-$buffer' : buffer.toString();
-  }
-
-  /// Converts the integer to ordinal string.
-  /// 
-  /// This method is now provided by dartx package.
-  /// Use: number.ordinal()
-  /// 
-  /// Example:
-  /// ```dart
-  /// 1.ordinal(); // '1st'
-  /// 2.ordinal(); // '2nd'
-  /// 3.ordinal(); // '3rd'
-  /// 21.ordinal(); // '21st'
-  /// ```
-
   /// Executes the given function [n] times.
   /// 
-  /// This method is now provided by dartx package.
-  /// Use: number.times((index) => action)
-  /// 
   /// Example:
   /// ```dart
-  /// 3.times((i) => print('Count: \${i}'));
+  /// 3.times((i) => print('Count: $i'));
   /// // Count: 0
   /// // Count: 1
   /// // Count: 2
   /// ```
   void times(void Function(int index) action) {
-    for (var i = 0; i < this; i++) {
+    for (int i = 0; i < this; i++) {
       action(i);
     }
   }
@@ -176,10 +110,6 @@ extension FalconToolIntNullExtensions on int? {
 
   /// Safely checks if the value is negative (< 0).
   bool get isNegative => this != null && this! < 0;
-
-  /// Safely formats the integer with thousand separators.
-  String? formatted({String separator = ','}) => 
-      this?.formatted(separator: separator);
 }
 
 /// Extension methods for double type.
@@ -196,11 +126,8 @@ extension FalconToolDoubleExtensions on double {
     return (this * mod).round().toDouble() / mod;
   }
 
-  /// Converts to int by truncating decimals.
-  int toIntValue() => toInt();
-
   /// Returns the absolute value.
-  double get absoluteValue => abs();
+  double get absolute => abs();
 
   /// Clamps the value between min and max.
   double clampValue(double min, double max) => clamp(min, max).toDouble();
@@ -227,10 +154,10 @@ extension FalconToolDoubleExtensions on double {
   /// 
   /// Example:
   /// ```dart
-  /// 3.14159.format(2); // '3.14'
-  /// 1000.0.format(2); // '1000.00'
+  /// 3.14159.formatDecimal(2); // '3.14'
+  /// 1000.0.formatDecimal(2); // '1000.00'
   /// ```
-  String format(int decimalPlaces) {
+  String formatDecimal(int decimalPlaces) {
     return toStringAsFixed(decimalPlaces);
   }
 
@@ -242,7 +169,7 @@ extension FalconToolDoubleExtensions on double {
   /// 0.1234.toPercentage(decimalPlaces: 1); // '12.3%'
   /// ```
   String toPercentage({int decimalPlaces = 2}) {
-    return '${(this * 100).format(decimalPlaces)}%';
+    return '${(this * 100).formatDecimal(decimalPlaces)}%';
   }
 
   /// Converts radians to degrees.
@@ -282,7 +209,7 @@ extension FalconToolDoubleNullExtensions on double? {
   double? roundToPlaces(int places) => this?.roundToPlaces(places);
 
   /// Safely formats the double.
-  String? format(int decimalPlaces) => this?.format(decimalPlaces);
+  String? format(int decimalPlaces) => this?.formatDecimal(decimalPlaces);
 
   /// Safely converts to percentage string.
   String? toPercentage({int decimalPlaces = 2}) =>
@@ -291,14 +218,9 @@ extension FalconToolDoubleNullExtensions on double? {
 
 /// Extension methods for num type.
 extension FalconToolNumExtensions on num {
-  /// Converts to double.
-  double toDoubleValue() => toDouble();
-
-  /// Converts to int.
-  int toIntValue() => toInt();
 
   /// Returns the absolute value.
-  num get absoluteValue => abs();
+  num get absolute => abs();
 
   /// Clamps the value between min and max.
   num clampValue(num min, num max) => clamp(min, max);
@@ -311,12 +233,6 @@ extension FalconToolNumExtensions on num {
 
   /// Checks if the number is within the given range (inclusive).
   bool inRange(num min, num max) => this >= min && this <= max;
-
-  /// Checks if the number is positive (> 0).
-  bool get isPositive => this > 0;
-
-  /// Checks if the number is negative (< 0).
-  bool get isNegative => this < 0;
 
   /// Checks if the number is zero.
   bool get isZero => this == 0;
