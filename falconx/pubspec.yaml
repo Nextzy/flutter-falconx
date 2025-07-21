@@ -25,7 +25,7 @@ dependencies:
   ansicolor: ^2.0.3
 
   #PLATFORM: Android, iOS, Linux, MacOS
-  flutter_local_notifications: ^19.3.0
+  flutter_local_notifications: ^19.3.1
 
   #======= Utils ========#
   #PLATFORM: All

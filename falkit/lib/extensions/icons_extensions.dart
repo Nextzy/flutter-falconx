@@ -3,7 +3,7 @@
 
 import 'package:falkit/lib.dart';
 
-extension SvgIcons on String? {
+extension SvgIcons on String {
   Widget toSvg({
     Key? key,
     bool matchTextDirection = false,
@@ -26,7 +26,7 @@ extension SvgIcons on String? {
     @Deprecated('This no longer does anything.') bool cacheColorFilter = false,
   }) =>
       SvgPicture.asset(
-        this!,
+        this,
         key: key,
         matchTextDirection: matchTextDirection,
         bundle: bundle,

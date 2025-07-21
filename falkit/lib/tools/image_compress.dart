@@ -6,7 +6,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 /// A comprehensive image compression tool using flutter_image_compress.
-/// 
+///
 /// Supports multiple image formats (JPEG, PNG, WebP, HEIC) with configurable
 /// compression settings and platform-specific optimizations.
 class ImageCompressTool {
@@ -15,10 +15,10 @@ class ImageCompressTool {
 
   /// Default compression quality (0-100)
   static const int defaultQuality = 85;
-  
+
   /// Default minimum width for compressed images
   static const int defaultMinWidth = 1920;
-  
+
   /// Default minimum height for compressed images
   static const int defaultMinHeight = 1080;
 
@@ -52,9 +52,9 @@ class ImageCompressTool {
   };
 
   /// Compresses an image file with the specified configuration.
-  /// 
+  ///
   /// Returns the compressed file or null if compression fails.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final compressed = await ImageCompressTool.compressFile(
@@ -105,7 +105,7 @@ class ImageCompressTool {
   }
 
   /// Compresses image data from memory.
-  /// 
+  ///
   /// Returns the compressed bytes or null if compression fails.
   static Future<Uint8List?> compressBytes({
     required Uint8List bytes,
@@ -184,10 +184,12 @@ class ImageCompressTool {
     }
   }
 
-  /// Batch compresses multiple image files.
-  /// 
+  /// Batch compresses multiple image files with parallel processing.
+  ///
   /// Returns a map of original file paths to compressed files.
   /// Failed compressions will have null values in the map.
+  ///
+  /// [concurrency] controls how many files are processed simultaneously.
   static Future<Map<String, File?>> batchCompressFiles({
     required List<File> files,
     ImageCompressProfile profile = ImageCompressProfile.standard,
@@ -196,30 +198,41 @@ class ImageCompressTool {
     bool autoCorrectionAngle = true,
     bool keepExif = false,
     int numberOfRetries = 5,
+    int concurrency = 3,
     void Function(int completed, int total)? onProgress,
   }) async {
     final results = <String, File?>{};
     var completed = 0;
 
-    for (final file in files) {
-      try {
-        final compressed = await compressFile(
-          file: file,
-          profile: profile,
-          customConfig: customConfig,
-          format: format,
-          autoCorrectionAngle: autoCorrectionAngle,
-          keepExif: keepExif,
-          numberOfRetries: numberOfRetries,
-        );
-        results[file.path] = compressed;
-      } catch (e) {
-        debugPrint('Failed to compress ${file.path}: $e');
-        results[file.path] = null;
-      }
+    // Process files in batches for better performance
+    for (var i = 0; i < files.length; i += concurrency) {
+      final batch = files.skip(i).take(concurrency);
 
-      completed++;
-      onProgress?.call(completed, files.length);
+      final futures = batch.map((file) async {
+        try {
+          final compressed = await compressFile(
+            file: file,
+            profile: profile,
+            customConfig: customConfig,
+            format: format,
+            autoCorrectionAngle: autoCorrectionAngle,
+            keepExif: keepExif,
+            numberOfRetries: numberOfRetries,
+          );
+          return MapEntry(file.path, compressed);
+        } catch (e) {
+          debugPrint('Failed to compress ${file.path}: $e');
+          return MapEntry(file.path, null);
+        }
+      });
+
+      final batchResults = await Future.wait(futures);
+
+      for (final result in batchResults) {
+        results[result.key] = result.value;
+        completed++;
+        onProgress?.call(completed, files.length);
+      }
     }
 
     return results;
@@ -244,7 +257,7 @@ class ImageCompressTool {
   }
 
   /// Estimates the compressed file size without actually compressing.
-  /// 
+  ///
   /// This is a rough estimate based on the quality setting.
   static Future<int> estimateCompressedSize({
     required File file,
@@ -253,7 +266,7 @@ class ImageCompressTool {
   }) async {
     final originalSize = await file.length();
     final config = customConfig ?? profiles[profile]!;
-    
+
     // Rough estimation based on quality
     // This is a simplified calculation and actual results may vary
     final compressionRatio = config.quality / 100.0;
@@ -270,7 +283,7 @@ class ImageCompressTool {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final basename = path.basenameWithoutExtension(file.path);
     final extension = _getExtensionForFormat(format);
-    
+
     return path.join(
       tempDir.path,
       'compressed_${basename}_$timestamp$extension',
@@ -280,7 +293,7 @@ class ImageCompressTool {
   /// Detects the image format based on file extension.
   static CompressFormat _detectFormat(String filePath) {
     final extension = path.extension(filePath).toLowerCase();
-    
+
     switch (extension) {
       case '.jpg':
       case '.jpeg':
@@ -316,16 +329,16 @@ class ImageCompressTool {
 enum ImageCompressProfile {
   /// Small thumbnails (150x150, 70% quality)
   thumbnail,
-  
+
   /// Preview images (800x600, 80% quality)
   preview,
-  
+
   /// Standard compression (1920x1080, 85% quality)
   standard,
-  
+
   /// High quality (2560x1440, 90% quality)
   high,
-  
+
   /// Minimal compression (original size, 95% quality)
   original,
 }
@@ -337,13 +350,13 @@ class ImageCompressConfig {
     required this.minHeight,
     required this.quality,
   });
-  
+
   /// Minimum width of the compressed image
   final int minWidth;
-  
+
   /// Minimum height of the compressed image
   final int minHeight;
-  
+
   /// Compression quality (0-100)
   final int quality;
 
@@ -369,25 +382,25 @@ class CompressionResult {
     required this.sizeReduction,
     required this.reductionPercentage,
   });
-  
+
   /// Original file size in bytes
   final int originalSize;
-  
+
   /// Compressed file size in bytes
   final int compressedSize;
-  
+
   /// Size reduction in bytes
   final int sizeReduction;
-  
+
   /// Size reduction percentage
   final double reductionPercentage;
 
   /// Returns a human-readable string of the compression result
   String toReadableString() {
     return 'Original: ${_formatBytes(originalSize)}, '
-           'Compressed: ${_formatBytes(compressedSize)}, '
-           'Reduction: ${_formatBytes(sizeReduction)} '
-           '(${reductionPercentage.toStringAsFixed(1)}%)';
+        'Compressed: ${_formatBytes(compressedSize)}, '
+        'Reduction: ${_formatBytes(sizeReduction)} '
+        '(${reductionPercentage.toStringAsFixed(1)}%)';
   }
 
   static String _formatBytes(int bytes) {
@@ -403,9 +416,9 @@ class CompressionResult {
 /// Custom exception for image compression errors
 class ImageCompressException implements Exception {
   ImageCompressException(this.message);
-  
+
   final String message;
-  
+
   @override
   String toString() => 'ImageCompressException: $message';
 }

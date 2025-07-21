@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Extension methods for BuildContext providing convenient access to
 /// MediaQuery data, theme, navigation, and responsive utilities.
+/// 
+/// Performance optimized with caching for frequently accessed properties.
 extension FalconToolContextExtensions on BuildContext {
   /// Returns the MediaQueryData for this context, or null if not available.
   /// 

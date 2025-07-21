@@ -32,4 +32,3 @@ export 'networks/internet_connection_bloc.dart';
 export 'notifications/notifications.dart';
 export 'routers/routers.dart';
 export 'views/views.dart';
-export 'widgets/widgets.dart';

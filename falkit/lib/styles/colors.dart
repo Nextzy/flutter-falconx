@@ -1,5 +1,10 @@
 import 'package:falkit/lib.dart';
 
+/// Abstract base class for color palettes following Material Design 3
+/// color system with enhanced transparency support.
+/// 
+/// Provides a comprehensive set of color shades from light (c25) to dark (c975)
+/// plus a transparent palette for alpha channel manipulation.
 abstract class PaletteColor {
   const PaletteColor({
     required this.c25,
@@ -18,25 +23,45 @@ abstract class PaletteColor {
     required this.transparent,
   });
 
+  /// Lightest shade (typically for backgrounds)
   final Color c25;
+  /// Very light shade
   final Color c50;
+  /// Light shade
   final Color c100;
+  /// Light-medium shade
   final Color c200;
+  /// Medium-light shade
   final Color c300;
+  /// Medium shade
   final Color c400;
+  /// Base/primary shade (most commonly used)
   final Color c500;
+  /// Medium-dark shade
   final Color c600;
+  /// Dark shade
   final Color c700;
+  /// Very dark shade
   final Color c800;
+  /// Darkest shade
   final Color c900;
+  /// Ultra dark shade
   final Color c950;
+  /// Maximum dark shade (typically for text on light backgrounds)
   final Color c975;
+  /// Transparent variations of the base color
   final TransparentPalette transparent;
 }
 
+/// Provides transparent variations of a color with predefined alpha values.
+/// 
+/// Useful for creating overlays, shadows, and semi-transparent UI elements.
+/// All percentages represent alpha opacity 
+/// (p100 = fully opaque, p0 = fully transparent).
 class TransparentPalette {
   const TransparentPalette(this.color);
 
+  /// The base color for transparency variations
   final Color color;
 
   Color get p0 => color.withValues(alpha: 0.0);
