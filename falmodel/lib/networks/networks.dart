@@ -7,7 +7,6 @@ export 'https/body/request_formdata.dart';
 
 // HTTP responses - new generic approach (recommended)
 export 'https/responses/base_response.dart';
-export 'https/responses/error_response.dart';
 export 'https/responses/paginated_response.dart';
 
 // WebSocket models - new approach (recommended)
