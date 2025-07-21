@@ -184,42 +184,14 @@ extension FalconToolContextExtensions on BuildContext {
   bool get isLargeScreen => shortestSide >= 720;
   
   // Theme Access
-  
-  /// Returns the current theme data.
-  ThemeData get theme => Theme.of(this);
-  
-  /// Returns the current color scheme.
-  ColorScheme get colorScheme => theme.colorScheme;
-  
-  /// Returns the current text theme.
-  TextTheme get textTheme => theme.textTheme;
-  
+
   /// Returns true if the current theme is dark.
-  bool get isDarkTheme => theme.brightness == Brightness.dark;
+  bool get isDarkTheme => Theme.of(this).brightness == Brightness.dark;
   
   /// Returns true if the current theme is light.
-  bool get isLightTheme => theme.brightness == Brightness.light;
+  bool get isLightTheme => Theme.of(this).brightness == Brightness.light;
   
-  // Navigation Helpers
-  
-  /// Returns the Navigator state for this context.
-  NavigatorState get navigator => Navigator.of(this);
-  
-  /// Returns true if the navigator can pop.
-  bool get canPop => navigator.canPop();
-  
-  /// Pops the current route off the navigator.
-  void pop<T>([T? result]) => navigator.pop(result);
-  
-  /// Returns the ModalRoute for this context.
-  ModalRoute<T>? route<T>() => ModalRoute.of<T>(this);
-  
-  /// Returns the route arguments for the current route.
-  Object? get routeArguments => route()?.settings.arguments;
-  
-  /// Returns the route name for the current route.
-  String? get routeName => route()?.settings.name;
-  
+
   // Focus Management
   
   /// Returns the FocusScope for this context.
