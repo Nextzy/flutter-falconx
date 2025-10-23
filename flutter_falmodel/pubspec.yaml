@@ -1,0 +1,26 @@
+name: flutter_falmodel
+description: A new Flutter package project.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.9.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  dart_falmodel:
+    path: /Users/nonthawit/Data/Github/FalconX/dart-falconx/dart_falmodel
+  flutter:
+    sdk: flutter
+  flutter_faltool:
+    path: ../flutter_faltool
+
+  #PLATFORM: All
+  dio: ^5.9.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.0.0

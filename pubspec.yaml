@@ -1,8 +1,69 @@
-name: falconx_project
-description: A falcon package.
+name: flutter_falconx_core
+description: A flutter falcon package.
 version: 1.0.0
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  flutter: ">=3.0.0 <4.0.0"
+  sdk: ">=3.9.0 <4.0.0"
+
+workspace:
+  - flutter_falconx
+  - flutter_falconnect
+  - flutter_falkit
+  - flutter_falstore
+  - flutter_falmodel
+  - flutter_faltool
+
 dev_dependencies:
-  melos: ^6.3.3
+  melos: ^7.2.0
+
+melos:
+  command:
+    bootstrap:
+      environment:
+        sdk: ">=3.9.0 <4.0.0"
+        flutter: ">=3.0.0 <4.0.0"
+
+      dependencies:
+        json_annotation: ^4.9.0
+
+      dev_dependencies:
+        flutter_lints: ^6.0.0
+        build_runner: ^2.10.0
+        freezed: ^3.2.3
+        json_serializable: ^6.11.1
+        flutter_gen_runner: ^5.12.0
+        very_good_analysis: ^10.0.0
+
+
+  scripts:
+    get:
+      description: Get dependencies for all packages
+      run: flutter pub get
+      exec:
+        concurrency: 1
+
+    restart:
+      description: Restart dependencies for all packages
+      run: flutter clean && flutter pub get
+      exec:
+        concurrency: 1
+
+    upgrade:
+      description: Upgrade dependencies in all packages
+      run: flutter pub upgrade
+      exec:
+        concurrency: 1
+
+    outdated:
+      description: Check outdated dependencies
+      run: flutter pub outdated
+      exec:
+        concurrency: 1
+
+    build_runner:
+      description: Run build_runner in all packages
+      run: dart run build_runner build -d
+      exec:
+        concurrency: 1
+

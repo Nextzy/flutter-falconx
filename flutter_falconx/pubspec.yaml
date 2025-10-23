@@ -1,0 +1,42 @@
+name: flutter_falconx
+description: A FalconX package project.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.9.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_faltool:
+    path: ../flutter_faltool
+  flutter_falkit:
+    path: ../flutter_falkit
+  flutter_falmodel:
+    path: ../flutter_falmodel
+  flutter_falconnect:
+    path: ../flutter_falconnect
+  flutter_falstore:
+    path: ../flutter_falstore
+
+  #PLATFORM: All
+  provider: ^6.1.5+1
+  ansicolor: ^2.0.3
+
+  #PLATFORM: Android, iOS, Linux, MacOS
+  flutter_local_notifications: ^19.5.0
+
+  #======= Utils ========#
+  #PLATFORM: All
+  flutter_bloc: ^9.1.1
+  bloc_concurrency: ^0.3.0
+  app_links: ^6.4.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  very_good_analysis: ^10.0.0
