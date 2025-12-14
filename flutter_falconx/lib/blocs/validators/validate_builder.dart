@@ -3,8 +3,13 @@
 
 import 'package:flutter_falconx/lib.dart';
 
-typedef ValidateWidgetBuilder<DATA> = Widget Function(
-    BuildContext context, bool valid, DATA? data, Failure? failure);
+typedef ValidateWidgetBuilder<DATA> =
+    Widget Function(
+      BuildContext context,
+      bool valid,
+      DATA? data,
+      Failure? failure,
+    );
 
 abstract class ValidatorCubit<DATA> extends Cubit<ValidateState<DATA?>> {
   ValidatorCubit() : super(const ValidateState(data: null));
@@ -25,8 +30,20 @@ abstract class ValidatorCubit<DATA> extends Cubit<ValidateState<DATA?>> {
     emit(const ValidateState(data: null));
   }
 
-  void emitErrorMessage(String? userMessage) {
-    emit(ValidateState<DATA>(failure: Failure(userMessage: userMessage)));
+  void emitErrorMessage<T>(
+    String? userMessage, {
+    FeedbackLevel level = FeedbackLevel.medium,
+    T? data,
+  }) {
+    emit(
+      ValidateState<DATA>(
+        failure: Failure(
+          message: userMessage,
+          data: data,
+          level: level,
+        ),
+      ),
+    );
   }
 
   @Deprecated('Please use [validate] or [emitError]')
