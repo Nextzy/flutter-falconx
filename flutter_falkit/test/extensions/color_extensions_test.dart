@@ -10,12 +10,18 @@ void main() {
         final brightened = baseColor.brighten();
 
         // Should be brighter than original
-        expect((brightened.r * 255).round(),
-            greaterThan((baseColor.r * 255).round()));
-        expect((brightened.g * 255).round(),
-            greaterThan((baseColor.g * 255).round()));
         expect(
-            (brightened.b * 255).round(), equals(255)); // Blue already at max
+          (brightened.r * 255).round(),
+          greaterThan((baseColor.r * 255).round()),
+        );
+        expect(
+          (brightened.g * 255).round(),
+          greaterThan((baseColor.g * 255).round()),
+        );
+        expect(
+          (brightened.b * 255).round(),
+          equals(255),
+        ); // Blue already at max
       });
 
       test('should brighten color by specified amount', () {
@@ -279,9 +285,17 @@ void main() {
         expect('0xff123456'.toColor, equals(const Color(0xFF123456)));
       });
 
-      test('should handle alpha channel', () {
+      test('should handle alpha channel in ARGB format', () {
         expect('80FF0000'.toColor, equals(const Color(0x80FF0000)));
         expect('#80FF0000'.toColor, equals(const Color(0x80FF0000)));
+      });
+
+      test('should handle alpha channel in RGBA format (CSS)', () {
+        // #00000024 = black with 0x24 (36/255 ≈ 14%) opacity
+        expect('#00000024'.toColor, equals(const Color(0x24000000)));
+        expect('00000024'.toColor, equals(const Color(0x24000000)));
+        // #FFFFFF80 = white with 0x80 (128/255 = 50%) opacity
+        expect('#FFFFFF80'.toColor, equals(const Color(0x80FFFFFF)));
       });
 
       test('should add default alpha (FF) if missing', () {

@@ -19,6 +19,10 @@ extension FalconToolColorThemeExtensions on Color {
   /// RGB hex substring start position
   static const int _rgbHexStart = 2;
 
+  Color applyOpacity(double opacity) {
+    return withValues(alpha: a * opacity);
+  }
+
   /// Brightens the color with the given percentage amount.
   ///
   /// [amount] - The percentage to brighten (0-100). Defaults to 10%.
@@ -55,8 +59,10 @@ extension FalconToolColorThemeExtensions on Color {
         ? HSLColor.fromColor(this).withSaturation(0)
         : HSLColor.fromColor(this);
 
-    final newLightness =
-        (hsl.lightness + amount / _maxPercentage).clamp(0.0, 1.0);
+    final newLightness = (hsl.lightness + amount / _maxPercentage).clamp(
+      0.0,
+      1.0,
+    );
     return hsl.withLightness(newLightness).toColor();
   }
 
@@ -69,8 +75,10 @@ extension FalconToolColorThemeExtensions on Color {
     if (amount >= _maxPercentage) return Colors.black;
 
     final hsl = HSLColor.fromColor(this);
-    final newLightness =
-        (hsl.lightness - amount / _maxPercentage).clamp(0.0, 1.0);
+    final newLightness = (hsl.lightness - amount / _maxPercentage).clamp(
+      0.0,
+      1.0,
+    );
     return hsl.withLightness(newLightness).toColor();
   }
 
@@ -144,8 +152,10 @@ extension FalconToolColorThemeExtensions on Color {
   /// This format excludes the alpha channel and is commonly used in CSS and
   /// web APIs.
   String get hex {
-    final fullHex =
-        toARGB32().toRadixString(16).toUpperCase().padLeft(_hexPadLength, '0');
+    final fullHex = toARGB32()
+        .toRadixString(16)
+        .toUpperCase()
+        .padLeft(_hexPadLength, '0');
     return '#${fullHex.substring(_rgbHexStart)}';
   }
 
@@ -197,25 +207,62 @@ extension FalconToolStringThemeExtensions on String {
   /// Accepts various formats:
   /// - With or without '#' prefix: #RRGGBB, RRGGBB
   /// - With or without '0x' prefix: 0xRRGGBB, RRGGBB
-  /// - With or without alpha: AARRGGBB, RRGGBB (defaults to FF for alpha)
+  /// - RGB format (6 chars): RRGGBB (defaults to FF for alpha)
+  /// - ARGB format (8 chars): AARRGGBB (Flutter format)
+  /// - RGBA format (8 chars): RRGGBBAA (CSS format, converted to ARGB)
+  /// - Examples: "#000000FF" (opaque black), "#00000024" (14% opacity)
   /// - Strings longer than 8 characters are right-truncated
   ///
   /// Returns opaque black (0xFF000000) if parsing fails or string is empty.
   Color get toColor {
     if (isEmpty) return _defaultColor;
 
+    // Check if it starts with '0x' or '0X' (Flutter format - definitely ARGB)
+    final isFlutterFormat = startsWith('0x') || startsWith('0X');
+
     // Remove common prefixes
-    final cleanHex = replaceAll('#', '').replaceAll('0x', '');
+    final cleanHex = replaceAll(
+      '#',
+      '',
+    ).replaceAll('0x', '').replaceAll('0X', '');
 
-    // Ensure minimum length with padding
-    final paddedHex = cleanHex
-        .padLeft(_minHexLength, '0') // Pad RGB values
-        .padLeft(_fullHexLength, 'F'); // Pad alpha channel
+    // Handle different hex length formats
+    String finalHex;
 
-    // Take only the last 8 characters if string is too long
-    final finalHex = paddedHex.length > _fullHexLength
-        ? paddedHex.substring(paddedHex.length - _fullHexLength)
-        : paddedHex;
+    if (cleanHex.length <= _minHexLength) {
+      // Short format (6 or fewer chars): RGB format
+      // Pad RGB to 6 chars, then add FF for full opacity
+      final paddedRgb = cleanHex.padLeft(_minHexLength, '0');
+      finalHex = 'FF$paddedRgb';
+    } else if (cleanHex.length == _fullHexLength) {
+      // 8 chars: Could be AARRGGBB or RRGGBBAA format
+      if (isFlutterFormat) {
+        // Flutter format (0x prefix) is always AARRGGBB
+        finalHex = cleanHex;
+      } else {
+        // Heuristic to distinguish AARRGGBB from RRGGBBAA
+        final last2 = cleanHex.substring(6, 8);
+        final lastValue = int.tryParse(last2, radix: 16) ?? 255;
+
+        // If last 2 bytes suggest a partial opacity (not FF and not 00),
+        // treat as RRGGBBAA format
+        if (lastValue < 0xFF && lastValue > 0x00) {
+          // RRGGBBAA: move alpha from end to beginning
+          final rgb = cleanHex.substring(0, 6);
+          final alpha = cleanHex.substring(6, 8);
+          finalHex = '$alpha$rgb';
+        } else {
+          // AARRGGBB format (or ambiguous case, default to ARGB)
+          finalHex = cleanHex;
+        }
+      }
+    } else if (cleanHex.length > _fullHexLength) {
+      // Too long: take last 8 characters
+      finalHex = cleanHex.substring(cleanHex.length - _fullHexLength);
+    } else {
+      // 7 chars: treat as RGB with partial alpha, pad to 8
+      finalHex = cleanHex.padLeft(_fullHexLength, 'F');
+    }
 
     return Color(int.tryParse('0x$finalHex') ?? _defaultColor.toARGB32());
   }

@@ -8,6 +8,7 @@ export 'dart:convert';
 
 export 'package:ansicolor/ansicolor.dart';
 export 'package:dart_faltool/dart_faltool.dart';
+export 'package:flutter_udid/flutter_udid.dart';
 
 export 'extensions/extensions.dart';
 export 'flutter_faltool.dart';

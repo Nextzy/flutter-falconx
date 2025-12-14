@@ -62,14 +62,15 @@ class Log {
   /// detailed debugging information.
   static void t(
     Object? message, {
-    String? id,
+    String? tag,
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
   }) {
     if (!kReleaseMode) {
+      final finalTag = tag ?? error.runtimeType.toString();
       _logger.t(
-        (id != null ? '$id: ' : '') + (message?.toString() ?? ''),
+        '$finalTag: $message',
         time: time,
         error: error,
         stackTrace: stackTrace ?? StackTrace.current,
@@ -83,14 +84,15 @@ class Log {
   /// development but not in production.
   static void d(
     Object? message, {
-    String? id,
+    String? tag,
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
   }) {
     if (!kReleaseMode) {
+      final finalTag = tag ?? error.runtimeType.toString();
       _logger.d(
-        (id != null ? '$id: ' : '') + (message?.toString() ?? ''),
+        '$finalTag: $message',
         time: time,
         error: error,
         stackTrace: stackTrace ?? StackTrace.current,
@@ -104,14 +106,15 @@ class Log {
   /// flow and state.
   static void i(
     Object? message, {
-    String? id,
+    String? tag,
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
   }) {
     if (!kReleaseMode) {
+      final finalTag = tag ?? error.runtimeType.toString();
       _logger.i(
-        (id != null ? '$id: ' : '') + (message?.toString() ?? ''),
+        '$finalTag: $message',
         time: time,
         error: error,
         stackTrace: stackTrace ?? StackTrace.current,
@@ -128,29 +131,30 @@ class Log {
   /// is an Error or Exception object.
   static void w(
     Object? message, {
-    String? id,
+    String? tag,
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
   }) {
     if (!kReleaseMode) {
+      final finalTag = tag ?? error.runtimeType.toString();
       if (message is Error) {
         _logger.w(
-          (id != null ? '$id: ' : '') + message.toString(),
+          '$finalTag: $message',
           time: time,
           error: error ?? message,
           stackTrace: stackTrace ?? message.stackTrace ?? StackTrace.current,
         );
       } else if (message is Exception) {
         _logger.w(
-          (id != null ? '$id: ' : '') + message.toString(),
+          '$finalTag: $message',
           time: time,
           error: error ?? message,
           stackTrace: stackTrace ?? StackTrace.current,
         );
       } else {
         _logger.w(
-          (id != null ? '$id: ' : '') + (message?.toString() ?? ''),
+          '$finalTag: $message',
           time: time,
           error: error,
           stackTrace: stackTrace ?? StackTrace.current,
@@ -166,12 +170,13 @@ class Log {
   static void error(
     Object error,
     StackTrace? stackTrace, {
-    String? id,
+    String? tag,
     DateTime? time,
   }) {
     if (!kReleaseMode) {
+      final finalTag = tag ?? error.runtimeType.toString();
       _logger.e(
-        (id != null ? '$id: ' : '') + error.toString(),
+        '$finalTag: $error',
         error: error,
         stackTrace: stackTrace ?? StackTrace.current,
         time: time,
@@ -188,29 +193,30 @@ class Log {
   /// is an Error or Exception object.
   static void e(
     Object? message, {
-    String? id,
+    String? tag,
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
   }) {
     if (!kReleaseMode) {
+      final finalTag = tag ?? error.runtimeType.toString();
       if (message is Error) {
         _logger.e(
-          (id != null ? '$id: ' : '') + message.toString(),
+          '$finalTag: $message',
           time: time,
           error: error ?? message,
           stackTrace: stackTrace ?? message.stackTrace ?? StackTrace.current,
         );
       } else if (message is Exception) {
         _logger.e(
-          (id != null ? '$id: ' : '') + message.toString(),
+          '$finalTag: $message',
           time: time,
           error: error ?? message,
           stackTrace: stackTrace ?? StackTrace.current,
         );
       } else {
         _logger.e(
-          (id != null ? '$id: ' : '') + (message?.toString() ?? ''),
+          '$finalTag: $message',
           time: time,
           error: error,
           stackTrace: stackTrace ?? StackTrace.current,
@@ -253,14 +259,15 @@ class Log {
   /// the application to abort.
   static void f(
     Object? message, {
-    String? id,
+    String? tag,
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
   }) {
     if (!kReleaseMode) {
+      final finalTag = tag ?? error.runtimeType.toString();
       _logger.f(
-        (id != null ? '$id: ' : '') + (message?.toString() ?? ''),
+        '$finalTag: $message',
         time: time,
         error: error,
         stackTrace: stackTrace ?? StackTrace.current,

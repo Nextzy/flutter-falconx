@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_falconx/lib.dart';
 
 // extension WidgetDataStateEmitterExtensions<T>
@@ -154,101 +156,109 @@ extension WidgetDataStateEmitterExtensions<T> on Emitter<WidgetDataState<T>> {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toInitial(data: data, id: id, feedback: feedback));
+  }) => call(currentState.toInitial(data: data, id: id, feedback: feedback));
 
   void loading(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toLoading(data: data, id: id, feedback: feedback));
+  }) => call(currentState.toLoading(data: data, id: id, feedback: feedback));
 
   void fail(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toFail(data: data, id: id, feedback: feedback));
+  }) => call(currentState.toFail(data: data, id: id, feedback: feedback));
 
   void warning(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toWarning(data: data, id: id, feedback: feedback));
+  }) => call(currentState.toWarning(data: data, id: id, feedback: feedback));
 
   void success(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toSuccess(data: data, id: id, feedback: feedback));
+  }) => call(currentState.toSuccess(data: data, id: id, feedback: feedback));
 
   void cancel(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toCancel(data: data, id: id, feedback: feedback));
+  }) => call(currentState.toCancel(data: data, id: id, feedback: feedback));
 
   void saveInitial(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toInitial(data: data, id: id, feedback: feedback));
+  }) => call(currentState.toInitial(data: data, id: id, feedback: feedback));
 
   void saveLoading(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toLoading(
-          data: data, id: id, feedback: feedback, build: false));
+  }) => call(
+    currentState.toLoading(
+      data: data,
+      id: id,
+      feedback: feedback,
+      build: false,
+    ),
+  );
 
   void saveFail(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toFail(
-          data: data, id: id, feedback: feedback, build: false));
+  }) => call(
+    currentState.toFail(data: data, id: id, feedback: feedback, build: false),
+  );
 
   void saveWarning(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toWarning(
-          data: data, id: id, feedback: feedback, build: false));
+  }) => call(
+    currentState.toWarning(
+      data: data,
+      id: id,
+      feedback: feedback,
+      build: false,
+    ),
+  );
 
   void saveSuccess(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toSuccess(
-          data: data, id: id, feedback: feedback, build: false));
+  }) => call(
+    currentState.toSuccess(
+      data: data,
+      id: id,
+      feedback: feedback,
+      build: false,
+    ),
+  );
 
   void saveCancel(
     WidgetDataState<T> currentState, {
     T? data,
     String? id,
     UserFeedback? feedback,
-  }) =>
-      call(currentState.toCancel(
-          data: data, id: id, feedback: feedback, build: false));
+  }) => call(
+    currentState.toCancel(data: data, id: id, feedback: feedback, build: false),
+  );
 
   /// Or use:
   /// emitter.emit(state.addEvent(...))
@@ -256,68 +266,119 @@ extension WidgetDataStateEmitterExtensions<T> on Emitter<WidgetDataState<T>> {
     WidgetDataState<T> currentState,
     Object event, {
     Object? data,
-  }) =>
-      call(currentState.addEvent(event, data));
+  }) => call(currentState.addEvent(event, data));
 
   Future<void> callStream<A>({
     required Stream<WidgetDataState<A?>> call,
     required void Function(WidgetDataState<A?> result) onData,
     VoidFailureCallback? onFailure,
-  }) =>
-      onEach(
-        call,
-        onData: (WidgetDataState<A?> data) {
-          onData(data);
-        },
-        onError: (Object error, StackTrace stackTrace) {
-          if (error is Failure) {
-            onFailure?.call(error);
-          } else {
-            FlutterError.reportError(FlutterErrorDetails(
-              exception: error,
-              stack: stackTrace,
-            ));
-          }
-        },
-      );
+  }) => onEach(
+    call,
+    onData: (WidgetDataState<A?> data) {
+      onData(data);
+    },
+    onError: (Object error, StackTrace stackTrace) {
+      if (error is Failure) {
+        onFailure?.call(error);
+      } else {
+        FlutterError.reportError(
+          FlutterErrorDetails(
+            exception: error,
+            stack: stackTrace,
+          ),
+        );
+      }
+    },
+  );
 
   Future<void> callEitherStream<A>({
     required Stream<Either<Failure, A>> call,
     required void Function(WidgetDataState<A?> result) onData,
     VoidFailureCallback? onFailure,
   }) {
-    final controller =
-        StreamController<WidgetDataState<A?>>.broadcast(sync: true);
+    final controller = StreamController<WidgetDataState<A?>>.broadcast(
+      sync: true,
+    );
 
     controller.onListen = () {
       controller.add(WidgetDataState.loading(null));
-      final subscription = call.listen(
-        null,
-        onError: (Object error, StackTrace? stackTrace) {
-          if (!controller.isClosed) {
-            controller.addError(error, stackTrace);
-          }
-          controller.close();
-        },
-      )
-        ..onData(
-          (data) {
-            data.fold(
-              (failure) {
+      final subscription =
+          call.listen(
+              null,
+              onError: (Object error, StackTrace? stackTrace) {
                 if (!controller.isClosed) {
-                  controller.addError(failure);
+                  controller.addError(error, stackTrace);
                 }
-                controller.close();
+                unawaited(controller.close());
               },
+            )
+            ..onData(
               (data) {
-                if (!controller.isClosed) {
-                  controller.add(WidgetDataState.success(data));
-                }
+                data.fold(
+                  (failure) {
+                    if (!controller.isClosed) {
+                      controller.addError(failure);
+                    }
+                    unawaited(controller.close());
+                  },
+                  (data) {
+                    if (!controller.isClosed) {
+                      controller.add(WidgetDataState.success(data));
+                    }
+                  },
+                );
               },
-            );
-          },
-        )
-        ..onDone(controller.close);
+            )
+            ..onDone(controller.close);
+      controller.onCancel = subscription.cancel;
+    };
+
+    return callStream<A>(
+      call: controller.stream,
+      onData: onData,
+      onFailure: onFailure,
+    );
+  }
+
+  Future<void> callResultStream<A>({
+    required Stream<Result<A>> call,
+    required void Function(WidgetDataState<A?> result) onData,
+    VoidFailureCallback? onFailure,
+  }) {
+    final controller = StreamController<WidgetDataState<A?>>.broadcast(
+      sync: true,
+    );
+
+    controller.onListen = () {
+      controller.add(WidgetDataState.loading(null));
+      final subscription =
+          call.listen(
+              null,
+              onError: (Object error, StackTrace? stackTrace) {
+                if (!controller.isClosed) {
+                  controller.addError(error, stackTrace);
+                }
+                unawaited(controller.close());
+              },
+            )
+            ..onData(
+              (data) {
+                data.resolve(
+                  (data) {
+                    if (!controller.isClosed) {
+                      controller.add(WidgetDataState.success(data));
+                    }
+                  },
+                  (failure, stacktrace) {
+                    if (!controller.isClosed) {
+                      controller.addError(failure);
+                    }
+                    unawaited(controller.close());
+                  },
+                );
+              },
+            )
+            ..onDone(controller.close);
       controller.onCancel = subscription.cancel;
     };
 
@@ -333,38 +394,89 @@ extension WidgetDataStateEmitterExtensions<T> on Emitter<WidgetDataState<T>> {
     required void Function(WidgetDataState<A?> state) onData,
     VoidFailureCallback? onFailure,
   }) {
-    final controller =
-        StreamController<WidgetDataState<A?>>.broadcast(sync: true);
+    final controller = StreamController<WidgetDataState<A?>>.broadcast(
+      sync: true,
+    );
 
     controller.onListen = () {
       controller.add(WidgetDataState.loading(null));
-      final subscription = Stream.fromFuture(call).listen(
-        null,
-        onError: (Object error, StackTrace? stackTrace) {
-          if (!controller.isClosed) {
-            controller.addError(error, stackTrace);
-          }
-          controller.close();
-        },
-      )
-        ..onData(
-          (data) {
-            data.fold(
-              (failure) {
+      final subscription =
+          Stream.fromFuture(call).listen(
+              null,
+              onError: (Object error, StackTrace? stackTrace) {
                 if (!controller.isClosed) {
-                  controller.addError(failure);
+                  controller.addError(error, stackTrace);
                 }
-                controller.close();
+                unawaited(controller.close());
               },
+            )
+            ..onData(
               (data) {
-                if (!controller.isClosed) {
-                  controller.add(WidgetDataState.success(data));
-                }
+                data.fold(
+                  (failure) {
+                    if (!controller.isClosed) {
+                      controller.addError(failure);
+                    }
+                    unawaited(controller.close());
+                  },
+                  (data) {
+                    if (!controller.isClosed) {
+                      controller.add(WidgetDataState.success(data));
+                    }
+                  },
+                );
               },
-            );
-          },
-        )
-        ..onDone(controller.close);
+            )
+            ..onDone(controller.close);
+      controller.onCancel = subscription.cancel;
+    };
+
+    return callStream<A>(
+      call: controller.stream,
+      onData: onData,
+      onFailure: onFailure,
+    );
+  }
+
+  Future<void> callResultFuture<A>({
+    required Future<Result<A>> call,
+    required void Function(WidgetDataState<A?> state) onData,
+    VoidFailureCallback? onFailure,
+  }) {
+    final controller = StreamController<WidgetDataState<A?>>.broadcast(
+      sync: true,
+    );
+
+    controller.onListen = () {
+      controller.add(WidgetDataState.loading(null));
+      final subscription =
+          Stream.fromFuture(call).listen(
+              null,
+              onError: (Object error, StackTrace? stackTrace) {
+                if (!controller.isClosed) {
+                  controller.addError(error, stackTrace);
+                }
+                unawaited(controller.close());
+              },
+            )
+            ..onData(
+              (data) {
+                data.resolve(
+                  (data) {
+                    if (!controller.isClosed) {
+                      controller.add(WidgetDataState.success(data));
+                    }
+                  },
+                  (failure, stacktrace) {
+                    if (!controller.isClosed) {
+                      controller.addError(failure);
+                    }
+                    unawaited(controller.close());
+                  },
+                );
+              },
+            )
+            ..onDone(controller.close);
       controller.onCancel = subscription.cancel;
     };
 

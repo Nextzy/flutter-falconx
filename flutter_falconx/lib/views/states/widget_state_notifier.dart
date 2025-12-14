@@ -10,54 +10,57 @@ class FullWidgetStatesNotifier extends ValueNotifier<FullWidgetStates> {
             : const FullWidgetStates({FullWidgetState.normal}),
       );
 
+  static const List<FullWidgetState> _displayStates = [
+    FullWidgetState.initial,
+    FullWidgetState.normal,
+    FullWidgetState.empty,
+    FullWidgetState.warning,
+    FullWidgetState.fail,
+    FullWidgetState.success,
+    FullWidgetState.cancel,
+    FullWidgetState.scrolledUnder,
+  ];
+
+  static const List<FullWidgetState> _actionStates = [
+    FullWidgetState.pressed,
+    FullWidgetState.hovered,
+    FullWidgetState.dragged,
+  ];
+
   bool _isDisposed = false; //
   bool get isDisposed => _isDisposed; //
 
   // Replace with single state (backward compatibility)
   set state(FullWidgetState state) {
     if (!_isDisposed) {
-      if (state == FullWidgetState.initial ||
-          state == FullWidgetState.normal ||
-          state == FullWidgetState.empty ||
-          state == FullWidgetState.warning ||
-          state == FullWidgetState.fail ||
-          state == FullWidgetState.success ||
-          state == FullWidgetState.cancel ||
-          state == FullWidgetState.scrolledUnder) {
-        removeAllState([
-          FullWidgetState.initial,
-          FullWidgetState.normal,
-          FullWidgetState.empty,
-          FullWidgetState.warning,
-          FullWidgetState.fail,
-          FullWidgetState.success,
-          FullWidgetState.cancel,
-        ]);
+      removeState(FullWidgetState.disabled);
+      removeState(FullWidgetState.loading);
+      if (_displayStates.contains(state)) {
+        removeAllState(_displayStates);
         addState(state);
-      } else if (state == FullWidgetState.pressed ||
-          state == FullWidgetState.dragged ||
-          state == FullWidgetState.hovered) {
-        removeAllState([
-          FullWidgetState.pressed,
-          FullWidgetState.hovered,
-          FullWidgetState.dragged,
-        ]);
+      } else if (_actionStates.contains(state)) {
+        removeAllState(_actionStates);
         addState(state);
+      } else if (state == FullWidgetState.focused) {
+        focus = true;
       } else if (state == FullWidgetState.disabled) {
-        value = const FullWidgetStates({FullWidgetState.disabled});
-      } else if (state == FullWidgetState.focused ||
-          state == FullWidgetState.focusedVisible) {
-        removeAllState([
-          FullWidgetState.focused,
-          FullWidgetState.focusedVisible,
-        ]);
-        addState(state);
+        disabled = true;
       } else if (state == FullWidgetState.loading) {
-        addState(state);
+        loading = true;
       } else if (state == FullWidgetState.selected) {
-        addState(state);
+        select = true;
       } else {
         addState(state);
+      }
+    }
+  }
+
+  set hover(bool hover) {
+    if (!_isDisposed) {
+      if (hover) {
+        addState(FullWidgetState.hovered);
+      } else {
+        removeState(FullWidgetState.hovered);
       }
     }
   }
@@ -75,27 +78,9 @@ class FullWidgetStatesNotifier extends ValueNotifier<FullWidgetStates> {
   set focus(bool focus) {
     if (!_isDisposed) {
       if (focus) {
-        removeState(FullWidgetState.focusedVisible);
         addState(FullWidgetState.focused);
       } else {
-        removeAllState([
-          FullWidgetState.focused,
-          FullWidgetState.focusedVisible,
-        ]);
-      }
-    }
-  }
-
-  set focusVisible(bool focus) {
-    if (!_isDisposed) {
-      if (focus) {
         removeState(FullWidgetState.focused);
-        addState(FullWidgetState.focusedVisible);
-      } else {
-        removeAllState([
-          FullWidgetState.focused,
-          FullWidgetState.focusedVisible,
-        ]);
       }
     }
   }
@@ -115,21 +100,21 @@ class FullWidgetStatesNotifier extends ValueNotifier<FullWidgetStates> {
       if (disabled) {
         value = const FullWidgetStates({FullWidgetState.disabled});
       } else {
-        value = const FullWidgetStates({FullWidgetState.normal});
+        removeState(FullWidgetState.disabled);
       }
     }
   }
 
   // Add state to stack if not already present
   void addState(FullWidgetState state) {
-    if (!_isDisposed) {
+    if (!_isDisposed && !hasState(state)) {
       value = value.copy({...value.value, state});
     }
   }
 
   // Remove state from stack
   void removeState(FullWidgetState state) {
-    if (!_isDisposed) {
+    if (!_isDisposed && hasState(state)) {
       value = value.copy(value.value.where((s) => s != state).toSet());
     }
   }

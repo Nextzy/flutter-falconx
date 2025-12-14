@@ -105,10 +105,10 @@ class WidgetDataState<T> {
       WidgetDataState.create(FullWidgetState.focused, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.focusedVisible(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.focusedVisible, data,
-          id: id, feedback: feedback, build: build);
+  // factory WidgetDataState.focusedVisible(T data,
+  //     {String? id, UserFeedback? feedback, bool build = true}) =>
+  //     WidgetDataState.create(FullWidgetState.focusedVisible, data,
+  //         id: id, feedback: feedback, build: build);
 
   factory WidgetDataState.pressed(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
@@ -165,7 +165,7 @@ class WidgetDataState<T> {
   bool get isEmpty => state.isEmpty; //
   bool get isHovered => state.isHovered; //
   bool get isFocused => state.isFocused; //
-  bool get isFocusedVisible => state.isFocusedVisible; //
+  // bool get isFocusedVisible => state.isFocusedVisible; //
   bool get isPressed => state.isPressed; //
   bool get isDragged => state.isDragged; //
   bool get isSelected => state.isSelected; //
@@ -182,7 +182,6 @@ class WidgetDataState<T> {
   bool get isNotEmpty => !isEmpty; //
   bool get isNotHovered => !isHovered; //
   bool get isNotFocused => !isFocused; //
-  bool get isNotFocusedVisible => !isFocusedVisible; //
   bool get isNotPressed => !isPressed; //
   bool get isNotDragged => !isDragged; //
   bool get isNotSelected => !isSelected; //
@@ -297,11 +296,6 @@ class WidgetDataState<T> {
   WidgetDataState<T> toFocused(
       {T? data, String? id, UserFeedback? feedback, bool? build}) =>
       toState(FullWidgetState.focused,
-          data: data, id: id, feedback: feedback, build: build);
-
-  WidgetDataState<T> toFocusedVisible(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.focusedVisible,
           data: data, id: id, feedback: feedback, build: build);
 
   WidgetDataState<T> toPressed(

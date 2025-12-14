@@ -2,20 +2,23 @@ import 'package:flutter_falconnect/lib.dart';
 
 class ConnectivityInterceptor extends Interceptor {
   ConnectivityInterceptor({Connectivity? connectivity})
-      : _connectivity = connectivity ?? Connectivity();
+    : _connectivity = connectivity ?? Connectivity();
 
   final Connectivity _connectivity;
 
   @override
   Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final result = await _connectivity.checkConnectivity();
     if (_isNoConnectedInternet(result)) {
       handler.reject(
         DioException(
           requestOptions: options,
           error: NoInternetConnectException(
-            message: 'No internet connection.',
+            userMessage: 'No internet connection.',
+            developerMessage: 'No internet connection. $result',
             requestOptions: options,
             stackTrace: Trace.current(),
           ),

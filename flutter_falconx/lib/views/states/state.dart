@@ -53,6 +53,14 @@ abstract class FalconState<T extends StatefulWidget> extends State<T>
 
   Key? get key => widget.key;
 
+  bool get disabled => stateNotifier.value.isDisabled; //
+
+  bool get loading => stateNotifier.value.isLoading; //
+
+  bool get isHovered => stateNotifier.value.isHovered; //
+
+  bool get isFocused => stateNotifier.value.isFocused; //
+
   Future<Version> get currentVersion async {
     final packageInfo = await PackageInfo.fromPlatform();
     final versionStr = packageInfo.version;
@@ -162,108 +170,50 @@ abstract class FalconState<T extends StatefulWidget> extends State<T>
 
   void clearFocus() => FocusScope.of(context).unfocus();
 
-  /// Updates the widget state using [stateNotifier] if widget is mounted.
-  ///
-  /// The [state] parameter represents the new [FullWidgetState] to be set.
-  /// Optionally executes a callback before setting the state.
-  ///
-  /// Example usage:
-  /// ```dart
-  /// changeState(FullWidgetState.loading); // Set loading state
-  ///
-  /// // With callback
-  /// changeState(FullWidgetState.loading, () {
-  ///   // Prepare for loading
-  ///   data.clear();
-  /// });
-  ///
-  /// // In async operations
-  /// try {
-  ///   changeState(FullWidgetState.loading);
-  ///   await someOperation();
-  ///   changeState(FullWidgetState.success);
-  /// } catch (e) {
-  ///   changeState(FullWidgetState.fail);
-  /// }
-  /// ```
-  ///
-  /// To handle states in the UI:
-  /// ```dart
-  /// buildState(context, state) {
-  ///   switch (state) {
-  ///     case FullWidgetState.loading:
-  ///       return LoadingWidget();
-  ///     case FullWidgetState.success:
-  ///       return SuccessWidget();
-  ///     case FullWidgetState.fail:
-  ///       return ErrorWidget();
-  ///   }
-  /// }
-  /// ```
-  void changeFullWidgetState(FullWidgetState state, [VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.state = state;
-    }
-  }
-
   void setFullWidgetState(FullWidgetState state, [VoidCallback? fn]) {
     if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.state = state;
-      });
-    }
-  }
-
-  // New methods for multi-state support
-  void addWidgetState(FullWidgetState state, [VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.addState(state);
-    }
-  }
-
-  void removeWidgetState(FullWidgetState state, [VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.removeState(state);
-    }
-  }
-
-  void toggleWidgetState(FullWidgetState state, [VoidCallback? fn]) {
-    if (mounted) {
-      fn?.call();
-      stateNotifier.toggleState(state);
+      stateNotifier.state = state;
+      fn.let(setState);
     }
   }
 
   void setWidgetStates(Set<FullWidgetState> states, [VoidCallback? fn]) {
     if (mounted) {
-      setState(() {
-        fn?.call();
-        stateNotifier.value = FullWidgetStates(states);
-      });
+      stateNotifier.value = FullWidgetStates(states);
+      fn.let(setState);
     }
   }
 
   void setNormalState([VoidCallback? fn]) =>
       setFullWidgetState(FullWidgetState.normal, fn);
 
-  void setLoadingState([VoidCallback? fn]) =>
-      setFullWidgetState(FullWidgetState.loading, fn);
+  void setLoadingState(bool loading, [VoidCallback? fn]) {
+    if (mounted) {
+      stateNotifier.loading = loading;
+      fn.let(setState);
+    }
+  }
 
-  void setHoveredState([VoidCallback? fn]) =>
-      setFullWidgetState(FullWidgetState.hovered, fn);
+  void setHoveredState(bool hover, [VoidCallback? fn]) {
+    if (mounted) {
+      stateNotifier.hover = hover;
+      fn.let(setState);
+    }
+  }
 
-  void setFocusedState([VoidCallback? fn]) =>
-      setFullWidgetState(FullWidgetState.focused, fn);
+  void setFocusedState(bool focus, [VoidCallback? fn]) {
+    if (mounted) {
+      stateNotifier.focus = focus;
+      fn.let(setState);
+    }
+  }
 
-  void setFocusedVisibleState([VoidCallback? fn]) =>
-      setFullWidgetState(FullWidgetState.focusedVisible, fn);
-
-  void setDisabledState([VoidCallback? fn]) =>
-      setFullWidgetState(FullWidgetState.disabled, fn);
+  void setDisabledState(bool disabled, [VoidCallback? fn]) {
+    if (mounted) {
+      stateNotifier.disabled = disabled;
+      fn.let(setState);
+    }
+  }
 
   void setWarningState([VoidCallback? fn]) =>
       setFullWidgetState(FullWidgetState.warning, fn);
@@ -271,8 +221,12 @@ abstract class FalconState<T extends StatefulWidget> extends State<T>
   void setEmptyState([VoidCallback? fn]) =>
       setFullWidgetState(FullWidgetState.empty, fn);
 
-  void setSelectedState([VoidCallback? fn]) =>
-      setFullWidgetState(FullWidgetState.selected, fn);
+  void setSelectedState(bool select, [VoidCallback? fn]) {
+    if (mounted) {
+      stateNotifier.select = select;
+      fn.let(setState);
+    }
+  }
 
   void setSuccessState([VoidCallback? fn]) =>
       setFullWidgetState(FullWidgetState.success, fn);
@@ -282,41 +236,4 @@ abstract class FalconState<T extends StatefulWidget> extends State<T>
 
   void setFailState([VoidCallback? fn]) =>
       setFullWidgetState(FullWidgetState.fail, fn);
-
-  // Convenience methods for common states
-  void changeToNormalState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.normal, fn);
-
-  void changeToLoadingState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.loading, fn);
-
-  void changeToSuccessState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.success, fn);
-
-  void changeToFailState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.fail, fn);
-
-  void changeToEmptyState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.empty, fn);
-
-  void changeToWarningState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.warning, fn);
-
-  void changeToDisabledState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.disabled, fn);
-
-  void changeToSelectedState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.selected, fn);
-
-  void changeToCancelState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.cancel, fn);
-
-  void changeToHoveredState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.hovered, fn);
-
-  void changeToFocusedState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.focused, fn);
-
-  void changeToFocusedVisibleState([VoidCallback? fn]) =>
-      changeFullWidgetState(FullWidgetState.focusedVisible, fn);
 }

@@ -25,74 +25,78 @@ class DeviceIdGenerator {
 
     try {
       if (PlatformChecker.isAndroid) {
+        final udid = await FlutterUdid.udid;
         final androidInfo = await _deviceInfo.androidInfo;
         deviceData.writeAll([
-          androidInfo.id,                    // Android ID
-          androidInfo.brand,                 // Device brand
-          androidInfo.model,                 // Device model
-          androidInfo.device,                // Device name
-          androidInfo.product,               // Product name
-          androidInfo.hardware,              // Hardware name
-          androidInfo.display,               // Display info
+          udid,
+          androidInfo.id, // Android ID
+          androidInfo.brand, // Device brand
+          androidInfo.model, // Device model
+          androidInfo.device, // Device name
+          androidInfo.product, // Product name
+          androidInfo.hardware, // Hardware name
+          androidInfo.display, // Display info
         ]);
-      }
-      else if (PlatformChecker.isIos) {
+      } else if (PlatformChecker.isIos) {
+        final udid = await FlutterUdid.udid;
         final iosInfo = await _deviceInfo.iosInfo;
         deviceData.writeAll([
+          udid,
           iosInfo.identifierForVendor ?? '', // Vendor ID
-          iosInfo.model,                     // Device model
-          iosInfo.name,                      // Device name
-          iosInfo.systemName,                // OS name
-          iosInfo.systemVersion,             // OS version
-          iosInfo.localizedModel,            // Localized model
-          iosInfo.utsname.machine,           // Machine type
+          iosInfo.model, // Device model
+          iosInfo.name, // Device name
+          iosInfo.systemName, // OS name
+          iosInfo.systemVersion, // OS version
+          iosInfo.localizedModel, // Localized model
+          iosInfo.utsname.machine, // Machine type
         ]);
-      }
-      else if (PlatformChecker.isMacOs) {
+      } else if (PlatformChecker.isMacOs) {
+        final udid = await FlutterUdid.udid;
         final macOsInfo = await _deviceInfo.macOsInfo;
         deviceData.writeAll([
-          macOsInfo.computerName,            // Computer name
-          macOsInfo.hostName,                // Host name
-          macOsInfo.arch,                    // Architecture
-          macOsInfo.model,                   // Model
-          macOsInfo.kernelVersion,           // Kernel version
-          macOsInfo.osRelease,               // OS release
+          udid,
+          macOsInfo.computerName, // Computer name
+          macOsInfo.hostName, // Host name
+          macOsInfo.arch, // Architecture
+          macOsInfo.model, // Model
+          macOsInfo.kernelVersion, // Kernel version
+          macOsInfo.osRelease, // OS release
         ]);
-      }
-      else if (PlatformChecker.isWindows) {
+      } else if (PlatformChecker.isWindows) {
+        final udid = await FlutterUdid.udid;
         final windowsInfo = await _deviceInfo.windowsInfo;
         deviceData.writeAll([
-          windowsInfo.computerName,          // Computer name
+          udid,
+          windowsInfo.computerName, // Computer name
           windowsInfo.numberOfCores.toString(), // CPU cores
           windowsInfo.systemMemoryInMegabytes.toString(), // RAM
-          windowsInfo.userName,              // User name
+          windowsInfo.userName, // User name
           windowsInfo.majorVersion.toString(), // Windows major version
           windowsInfo.minorVersion.toString(), // Windows minor version
         ]);
-      }
-      else if (PlatformChecker.isLinux) {
+      } else if (PlatformChecker.isLinux) {
+        final udid = await FlutterUdid.udid;
         final linuxInfo = await _deviceInfo.linuxInfo;
         deviceData.writeAll([
-          linuxInfo.id,                      // Linux ID
-          linuxInfo.name,                    // Linux name
-          linuxInfo.version,                 // Linux version
-          linuxInfo.machineId ?? '',         // Machine ID
-          linuxInfo.prettyName,              // Pretty name
+          udid,
+          linuxInfo.id, // Linux ID
+          linuxInfo.name, // Linux name
+          linuxInfo.version, // Linux version
+          linuxInfo.machineId ?? '', // Machine ID
+          linuxInfo.prettyName, // Pretty name
         ]);
-      }
-      else if (PlatformChecker.isWeb) {
+      } else if (PlatformChecker.isWeb) {
         final webInfo = await _deviceInfo.webBrowserInfo;
         deviceData.writeAll([
-          webInfo.userAgent ?? '',           // User agent
-          webInfo.browserName.name,          // Browser name
-          webInfo.platform ?? '',            // Platform
-          webInfo.language ?? '',            // Language
-          webInfo.vendor ?? '',              // Vendor
+          webInfo.userAgent ?? '', // User agent
+          webInfo.browserName.name, // Browser name
+          webInfo.platform ?? '', // Platform
+          webInfo.language ?? '', // Language
+          webInfo.vendor ?? '', // Vendor
           webInfo.hardwareConcurrency?.toString() ?? '', // CPU cores
           webInfo.deviceMemory?.toString() ?? '', // Device memory
         ]);
-      }
-      else {
+      } else {
         // Fallback for other platforms
         final now = DateTime.now();
         deviceData.writeAll([

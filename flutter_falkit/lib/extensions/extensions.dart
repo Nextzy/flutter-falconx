@@ -5,6 +5,12 @@ export 'context_extensions.dart';
 export 'icons_extensions.dart';
 export 'images_extensions.dart';
 
+extension FalkitThemeModeExtension on ThemeMode {
+  bool get isLight => this == ThemeMode.light;
+  bool get isDark => this == ThemeMode.dark;
+  bool get isSystem => this == ThemeMode.system;
+}
+
 extension WidgetStateExtension on WidgetState? {
   bool get isNormal => this == null;
   bool get isHovered => this == WidgetState.hovered;

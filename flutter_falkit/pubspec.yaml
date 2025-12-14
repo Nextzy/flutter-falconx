@@ -21,6 +21,7 @@ dependencies:
   gap: ^3.0.1
   path: ^1.9.1
   smooth_page_indicator: ^1.2.1
+  flutter_blurhash: ^0.9.1
 
   #PLATFORM: Android, iOS, MacOS, Web
   flutter_image_compress: ^2.4.0

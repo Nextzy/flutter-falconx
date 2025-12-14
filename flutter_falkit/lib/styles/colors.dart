@@ -5,7 +5,7 @@ import 'package:flutter_falkit/lib.dart';
 /// 
 /// Provides a comprehensive set of color shades from light (c25) to dark (c975)
 /// plus a transparent palette for alpha channel manipulation.
-abstract class PaletteColor {
+class PaletteColor {
   const PaletteColor({
     required this.c25,
     required this.c50,

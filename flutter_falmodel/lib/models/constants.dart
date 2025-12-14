@@ -7,7 +7,6 @@ enum FullWidgetState {
   empty,
   hovered,
   focused,
-  focusedVisible,
   pressed,
   dragged,
   selected,
@@ -24,7 +23,6 @@ enum FullWidgetState {
   bool get isEmpty => this == FullWidgetState.empty; //
   bool get isHovered => this == FullWidgetState.hovered; //
   bool get isFocused => this == FullWidgetState.focused; //
-  bool get isFocusedVisible => this == FullWidgetState.focusedVisible; //
   bool get isPressed => this == FullWidgetState.pressed; //
   bool get isDragged => this == FullWidgetState.dragged; //
   bool get isSelected => this == FullWidgetState.selected; //
@@ -41,7 +39,6 @@ enum FullWidgetState {
   bool get isNotEmpty => !isEmpty; //
   bool get isNotHovered => !isHovered; //
   bool get isNotFocused => !isFocused; //
-  bool get isNotFocusedVisible => !isFocusedVisible; //
   bool get isNotPressed => !isPressed; //
   bool get isNotDragged => !isDragged; //
   bool get isNotSelected => !isSelected; //
@@ -76,8 +73,6 @@ class FullWidgetStates {
   bool get isEmpty => _value.contains(FullWidgetState.empty); //
   bool get isHovered => _value.contains(FullWidgetState.hovered); //
   bool get isFocused => _value.contains(FullWidgetState.focused); //
-  bool get isFocusedVisible =>
-      _value.contains(FullWidgetState.focusedVisible); //
   bool get isPressed => _value.contains(FullWidgetState.pressed); //
   bool get isDragged => _value.contains(FullWidgetState.dragged); //
   bool get isSelected => _value.contains(FullWidgetState.selected); //
@@ -94,7 +89,6 @@ class FullWidgetStates {
   bool get isNotEmpty => !isEmpty; //
   bool get isNotHovered => !isHovered; //
   bool get isNotFocused => !isFocused; //
-  bool get isNotFocusedVisible => !isFocusedVisible; //
   bool get isNotPressed => !isPressed; //
   bool get isNotDragged => !isDragged; //
   bool get isNotSelected => !isSelected; //
@@ -115,4 +109,9 @@ class FullWidgetStates {
 
   FullWidgetStates copy(Set<FullWidgetState>? value) =>
       FullWidgetStates(value ?? _value);
+
+  @override
+  String toString() {
+    return _value.toString();
+  }
 }
