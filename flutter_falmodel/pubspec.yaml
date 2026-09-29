@@ -1,10 +1,10 @@
 name: flutter_falmodel
-description: A new Flutter package project.
-version: 1.0.0
+description: Widget data state and model helpers for Flutter.
+version: 4.0.0
 publish_to: none
 
 environment:
-  sdk: ">=3.13.0"
+  sdk: ">=3.13.0 <4.0.0"
 
 resolution: workspace
 
@@ -17,10 +17,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_faltool:
-    path: ../flutter_faltool
-
-  #PLATFORM: All
-  dio: ^5.11.1
+    git:
+      url: https://github.com/Nextzy/flutter-falconx
+      ref: 4.0.0
+      path: flutter_faltool
 
 dev_dependencies:
   flutter_lints: ^6.0.0
