@@ -1,10 +1,10 @@
 name: flutter_falconx_core
 description: A flutter falcon package.
-version: 1.0.0
+version: 4.0.0
 
 environment:
-  flutter: ">=3.0.0"
-  sdk: ">=3.13.0"
+  flutter: ">=3.44.0"
+  sdk: ">=3.13.0 <4.0.0"
 
 workspace:
   - flutter_falconx
@@ -21,7 +21,7 @@ melos:
     analyze:
       description: Run dart analyze across all packages.
       exec:
-        command: dart analyze
+        command: flutter analyze
         concurrency: 4
 
     format:
@@ -62,7 +62,7 @@ melos:
     test:
       description: Run tests across all packages.
       exec:
-        command: dart test
+        command: flutter test
         concurrency: 4
         failFast: true
       packageFilters:
@@ -97,17 +97,17 @@ melos:
     get:
       description: Get the current package's dependencies.
       exec:
-        command: dart pub get
+        command: flutter pub get
         concurrency: 5
 
     upgrade:
       description: Upgrade the current package's dependencies to latest versions.
       exec:
-        command: dart pub upgrade
+        command: flutter pub upgrade
         concurrency: 5
 
     outdated:
       description: Analyze your dependencies to find which ones can be upgraded.
       exec:
-        command: dart pub outdated
+        command: flutter pub outdated
         concurrency: 5
