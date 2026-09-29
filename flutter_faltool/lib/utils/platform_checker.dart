@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/lib.dart';
 import 'package:flutter_faltool/utils/platform_checker_web.dart'
-if (dart.library.io) 'platform_checker_stub.dart' as web_impl;
-import 'package:flutter/foundation.dart';
+    if (dart.library.io) 'platform_checker_stub.dart' as web_impl;
 
 enum DevicePlatform { android, ios, windows, macOs, linux, web }
 
@@ -47,7 +47,7 @@ class PlatformChecker {
 
   ///========================= PLATFORM =========================///
 
-  static bool get isAndroid => Platform.isAndroid; //
+  static bool get isAndroid => defaultTargetPlatform == TargetPlatform.android; //
   static bool get isNotAndroid => !isAndroid; //
   static bool get isAndroidNative => isAndroid && isNotWeb; //
   static bool get isNotAndroidNative => !isAndroidNative; //
@@ -55,7 +55,7 @@ class PlatformChecker {
       isWeb && userAgent.toLowerCase().contains('android'); //
   static bool get isNotAndroidOnWeb => !isAndroidOnWeb; //
 
-  static bool get isIos => Platform.isIOS; //
+  static bool get isIos => defaultTargetPlatform == TargetPlatform.iOS; //
   static bool get isNotIos => !isIos; //
   static bool get isIosNative => isIos && isNotWeb; //
   static bool get isNotIosNative => !isIosNative; //
@@ -63,7 +63,7 @@ class PlatformChecker {
   isWeb && userAgent.toLowerCase().contains('iphone'); //
   static bool get isNotIosOnWeb => !isIosOnWeb; //
 
-  static bool get isLinux => Platform.isLinux; //
+  static bool get isLinux => defaultTargetPlatform == TargetPlatform.linux; //
   static bool get isNotLinux => !isLinux; //
   static bool get isLinuxNative => isLinux && isNotWeb; //
   static bool get isNotLinuxNative => !isLinuxNative; //
@@ -71,7 +71,7 @@ class PlatformChecker {
       isWeb && userAgent.toLowerCase().contains('linux'); //
   static bool get isNotLinuxOnWeb => !isLinuxOnWeb; //
 
-  static bool get isWindows => Platform.isWindows; //
+  static bool get isWindows => defaultTargetPlatform == TargetPlatform.windows; //
   static bool get isNotWindows => !isWindows; //
   static bool get isWindowsNative => isWindows && isNotWeb; //
   static bool get isNotWindowsNative => !isWindowsNative; //
@@ -79,7 +79,7 @@ class PlatformChecker {
       isWeb && userAgent.toLowerCase().contains('windows'); //
   static bool get isNotWindowsOnWeb => !isWindowsOnWeb; //
 
-  static bool get isMacOs => Platform.isMacOS; //
+  static bool get isMacOs => defaultTargetPlatform == TargetPlatform.macOS; //
   static bool get isNotMacOs => !isMacOs; //
   static bool get isMacOsNative => isMacOs && isNotWeb; //
   static bool get isNotMacOsNative => !isMacOsNative; //
@@ -87,7 +87,7 @@ class PlatformChecker {
       isWeb && userAgent.toLowerCase().contains('macintosh'); //
   static bool get isNotMacOsOnWeb => !isMacOsOnWeb; //
 
-  static bool get isFuchsia => Platform.isFuchsia; //
+  static bool get isFuchsia => defaultTargetPlatform == TargetPlatform.fuchsia; //
   static bool get isNotFuchsia => !isFuchsia; //
   static bool get isFuchsiaNative => isFuchsia && isNotWeb; //
   static bool get isNotFuchsiaNative => !isFuchsiaNative; //
@@ -96,7 +96,7 @@ class PlatformChecker {
     final packageInfo = await PackageInfo.fromPlatform();
 
     // Check if the app is running on an Android device with a Chrome OS package
-    if (Platform.isAndroid &&
+    if (isAndroid &&
         packageInfo.packageName.startsWith('dev.flutter')) {
       final version = packageInfo.version;
       final versionComponents = version.split('.');
