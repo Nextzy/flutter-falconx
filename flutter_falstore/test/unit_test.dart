@@ -327,8 +327,8 @@ void main() {
           'key3': 'value3',
         };
 
-        expect(
-          () => customStorage.saveMultiple(data),
+        await expectLater(
+          customStorage.saveMultiple(data),
           throwsA(isA<StorageException>()),
         );
 
