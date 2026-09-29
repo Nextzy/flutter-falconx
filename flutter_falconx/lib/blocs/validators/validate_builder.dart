@@ -30,16 +30,14 @@ abstract class ValidatorCubit<DATA> extends Cubit<ValidateState<DATA?>> {
     emit(const ValidateState(data: null));
   }
 
-  void emitErrorMessage<T>(
+  void emitErrorMessage(
     String? userMessage, {
     FeedbackLevel level = FeedbackLevel.medium,
-    T? data,
   }) {
     emit(
       ValidateState<DATA>(
         failure: Failure(
           message: userMessage,
-          data: data,
           level: level,
         ),
       ),

@@ -14,9 +14,7 @@ extension FalconFutureExtensions<T> on Future<T> {
           }
           return Left(
             handleError?.call(exception, stackTrace) ??
-                Failure.fromException(
-                  tmpException.toException(stackTrace: stackTrace),
-                ),
+                tmpException.toException(stackTrace: stackTrace).toFailure(),
           );
         },
       );
