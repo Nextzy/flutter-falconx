@@ -11,6 +11,16 @@ Uint8List _redPng({int width = 200, int height = 200}) {
   return img.encodePng(image);
 }
 
+// The EXIF 'Software' tag, 0x0131 (see package:image's exif_tag.dart).
+const _softwareExifTag = 0x0131;
+
+Uint8List _redJpegWithExifTag({int width = 200, int height = 200}) {
+  final image = img.Image(width: width, height: height);
+  img.fill(image, color: img.ColorRgb8(255, 0, 0));
+  image.exif.imageIfd['Software'] = 'flutter_faltool test';
+  return img.encodeJpg(image, quality: 95);
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final engine = DartImageCompressEngine();
@@ -67,6 +77,26 @@ void main() {
       ),
       throwsA(isA<UnsupportedError>()),
     );
+  });
+
+  test('keepExif false strips EXIF, keepExif true preserves it', () async {
+    final source = _redJpegWithExifTag();
+    expect(img.decodeJpg(source)!.exif.hasTag(_softwareExifTag), isTrue);
+
+    final stripped = await engine.compress(
+      bytes: source,
+      config: const ImageCompressConfig(minWidth: 0, minHeight: 0, quality: 90),
+      format: CompressFormat.jpeg,
+    );
+    expect(img.decodeJpg(stripped)!.exif.hasTag(_softwareExifTag), isFalse);
+
+    final kept = await engine.compress(
+      bytes: source,
+      config: const ImageCompressConfig(minWidth: 0, minHeight: 0, quality: 90),
+      format: CompressFormat.jpeg,
+      keepExif: true,
+    );
+    expect(img.decodeJpg(kept)!.exif.hasTag(_softwareExifTag), isTrue);
   });
 
   test('throws ImageCompressException on undecodable bytes', () async {
