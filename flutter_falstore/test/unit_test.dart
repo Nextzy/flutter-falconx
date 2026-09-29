@@ -3,21 +3,21 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Mock implementation of FlutterSecureStorage for testing.
-class MockFlutterSecureStorage implements FlutterSecureStorage {
+class MockFlutterSecureStorage extends Fake implements FlutterSecureStorage {
   final Map<String, String> _storage = {};
   final bool _shouldThrow;
-  
+
   MockFlutterSecureStorage({bool shouldThrow = false}) : _shouldThrow = shouldThrow;
 
   @override
   Future<void> write({
     required String key,
     required String? value,
-    IOSOptions? iOptions,
+    AppleOptions? iOptions,
     AndroidOptions? aOptions,
     LinuxOptions? lOptions,
     WebOptions? webOptions,
-    MacOsOptions? mOptions,
+    AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async {
     if (_shouldThrow) {
@@ -31,11 +31,11 @@ class MockFlutterSecureStorage implements FlutterSecureStorage {
   @override
   Future<String?> read({
     required String key,
-    IOSOptions? iOptions,
+    AppleOptions? iOptions,
     AndroidOptions? aOptions,
     LinuxOptions? lOptions,
     WebOptions? webOptions,
-    MacOsOptions? mOptions,
+    AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async {
     if (_shouldThrow) {
@@ -47,11 +47,11 @@ class MockFlutterSecureStorage implements FlutterSecureStorage {
   @override
   Future<void> delete({
     required String key,
-    IOSOptions? iOptions,
+    AppleOptions? iOptions,
     AndroidOptions? aOptions,
     LinuxOptions? lOptions,
     WebOptions? webOptions,
-    MacOsOptions? mOptions,
+    AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async {
     if (_shouldThrow) {
@@ -62,11 +62,11 @@ class MockFlutterSecureStorage implements FlutterSecureStorage {
 
   @override
   Future<Map<String, String>> readAll({
-    IOSOptions? iOptions,
+    AppleOptions? iOptions,
     AndroidOptions? aOptions,
     LinuxOptions? lOptions,
     WebOptions? webOptions,
-    MacOsOptions? mOptions,
+    AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async {
     if (_shouldThrow) {
@@ -77,11 +77,11 @@ class MockFlutterSecureStorage implements FlutterSecureStorage {
 
   @override
   Future<void> deleteAll({
-    IOSOptions? iOptions,
+    AppleOptions? iOptions,
     AndroidOptions? aOptions,
     LinuxOptions? lOptions,
     WebOptions? webOptions,
-    MacOsOptions? mOptions,
+    AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async {
     if (_shouldThrow) {
@@ -93,11 +93,11 @@ class MockFlutterSecureStorage implements FlutterSecureStorage {
   @override
   Future<bool> containsKey({
     required String key,
-    IOSOptions? iOptions,
+    AppleOptions? iOptions,
     AndroidOptions? aOptions,
     LinuxOptions? lOptions,
     WebOptions? webOptions,
-    MacOsOptions? mOptions,
+    AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async {
     if (_shouldThrow) {
@@ -107,54 +107,15 @@ class MockFlutterSecureStorage implements FlutterSecureStorage {
   }
 
   @override
-  IOSOptions get iOptions => const IOSOptions();
-
-  @override
-  AndroidOptions get aOptions => const AndroidOptions();
-
-  @override
-  LinuxOptions get lOptions => const LinuxOptions();
-
-  @override
-  MacOsOptions get mOptions => const MacOsOptions();
-
-  @override
-  WindowsOptions get wOptions => const WindowsOptions();
-
-  @override
-  WebOptions get webOptions => const WebOptions();
-
-  @override
-  Future<bool?> isCupertinoProtectedDataAvailable() async => true;
-
-  @override
-  Stream<bool>? get onCupertinoProtectedDataAvailabilityChanged => null;
-
-  @override
-  void registerListener({
-    required String key,
-    required void Function(String?) listener,
-  }) {
-    // No-op for testing
-  }
-
-  @override
-  void unregisterListener({
-    required String key,
-    required void Function(String?) listener,
-  }) {
-    // No-op for testing
-  }
-
-  @override
-  void unregisterAllListenersForKey({required String key}) {
-    // No-op for testing
-  }
-
-  @override
-  void unregisterAllListeners() {
-    // No-op for testing
-  }
+  Future<SecureStorageUpgradeStatus> checkUpgradeStatus({
+    AppleOptions? iOptions,
+    AndroidOptions? aOptions,
+    LinuxOptions? lOptions,
+    WebOptions? webOptions,
+    AppleOptions? mOptions,
+    WindowsOptions? wOptions,
+  }) async =>
+      SecureStorageUpgradeStatus.unsupported;
 }
 
 /// Mock that fails on the second write operation for testing rollback.
@@ -165,11 +126,11 @@ class _FailOnSecondWriteMockStorage extends MockFlutterSecureStorage {
   Future<void> write({
     required String key,
     required String? value,
-    IOSOptions? iOptions,
+    AppleOptions? iOptions,
     AndroidOptions? aOptions,
     LinuxOptions? lOptions,
     WebOptions? webOptions,
-    MacOsOptions? mOptions,
+    AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async {
     _writeCount++;
@@ -296,7 +257,7 @@ void main() {
 
       test('should throw when saving non-JSON-encodable object', () async {
         final nonEncodable = Object();
-        
+
         expect(
           () => secureStorage.saveJson('key', data: nonEncodable),
           throwsA(isA<StorageException>()),
@@ -396,7 +357,7 @@ void main() {
         await secureStorage.save('existing', data: 'value');
 
         final loaded = await secureStorage.loadMultiple(['existing', 'non_existent']);
-        
+
         expect(loaded.length, equals(1));
         expect(loaded['existing'], equals('value'));
         expect(loaded.containsKey('non_existent'), isFalse);
