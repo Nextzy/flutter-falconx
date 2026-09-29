@@ -2,7 +2,7 @@
 // ignore_for_file:  join_return_with_assignment
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
-import 'package:flutter_falmodel/lib.dart';
+import 'package:flutter_falmodel/src/src.dart';
 
 extension FalModelStreamResourceExtension<T extends WidgetDataState>
     on Stream<T> {

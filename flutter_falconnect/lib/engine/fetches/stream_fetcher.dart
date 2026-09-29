@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_falconnect/lib.dart';
+import 'package:flutter_falconnect/src/src.dart';
 
 /// A stream fetcher that handles Either&lt;Failure, T&gt; streams and manages
 /// their lifecycle with proper resource cleanup and error handling.

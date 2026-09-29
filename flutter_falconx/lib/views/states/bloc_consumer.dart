@@ -1,4 +1,4 @@
-import 'package:flutter_falconx/lib.dart';
+import 'package:flutter_falconx/src/src.dart';
 
 class NullableWidgetStateBlocConsumer<
 B extends StateStreamable<WidgetDataState<DATA?>>,

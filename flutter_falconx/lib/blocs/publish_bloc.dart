@@ -1,4 +1,4 @@
-import 'package:flutter_falconx/lib.dart';
+import 'package:flutter_falconx/src/src.dart';
 
 abstract class PublishBloc<EVENT, STATE> extends FalconBloc<EVENT, STATE> {
   PublishBloc(super.initialState);

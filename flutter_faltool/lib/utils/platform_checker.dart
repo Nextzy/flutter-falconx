@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_faltool/lib.dart';
+import 'package:flutter_faltool/src/src.dart';
 import 'package:flutter_faltool/utils/platform_checker_web.dart'
     if (dart.library.io) 'platform_checker_stub.dart' as web_impl;
 

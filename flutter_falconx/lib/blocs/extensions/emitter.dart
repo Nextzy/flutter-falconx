@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_falconx/lib.dart';
+import 'package:flutter_falconx/src/src.dart';
 
 // extension WidgetDataStateEmitterExtensions<T>
 // on Emitter<WidgetDataState<T?>> {

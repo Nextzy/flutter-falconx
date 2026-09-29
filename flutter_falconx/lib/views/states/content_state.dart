@@ -1,4 +1,4 @@
-import 'package:flutter_falconx/lib.dart';
+import 'package:flutter_falconx/src/src.dart';
 
 class ContentState<T> extends Cubit<WidgetDataState<T>> {
   ContentState.initial(T data) : super(WidgetDataState.initial(data));

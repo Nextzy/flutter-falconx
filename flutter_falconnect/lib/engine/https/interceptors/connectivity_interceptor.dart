@@ -1,4 +1,4 @@
-import 'package:flutter_falconnect/lib.dart';
+import 'package:flutter_falconnect/src/src.dart';
 
 class ConnectivityInterceptor extends Interceptor {
   ConnectivityInterceptor({Connectivity? connectivity})

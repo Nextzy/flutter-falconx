@@ -1,4 +1,4 @@
-import 'package:flutter_falconnect/lib.dart';
+import 'package:flutter_falconnect/src/src.dart';
 
 /// Manages a collection of [EitherStreamFetcher] instances with automatic
 /// cleanup, debouncing, and type-safe operations.

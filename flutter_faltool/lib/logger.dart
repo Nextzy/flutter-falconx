@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_faltool/lib.dart';
+import 'package:flutter_faltool/src/src.dart';
 import 'package:flutter/foundation.dart';
 
 /// A comprehensive logging utility for Falcon applications.

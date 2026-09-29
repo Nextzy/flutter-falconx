@@ -1,4 +1,4 @@
-import 'package:flutter_falconx/lib.dart';
+import 'package:flutter_falconx/src/src.dart';
 
 /// [Android State]
 /// - onCreate

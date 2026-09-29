@@ -1,4 +1,4 @@
-import 'package:flutter_falmodel/lib.dart';
+import 'package:flutter_falmodel/src/src.dart';
 import 'package:flutter/widgets.dart';
 
 extension FullWidgetStateExtension on WidgetState {

@@ -1,4 +1,4 @@
-import 'package:flutter_falstore/lib.dart';
+import 'package:flutter_falstore/src/src.dart';
 
 /// A secure storage solution for Flutter applications.
 ///
