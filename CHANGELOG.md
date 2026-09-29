@@ -12,7 +12,7 @@
 6. Packages in this repository depend on each other through git tags. An app lists any mix of `flutter_falconx`, `flutter_falconnect`, `flutter_falmodel`, `flutter_falstore`, `flutter_faltool` with the same `ref:` and `url: https://github.com/Nextzy/flutter-falconx`.
 7. `flutter_falconnect` no longer declares `dio`, `retrofit`, `web_socket_channel`, `dio_cache_interceptor`, or `freezed_annotation` directly; they still arrive through `dart_falconnect` and `dart_faltool`, so app code is unchanged.
 8. `ValidatorCubit.emitErrorMessage` no longer takes a `data` parameter or a `<T>` type argument (`dart_falmodel` 2.3.1's `Failure` has no `data`).
-9. `flutter_falconx` no longer re-exports `flutter_falconnect`'s `RefreshCallback` or intl's `TextDirection` from its `flutter_falconnect`/`flutter_falmodel`/`flutter_falstore`/`flutter_faltool` exports; import them directly.
+9. `flutter_falconx` no longer exports `dart_falconnect`'s `RefreshCallback` (hidden on its `flutter_falconnect` export) or intl's `TextDirection` (hidden on its `flutter_falconnect`, `flutter_falmodel`, `flutter_falstore`, and `flutter_faltool` exports); import them directly if needed.
 10. `flutter_falmodel` no longer re-exports `dio`.
 
 ### Deprecated
