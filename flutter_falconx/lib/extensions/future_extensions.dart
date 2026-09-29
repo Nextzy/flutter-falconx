@@ -1,4 +1,4 @@
-import 'package:flutter_falconx/lib.dart';
+import 'package:flutter_falconx/src/src.dart';
 
 extension FalconFutureExtensions<T> on Future<T> {
   Future<Either<Failure, T>> toEitherFailure({

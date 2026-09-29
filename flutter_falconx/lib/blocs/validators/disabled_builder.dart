@@ -1,7 +1,7 @@
 // Ignore because is not necessary
 // ignore_for_file: deprecated_member_use_from_same_package
 
-import 'package:flutter_falconx/lib.dart';
+import 'package:flutter_falconx/src/src.dart';
 
 typedef DisabledWidgetBuilder =
     Widget Function(

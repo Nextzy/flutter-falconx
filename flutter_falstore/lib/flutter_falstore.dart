@@ -36,6 +36,9 @@
 /// - ✅ macOS (Keychain)
 /// - ✅ Windows (Windows Credential Store)
 /// - ✅ Web (IndexedDB with encryption)
-library falstore;
+library;
+
+export 'package:flutter_faltool/flutter_faltool.dart';
+export 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 export 'databases/databases.dart';

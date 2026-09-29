@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_falmodel/lib.dart';
+import 'package:flutter_falmodel/src/src.dart';
 
 /// An optimized version of WidgetDataState that reduces code duplication
 /// and improves performance using Dart 3 features.

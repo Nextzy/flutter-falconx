@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_faltool/lib.dart';
+import 'package:flutter_faltool/src/src.dart';
 
 class DeviceIdGenerator {
   static const String _deviceIdKey = 'device_id_key';

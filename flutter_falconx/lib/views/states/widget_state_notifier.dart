@@ -1,4 +1,4 @@
-import 'package:flutter_falconx/lib.dart';
+import 'package:flutter_falconx/src/src.dart';
 
 class FullWidgetStatesNotifier extends ValueNotifier<FullWidgetStates> {
   FullWidgetStatesNotifier([dynamic state])
