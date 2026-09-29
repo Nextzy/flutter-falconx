@@ -18,7 +18,6 @@ export 'package:flutter/material.dart'
 export 'package:flutter/services.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 export 'package:flutter_falconnect/flutter_falconnect.dart' hide Path;
-export 'package:flutter_falkit/flutter_falkit.dart' hide BaseResponse;
 export 'package:flutter_falmodel/flutter_falmodel.dart';
 export 'package:flutter_falstore/flutter_falstore.dart';
 export 'package:flutter_faltool/flutter_faltool.dart';

@@ -4,23 +4,26 @@ version: 1.0.0
 publish_to: none
 
 environment:
-  sdk: ">=3.9.0 <4.0.0"
+  sdk: ">=3.13.0"
 
 resolution: workspace
 
 dependencies:
   dart_falmodel:
-    path: /Users/nonthawit/Data/Github/FalconX/dart-falconx/dart_falmodel
+    git:
+      url: https://github.com/Nextzy/dart-falconx
+      ref: 2.3.1
+      path: dart_falmodel
   flutter:
     sdk: flutter
   flutter_faltool:
     path: ../flutter_faltool
 
   #PLATFORM: All
-  dio: ^5.9.0
+  dio: ^5.11.1
 
 dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.0.0
+  very_good_analysis: ^11.0.0

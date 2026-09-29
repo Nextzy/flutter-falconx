@@ -13,6 +13,7 @@ export 'package:flutter_udid/flutter_udid.dart';
 export 'extensions/extensions.dart';
 export 'flutter_faltool.dart';
 export 'logger.dart';
+export 'tools/tools.dart';
 export 'utils/utils.dart';
 
 
