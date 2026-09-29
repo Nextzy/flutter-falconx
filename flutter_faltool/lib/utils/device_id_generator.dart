@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/lib.dart';
 
 class DeviceIdGenerator {
@@ -98,30 +99,17 @@ class DeviceIdGenerator {
         ]);
       } else {
         // Fallback for other platforms
-        final now = DateTime.now();
-        deviceData.writeAll([
-          now.millisecondsSinceEpoch.toString(),
-          now.timeZoneName,
-          Platform.operatingSystem,
-          Platform.localHostname,
-        ]);
+        deviceData.write(fallbackFingerprint());
       }
     } catch (e) {
       // Fallback if device info fails
-      final now = DateTime.now();
-      deviceData.writeAll([
-        now.millisecondsSinceEpoch.toString(),
-        now.timeZoneName,
-        Platform.operatingSystem,
-        Platform.localHostname,
-      ]);
+      deviceData.write(fallbackFingerprint());
     }
 
     // Add some common system properties for additional uniqueness
     deviceData.writeAll([
-      Platform.operatingSystem,
-      Platform.operatingSystemVersion,
-      Platform.localHostname,
+      defaultTargetPlatform.name,
+      kIsWeb ? 'web' : 'native',
       DateTime.now().timeZoneName,
     ]);
 
@@ -129,5 +117,18 @@ class DeviceIdGenerator {
     final bytes = utf8.encode(deviceData.toString());
     final hash = sha256.convert(bytes);
     return hash.toString();
+  }
+
+  /// Platform-derived salt used when no device_info branch applies or
+  /// device_info throws. Web-safe: no dart:io.
+  @visibleForTesting
+  static String fallbackFingerprint() {
+    final now = DateTime.now();
+    return [
+      now.millisecondsSinceEpoch.toString(),
+      now.timeZoneName,
+      defaultTargetPlatform.name,
+      kIsWeb ? 'web' : 'native',
+    ].join('|');
   }
 }
