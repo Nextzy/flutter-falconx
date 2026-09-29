@@ -63,6 +63,7 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
+    @Deprecated('Has no effect since 4.0.0; removed in 5.0.0.')
     int numberOfRetries = 5,
   }) async {
     final outputFormat = format ?? _detectFormat(file.name);
@@ -119,6 +120,7 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
+    @Deprecated('Has no effect since 4.0.0; removed in 5.0.0.')
     int numberOfRetries = 5,
   }) async {
     if (kIsWeb) {
@@ -147,6 +149,7 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
+    @Deprecated('Has no effect since 4.0.0; removed in 5.0.0.')
     int numberOfRetries = 5,
     int concurrency = 3,
     void Function(int completed, int total)? onProgress,
@@ -165,7 +168,6 @@ class ImageCompressTool {
               format: format,
               autoCorrectionAngle: autoCorrectionAngle,
               keepExif: keepExif,
-              numberOfRetries: numberOfRetries,
             );
             return MapEntry(file.path, compressed);
           } catch (e) {

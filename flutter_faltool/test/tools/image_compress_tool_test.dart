@@ -30,6 +30,12 @@ Uint8List _png() {
   return img.encodePng(image);
 }
 
+Uint8List _png30x30() {
+  final image = img.Image(width: 30, height: 30);
+  img.fill(image, color: img.ColorRgb8(0, 255, 0));
+  return img.encodePng(image);
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -80,6 +86,22 @@ void main() {
       expect(engine.lastFormat, CompressFormat.png);
       expect(engine.lastConfig, ImageCompressTool.profiles[ImageCompressProfile.thumbnail]);
     });
+
+    test(
+      'ImageCompressProfile.original does not resize, through the real Dart engine',
+      () async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+        final out = await ImageCompressTool.compressBytes(
+          bytes: _png30x30(),
+          profile: ImageCompressProfile.original,
+          format: CompressFormat.png,
+        );
+        final decoded = img.decodePng(out!)!;
+        expect(decoded.width, 30);
+        expect(decoded.height, 30);
+      },
+      skip: kIsWeb ? 'engine selection by TargetPlatform applies to native builds' : null,
+    );
   });
 
   group('compressFile', () {

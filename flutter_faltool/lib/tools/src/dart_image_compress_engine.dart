@@ -9,6 +9,12 @@ import 'package:image/image.dart' as img;
 /// Pure-Dart backend for platforms without a native plugin (Windows, Linux).
 /// Runs the decode/resize/encode in [compute] so the UI isolate stays free.
 /// Supports JPEG, PNG and WebP; HEIC throws [UnsupportedError].
+///
+/// `keepExif` is honored for JPEG and WebP output (the only two
+/// `package:image` 4.10.1 encoders that write EXIF): when `false`, the
+/// decoded image's EXIF is cleared before encoding. `package:image`'s PNG
+/// encoder never writes EXIF, so `keepExif` has no observable effect for
+/// [CompressFormat.png].
 class DartImageCompressEngine implements ImageCompressEngine {
   const DartImageCompressEngine();
 
@@ -35,6 +41,7 @@ class DartImageCompressEngine implements ImageCompressEngine {
         quality: config.quality,
         format: format,
         autoCorrectionAngle: autoCorrectionAngle,
+        keepExif: keepExif,
       ),
     );
   }
@@ -48,6 +55,7 @@ class _DartCompressRequest {
     required this.quality,
     required this.format,
     required this.autoCorrectionAngle,
+    required this.keepExif,
   });
 
   final Uint8List bytes;
@@ -56,6 +64,7 @@ class _DartCompressRequest {
   final int quality;
   final CompressFormat format;
   final bool autoCorrectionAngle;
+  final bool keepExif;
 }
 
 Uint8List _compressSync(_DartCompressRequest request) {
@@ -71,6 +80,9 @@ Uint8List _compressSync(_DartCompressRequest request) {
   var image = decoded;
   if (request.autoCorrectionAngle) {
     image = img.bakeOrientation(image);
+  }
+  if (!request.keepExif) {
+    image.exif.clear();
   }
 
   // Mirror flutter_image_compress: scale down so the result is never
