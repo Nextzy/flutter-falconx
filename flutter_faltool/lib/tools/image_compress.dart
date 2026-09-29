@@ -1,69 +1,63 @@
-import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_faltool/tools/src/dart_image_compress_engine.dart';
+import 'package:flutter_faltool/tools/src/directory_stub.dart'
+    if (dart.library.io) 'package:flutter_faltool/tools/src/directory_io.dart';
+import 'package:flutter_faltool/tools/src/image_compress_engine.dart';
+import 'package:flutter_faltool/tools/src/native_image_compress_engine.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-/// A comprehensive image compression tool using flutter_image_compress.
+export 'package:flutter_faltool/tools/src/dart_image_compress_engine.dart';
+export 'package:flutter_faltool/tools/src/image_compress_engine.dart';
+export 'package:flutter_faltool/tools/src/native_image_compress_engine.dart';
+
+/// Image compression that works on every Flutter platform.
 ///
-/// Supports multiple image formats (JPEG, PNG, WebP, HEIC) with configurable
-/// compression settings and platform-specific optimizations.
+/// Android, iOS, macOS and web use `flutter_image_compress`; Windows and
+/// Linux use `package:image` in a background isolate. Files are [XFile]s so
+/// the same API compiles on web.
 class ImageCompressTool {
-  /// Private constructor to prevent instantiation
   ImageCompressTool._();
 
-  /// Default compression quality (0-100)
   static const int defaultQuality = 85;
-
-  /// Default minimum width for compressed images
   static const int defaultMinWidth = 1920;
-
-  /// Default minimum height for compressed images
   static const int defaultMinHeight = 1080;
 
-  /// Compression configuration for different use cases
   static const Map<ImageCompressProfile, ImageCompressConfig> profiles = {
-    ImageCompressProfile.thumbnail: ImageCompressConfig(
-      minWidth: 150,
-      minHeight: 150,
-      quality: 70,
-    ),
-    ImageCompressProfile.preview: ImageCompressConfig(
-      minWidth: 800,
-      minHeight: 600,
-      quality: 80,
-    ),
-    ImageCompressProfile.standard: ImageCompressConfig(
-      minWidth: 1920,
-      minHeight: 1080,
-      quality: 85,
-    ),
-    ImageCompressProfile.high: ImageCompressConfig(
-      minWidth: 2560,
-      minHeight: 1440,
-      quality: 90,
-    ),
-    ImageCompressProfile.original: ImageCompressConfig(
-      minWidth: 0,
-      minHeight: 0,
-      quality: 95,
-    ),
+    ImageCompressProfile.thumbnail: ImageCompressConfig(minWidth: 150, minHeight: 150, quality: 70),
+    ImageCompressProfile.preview: ImageCompressConfig(minWidth: 800, minHeight: 600, quality: 80),
+    ImageCompressProfile.standard: ImageCompressConfig(minWidth: 1920, minHeight: 1080, quality: 85),
+    ImageCompressProfile.high: ImageCompressConfig(minWidth: 2560, minHeight: 1440, quality: 90),
+    ImageCompressProfile.original: ImageCompressConfig(minWidth: 0, minHeight: 0, quality: 95),
   };
 
-  /// Compresses an image file with the specified configuration.
-  ///
-  /// Returns the compressed file or null if compression fails.
-  ///
-  /// Example:
-  /// ```dart
-  /// final compressed = await ImageCompressTool.compressFile(
-  ///   file: imageFile,
-  ///   profile: ImageCompressProfile.standard,
-  /// );
-  /// ```
-  static Future<File?> compressFile({
-    required File file,
+  /// Test seam: when set, every call uses this engine.
+  @visibleForTesting
+  static ImageCompressEngine? debugEngineOverride;
+
+  /// The engine for the current platform.
+  static ImageCompressEngine get engine {
+    final override = debugEngineOverride;
+    if (override != null) return override;
+    if (kIsWeb) return const NativeImageCompressEngine();
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return const NativeImageCompressEngine();
+      case TargetPlatform.windows:
+      case TargetPlatform.linux:
+      case TargetPlatform.fuchsia:
+        return const DartImageCompressEngine();
+    }
+  }
+
+  static Future<XFile?> compressFile({
+    required XFile file,
     ImageCompressProfile profile = ImageCompressProfile.standard,
     ImageCompressConfig? customConfig,
     CompressFormat? format,
@@ -71,42 +65,26 @@ class ImageCompressTool {
     bool keepExif = false,
     int numberOfRetries = 5,
   }) async {
-    try {
-      if (!await file.exists()) {
-        throw ImageCompressException('File does not exist: ${file.path}');
-      }
-
-      final config = customConfig ?? profiles[profile]!;
-      final outputFormat = format ?? _detectFormat(file.path);
-      final targetPath = await _generateTargetPath(file, outputFormat);
-
-      final result = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path,
-        targetPath,
-        minWidth: config.minWidth,
-        minHeight: config.minHeight,
-        quality: config.quality,
-        format: outputFormat,
-        autoCorrectionAngle: autoCorrectionAngle,
-        keepExif: keepExif,
-        numberOfRetries: numberOfRetries,
+    final outputFormat = format ?? _detectFormat(file.name);
+    final bytes = await _compressXFile(
+      file: file,
+      config: customConfig ?? profiles[profile]!,
+      format: outputFormat,
+      autoCorrectionAngle: autoCorrectionAngle,
+      keepExif: keepExif,
+    );
+    if (kIsWeb) {
+      return XFile.fromData(
+        bytes,
+        name: _outputName(file.name, outputFormat),
+        mimeType: _mimeType(outputFormat),
       );
-
-      if (result == null) {
-        throw ImageCompressException('Compression failed for ${file.path}');
-      }
-
-      return File(result.path);
-    } catch (e) {
-      debugPrint('Image compression error: $e');
-      if (e is ImageCompressException) rethrow;
-      throw ImageCompressException('Failed to compress image: $e');
     }
+    final targetPath = await _generateTargetPath(file.name, outputFormat);
+    await XFile.fromData(bytes).saveTo(targetPath);
+    return XFile(targetPath, mimeType: _mimeType(outputFormat));
   }
 
-  /// Compresses image data from memory.
-  ///
-  /// Returns the compressed bytes or null if compression fails.
   static Future<Uint8List?> compressBytes({
     required Uint8List bytes,
     ImageCompressProfile profile = ImageCompressProfile.standard,
@@ -116,28 +94,25 @@ class ImageCompressTool {
     bool keepExif = false,
   }) async {
     try {
-      final config = customConfig ?? profiles[profile]!;
-
-      final result = await FlutterImageCompress.compressWithList(
-        bytes,
-        minWidth: config.minWidth,
-        minHeight: config.minHeight,
-        quality: config.quality,
+      return await engine.compress(
+        bytes: bytes,
+        config: customConfig ?? profiles[profile]!,
         format: format,
         autoCorrectionAngle: autoCorrectionAngle,
         keepExif: keepExif,
       );
-
-      return result;
+    } on UnsupportedError {
+      rethrow;
+    } on ImageCompressException {
+      rethrow;
     } catch (e) {
       debugPrint('Image compression error: $e');
       throw ImageCompressException('Failed to compress image bytes: $e');
     }
   }
 
-  /// Compresses an image file and saves it to a specific path.
-  static Future<File?> compressAndSaveFile({
-    required File file,
+  static Future<XFile?> compressAndSaveFile({
+    required XFile file,
     required String targetPath,
     ImageCompressProfile profile = ImageCompressProfile.standard,
     ImageCompressConfig? customConfig,
@@ -146,52 +121,27 @@ class ImageCompressTool {
     bool keepExif = false,
     int numberOfRetries = 5,
   }) async {
-    try {
-      if (!await file.exists()) {
-        throw ImageCompressException('File does not exist: ${file.path}');
-      }
-
-      // Ensure target directory exists
-      final targetDir = Directory(path.dirname(targetPath));
-      if (!await targetDir.exists()) {
-        await targetDir.create(recursive: true);
-      }
-
-      final config = customConfig ?? profiles[profile]!;
-      final outputFormat = format ?? _detectFormat(file.path);
-
-      final result = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path,
-        targetPath,
-        minWidth: config.minWidth,
-        minHeight: config.minHeight,
-        quality: config.quality,
-        format: outputFormat,
-        autoCorrectionAngle: autoCorrectionAngle,
-        keepExif: keepExif,
-        numberOfRetries: numberOfRetries,
+    if (kIsWeb) {
+      throw UnsupportedError(
+        'ImageCompressTool.compressAndSaveFile: web has no file system; '
+        'use compressFile and keep the returned XFile.',
       );
-
-      if (result == null) {
-        throw ImageCompressException('Compression failed for ${file.path}');
-      }
-
-      return File(result.path);
-    } catch (e) {
-      debugPrint('Image compression error: $e');
-      if (e is ImageCompressException) rethrow;
-      throw ImageCompressException('Failed to compress and save image: $e');
     }
+    final outputFormat = format ?? _detectFormat(file.name);
+    final bytes = await _compressXFile(
+      file: file,
+      config: customConfig ?? profiles[profile]!,
+      format: outputFormat,
+      autoCorrectionAngle: autoCorrectionAngle,
+      keepExif: keepExif,
+    );
+    await ensureDirectoryExists(p.dirname(targetPath));
+    await XFile.fromData(bytes).saveTo(targetPath);
+    return XFile(targetPath, mimeType: _mimeType(outputFormat));
   }
 
-  /// Batch compresses multiple image files with parallel processing.
-  ///
-  /// Returns a map of original file paths to compressed files.
-  /// Failed compressions will have null values in the map.
-  ///
-  /// [concurrency] controls how many files are processed simultaneously.
-  static Future<Map<String, File?>> batchCompressFiles({
-    required List<File> files,
+  static Future<Map<String, XFile?>> batchCompressFiles({
+    required List<XFile> files,
     ImageCompressProfile profile = ImageCompressProfile.standard,
     ImageCompressConfig? customConfig,
     CompressFormat? format,
@@ -201,103 +151,104 @@ class ImageCompressTool {
     int concurrency = 3,
     void Function(int completed, int total)? onProgress,
   }) async {
-    final results = <String, File?>{};
+    final results = <String, XFile?>{};
     var completed = 0;
-
-    // Process files in batches for better performance
     for (var i = 0; i < files.length; i += concurrency) {
       final batch = files.skip(i).take(concurrency);
-
-      final futures = batch.map((file) async {
-        try {
-          final compressed = await compressFile(
-            file: file,
-            profile: profile,
-            customConfig: customConfig,
-            format: format,
-            autoCorrectionAngle: autoCorrectionAngle,
-            keepExif: keepExif,
-            numberOfRetries: numberOfRetries,
-          );
-          return MapEntry(file.path, compressed);
-        } catch (e) {
-          debugPrint('Failed to compress ${file.path}: $e');
-          return MapEntry(file.path, null);
-        }
-      });
-
-      final batchResults = await Future.wait(futures);
-
+      final batchResults = await Future.wait(
+        batch.map((file) async {
+          try {
+            final compressed = await compressFile(
+              file: file,
+              profile: profile,
+              customConfig: customConfig,
+              format: format,
+              autoCorrectionAngle: autoCorrectionAngle,
+              keepExif: keepExif,
+              numberOfRetries: numberOfRetries,
+            );
+            return MapEntry(file.path, compressed);
+          } catch (e) {
+            debugPrint('Failed to compress ${file.path}: $e');
+            return MapEntry<String, XFile?>(file.path, null);
+          }
+        }),
+      );
       for (final result in batchResults) {
         results[result.key] = result.value;
         completed++;
         onProgress?.call(completed, files.length);
       }
     }
-
     return results;
   }
 
-  /// Gets the size reduction information for a compressed file.
   static Future<CompressionResult> getCompressionResult({
-    required File originalFile,
-    required File compressedFile,
+    required XFile originalFile,
+    required XFile compressedFile,
   }) async {
     final originalSize = await originalFile.length();
     final compressedSize = await compressedFile.length();
     final reduction = originalSize - compressedSize;
-    final reductionPercentage = (reduction / originalSize) * 100;
-
     return CompressionResult(
       originalSize: originalSize,
       compressedSize: compressedSize,
       sizeReduction: reduction,
-      reductionPercentage: reductionPercentage,
+      reductionPercentage: originalSize == 0 ? 0 : (reduction / originalSize) * 100,
     );
   }
 
-  /// Estimates the compressed file size without actually compressing.
-  ///
-  /// This is a rough estimate based on the quality setting.
   static Future<int> estimateCompressedSize({
-    required File file,
+    required XFile file,
     ImageCompressProfile profile = ImageCompressProfile.standard,
     ImageCompressConfig? customConfig,
   }) async {
     final originalSize = await file.length();
     final config = customConfig ?? profiles[profile]!;
-
-    // Rough estimation based on quality
-    // This is a simplified calculation and actual results may vary
-    final compressionRatio = config.quality / 100.0;
-    // 0.7 is an average factor for compression
-    return (originalSize * compressionRatio * 0.7).round();
+    return (originalSize * (config.quality / 100.0) * 0.7).round();
   }
 
-  /// Generates a unique target path for the compressed file.
-  static Future<String> _generateTargetPath(
-    File file,
-    CompressFormat format,
-  ) async {
-    final tempDir = await getTemporaryDirectory();
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final basename = path.basenameWithoutExtension(file.path);
-    final extension = _getExtensionForFormat(format);
+  // ---- internals ----
 
-    return path.join(
-      tempDir.path,
-      'compressed_${basename}_$timestamp$extension',
+  static Future<Uint8List> _compressXFile({
+    required XFile file,
+    required ImageCompressConfig config,
+    required CompressFormat format,
+    required bool autoCorrectionAngle,
+    required bool keepExif,
+  }) async {
+    final Uint8List input;
+    try {
+      input = await file.readAsBytes();
+    } catch (e) {
+      throw ImageCompressException('Cannot read ${file.path}: $e');
+    }
+    final output = await compressBytes(
+      bytes: input,
+      customConfig: config,
+      format: format,
+      autoCorrectionAngle: autoCorrectionAngle,
+      keepExif: keepExif,
     );
+    if (output == null) {
+      throw ImageCompressException('Compression failed for ${file.path}');
+    }
+    return output;
   }
 
-  /// Detects the image format based on file extension.
-  static CompressFormat _detectFormat(String filePath) {
-    final extension = path.extension(filePath).toLowerCase();
+  static Future<String> _generateTargetPath(String sourceName, CompressFormat format) async {
+    final tempDir = await getTemporaryDirectory();
+    return p.join(tempDir.path, _outputName(sourceName, format));
+  }
 
-    switch (extension) {
-      case '.jpg':
-      case '.jpeg':
-        return CompressFormat.jpeg;
+  static String _outputName(String sourceName, CompressFormat format) {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final basename = p.basenameWithoutExtension(sourceName);
+    return 'compressed_${basename}_$timestamp${_getExtensionForFormat(format)}';
+  }
+
+  static CompressFormat _detectFormat(String fileName) {
+    switch (p.extension(fileName).toLowerCase()) {
       case '.png':
         return CompressFormat.png;
       case '.webp':
@@ -305,12 +256,13 @@ class ImageCompressTool {
       case '.heic':
       case '.heif':
         return CompressFormat.heic;
+      case '.jpg':
+      case '.jpeg':
       default:
-        return CompressFormat.jpeg; // Default to JPEG
+        return CompressFormat.jpeg;
     }
   }
 
-  /// Gets the file extension for a compress format.
   static String _getExtensionForFormat(CompressFormat format) {
     switch (format) {
       case CompressFormat.jpeg:
@@ -321,6 +273,19 @@ class ImageCompressTool {
         return '.webp';
       case CompressFormat.heic:
         return '.heic';
+    }
+  }
+
+  static String _mimeType(CompressFormat format) {
+    switch (format) {
+      case CompressFormat.jpeg:
+        return 'image/jpeg';
+      case CompressFormat.png:
+        return 'image/png';
+      case CompressFormat.webp:
+        return 'image/webp';
+      case CompressFormat.heic:
+        return 'image/heic';
     }
   }
 }
