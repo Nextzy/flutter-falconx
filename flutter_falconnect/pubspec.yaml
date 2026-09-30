@@ -13,7 +13,7 @@ dependencies:
   dart_falconnect:
     git:
       url: https://github.com/Nextzy/dart-falconx
-      ref: 2.3.1
+      ref: 2.4.0
       path: dart_falconnect
   flutter:
     sdk: flutter
