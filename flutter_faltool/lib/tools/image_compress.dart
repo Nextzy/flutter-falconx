@@ -63,7 +63,7 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
-    @Deprecated('Has no effect since 4.0.0; removed in 5.0.0.')
+    /// Android only: retries after OutOfMemoryError with a doubled sample size.
     int numberOfRetries = 5,
   }) async {
     final outputFormat = format ?? _detectFormat(file.name);
@@ -73,6 +73,7 @@ class ImageCompressTool {
       format: outputFormat,
       autoCorrectionAngle: autoCorrectionAngle,
       keepExif: keepExif,
+      numberOfRetries: numberOfRetries,
     );
     if (kIsWeb) {
       return XFile.fromData(
@@ -120,7 +121,7 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
-    @Deprecated('Has no effect since 4.0.0; removed in 5.0.0.')
+    /// Android only: retries after OutOfMemoryError with a doubled sample size.
     int numberOfRetries = 5,
   }) async {
     if (kIsWeb) {
@@ -136,6 +137,7 @@ class ImageCompressTool {
       format: outputFormat,
       autoCorrectionAngle: autoCorrectionAngle,
       keepExif: keepExif,
+      numberOfRetries: numberOfRetries,
     );
     await ensureDirectoryExists(p.dirname(targetPath));
     await XFile.fromData(bytes).saveTo(targetPath);
@@ -149,7 +151,7 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
-    @Deprecated('Has no effect since 4.0.0; removed in 5.0.0.')
+    /// Android only: retries after OutOfMemoryError with a doubled sample size.
     int numberOfRetries = 5,
     int concurrency = 3,
     void Function(int completed, int total)? onProgress,
@@ -168,6 +170,7 @@ class ImageCompressTool {
               format: format,
               autoCorrectionAngle: autoCorrectionAngle,
               keepExif: keepExif,
+              numberOfRetries: numberOfRetries,
             );
             return MapEntry(file.path, compressed);
           } catch (e) {
@@ -212,13 +215,40 @@ class ImageCompressTool {
 
   // ---- internals ----
 
+  /// Native platforms compress a file on disk by path, so the plugin can
+  /// retry after an Android OutOfMemoryError. Everything else reads bytes:
+  /// web, the Dart engine, a [debugEngineOverride] that is not a
+  /// [NativeImageCompressEngine], and an [XFile] with no path.
   static Future<Uint8List> _compressXFile({
     required XFile file,
     required ImageCompressConfig config,
     required CompressFormat format,
     required bool autoCorrectionAngle,
     required bool keepExif,
+    required int numberOfRetries,
   }) async {
+    final selected = engine;
+    if (!kIsWeb &&
+        selected is NativeImageCompressEngine &&
+        file.path.isNotEmpty) {
+      try {
+        return await selected.compressPath(
+          path: file.path,
+          config: config,
+          format: format,
+          autoCorrectionAngle: autoCorrectionAngle,
+          keepExif: keepExif,
+          numberOfRetries: numberOfRetries,
+        );
+      } on UnsupportedError {
+        rethrow;
+      } on ImageCompressException {
+        rethrow;
+      } catch (e) {
+        debugPrint('Image compression error: $e');
+        throw ImageCompressException('Failed to compress ${file.path}: $e');
+      }
+    }
     final Uint8List input;
     try {
       input = await file.readAsBytes();
