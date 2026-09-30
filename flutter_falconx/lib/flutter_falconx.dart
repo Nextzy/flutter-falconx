@@ -18,9 +18,9 @@ export 'package:flutter/material.dart'
 export 'package:flutter/services.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 export 'package:flutter_falconnect/flutter_falconnect.dart'
-    hide Path, RefreshCallback, TextDirection;
-export 'package:flutter_falmodel/flutter_falmodel.dart' hide TextDirection;
-export 'package:flutter_falstore/flutter_falstore.dart' hide TextDirection;
+    hide Path, RefreshCallback;
+export 'package:flutter_falmodel/flutter_falmodel.dart';
+export 'package:flutter_falstore/flutter_falstore.dart';
 export 'package:flutter_faltool/flutter_faltool.dart' hide TextDirection;
 export 'package:flutter_local_notifications/flutter_local_notifications.dart';
 export 'package:provider/provider.dart';

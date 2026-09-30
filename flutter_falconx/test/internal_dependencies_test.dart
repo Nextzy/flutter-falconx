@@ -83,6 +83,46 @@ void main() {
         expect(barrel, isNot(contains('/src/src.dart')));
         expect(File('../$package/lib/src/src.dart').existsSync(), isTrue);
       });
+
+      final isUmbrella = package == 'flutter_falconx';
+      final otherPackages = _packages.where((p) => p != package);
+
+      test(
+        'non-umbrella barrel does not re-export a sibling package',
+        () {
+          final barrel =
+              File('../$package/lib/$package.dart').readAsStringSync();
+          for (final other in otherPackages) {
+            expect(
+              barrel,
+              isNot(contains("export 'package:$other/$other.dart'")),
+              reason: '$package must not re-export $other from its barrel; '
+                  'reach it through lib/src/src.dart instead',
+            );
+          }
+        },
+        skip: isUmbrella
+            ? 'the umbrella barrel exports all four siblings by design'
+            : null,
+      );
+
+      test(
+        'umbrella barrel exports all four sibling packages',
+        () {
+          final barrel =
+              File('../$package/lib/$package.dart').readAsStringSync();
+          for (final other in otherPackages) {
+            expect(
+              barrel,
+              contains("export 'package:$other/$other.dart'"),
+              reason: 'flutter_falconx must export $other',
+            );
+          }
+        },
+        skip: isUmbrella
+            ? null
+            : 'only the umbrella barrel exports all siblings',
+      );
     });
   }
 }
