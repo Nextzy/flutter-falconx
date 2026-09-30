@@ -1,0 +1,16 @@
+name: export_check
+description: >-
+  Fails when a barrel exports a name that collides with a dart library or
+  Flutter and the allowlist does not record it.
+publish_to: none
+
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+
+dependencies:
+  analyzer: ^14.4.0
+  path: ^1.9.1
+
+dev_dependencies:
+  test: ^1.32.0
+  very_good_analysis: ^11.0.0

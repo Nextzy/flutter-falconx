@@ -28,7 +28,6 @@ These are direct or transitive dependencies of a `flutter_fal*` package but are 
 | Package | Why you might import it | Brought in transitively by |
 |---|---|---|
 | `retrofit` | `@Path`, `@Headers`, `@noToken` annotations (`flutter_falconx` hides Retrofit's `Path`) | dart_falconnect → flutter_falconnect |
-| `dart_falconnect` | `RefreshCallback` typedef (hidden by `flutter_falconx`'s `flutter_falconnect` export) | flutter_falconnect |
 | `flutter_image_compress` | `FlutterImageCompress` and the rest of the plugin API; `CompressFormat` alone is re-exported by `flutter_faltool` | flutter_faltool (only `CompressFormat` exported) |
 | `ansicolor` | Only used internally by `Log`/`printInfo`/`printError`/`printSuccess`; no public API needs it | flutter_faltool (never exported) |
 | `image` (`package:image`) | Only used internally by the Dart image-compress engine (Windows/Linux) | flutter_faltool (never exported) |

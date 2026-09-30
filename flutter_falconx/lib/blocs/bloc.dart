@@ -28,7 +28,8 @@ abstract class FalconWidgetDataStateBloc<EVENT, DATA>
   //       build: true,
   //     ));
   //
-  // void emitFail({DATA? data, Failure? feedback}) => _emit(WidgetDataState.fail(
+  // void emitFail({DATA? data, Failure? feedback}) =>
+  //     _emit(WidgetDataState.fail(
   //       data ?? state.data,
   //       feedback: feedback,
   //       build: true,
@@ -126,7 +127,8 @@ abstract class FalconNullableWidgetDataStateBloc<EVENT, DATA>
   //       build: true,
   //     ));
   //
-  // void emitFail({DATA? data, Failure? feedback}) => _emit(WidgetDataState.fail(
+  // void emitFail({DATA? data, Failure? feedback}) =>
+  //     _emit(WidgetDataState.fail(
   //       data ?? state.data,
   //       feedback: feedback,
   //       build: true,
