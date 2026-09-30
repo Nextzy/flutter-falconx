@@ -3,7 +3,7 @@ export 'dart:convert';
 export 'dart:typed_data';
 
 export 'package:cross_file/cross_file.dart';
-export 'package:dart_faltool/dart_faltool.dart';
+export 'package:dart_faltool/dart_faltool.dart' hide IterableFilter;
 export 'package:device_info_plus/device_info_plus.dart';
 export 'package:flutter_udid/flutter_udid.dart';
 export 'package:leak_tracker/leak_tracker.dart';

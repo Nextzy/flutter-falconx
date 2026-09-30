@@ -2,7 +2,7 @@ import 'package:flutter_falconx/src/src.dart';
 
 class NullableContentState<T> extends Cubit<WidgetDataState<T?>> {
   new initial({T? data, UserFeedback? feedback})
-      : super(WidgetDataState.initial(data, feedback: feedback));
+    : super(WidgetDataState.initial(data, feedback: feedback));
 
   bool get isInitial => state.isInitial; //
   bool get isEmpty => state.isEmpty; //

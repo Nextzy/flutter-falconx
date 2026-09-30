@@ -1,6 +1,7 @@
 import 'package:flutter_faltool/src/src.dart';
 import 'package:flutter_faltool/utils/platform_checker_web.dart'
-    if (dart.library.io) 'platform_checker_stub.dart' as web_impl;
+    if (dart.library.io) 'platform_checker_stub.dart'
+    as web_impl;
 
 enum DevicePlatform { android, ios, windows, macOs, linux, web }
 
@@ -60,7 +61,7 @@ class PlatformChecker {
   static bool get isIosNative => isIos && isNotWeb; //
   static bool get isNotIosNative => !isIosNative; //
   static bool get isIosOnWeb => //
-  isWeb && userAgent.toLowerCase().contains('iphone'); //
+      isWeb && userAgent.toLowerCase().contains('iphone'); //
   static bool get isNotIosOnWeb => !isIosOnWeb; //
 
   static bool get isLinux => defaultTargetPlatform == TargetPlatform.linux; //
@@ -98,8 +99,7 @@ class PlatformChecker {
     final packageInfo = await PackageInfo.fromPlatform();
 
     // Check if the app is running on an Android device with a Chrome OS package
-    if (isAndroid &&
-        packageInfo.packageName.startsWith('dev.flutter')) {
+    if (isAndroid && packageInfo.packageName.startsWith('dev.flutter')) {
       final version = packageInfo.version;
       final versionComponents = version.split('.');
       final majorVersion = int.parse(versionComponents[0]);
@@ -123,8 +123,8 @@ class PlatformChecker {
 
   static bool get isInAppBrowser =>
       userAgent.contains('instagram') ||
-          userAgent.contains('fbav') ||
-          userAgent.contains('kakaotalk') ||
-          userAgent.contains('whatsapp') ||
-          userAgent.contains('line');
+      userAgent.contains('fbav') ||
+      userAgent.contains('kakaotalk') ||
+      userAgent.contains('whatsapp') ||
+      userAgent.contains('line');
 }

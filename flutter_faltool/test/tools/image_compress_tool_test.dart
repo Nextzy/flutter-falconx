@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/flutter_faltool.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -71,14 +70,10 @@ void main() {
       }
     });
 
-    test(
-      'web always uses the native engine',
-      () {
-        debugDefaultTargetPlatformOverride = TargetPlatform.windows;
-        expect(ImageCompressTool.engine, isA<NativeImageCompressEngine>());
-      },
-      skip: !kIsWeb ? 'web-only behaviour' : null,
-    );
+    test('web always uses the native engine', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      expect(ImageCompressTool.engine, isA<NativeImageCompressEngine>());
+    }, skip: !kIsWeb ? 'web-only behaviour' : null);
   });
 
   group('compressBytes', () {

@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/tools/src/dart_image_compress_engine.dart';
 import 'package:flutter_faltool/tools/src/directory_stub.dart'
@@ -83,10 +82,11 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
+
     /// Android only: retries after OutOfMemoryError with a doubled sample size.
     int numberOfRetries = 5,
   }) async {
-    final outputFormat = format ?? _detectFormat(file.name);
+    final outputFormat = format ?? _detectFormat(file);
     final bytes = await _compressXFile(
       file: file,
       config: customConfig ?? profiles[profile]!,
@@ -143,6 +143,7 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
+
     /// Android only: retries after OutOfMemoryError with a doubled sample size.
     int numberOfRetries = 5,
   }) async {
@@ -152,7 +153,7 @@ class ImageCompressTool {
         'use compressFile and keep the returned XFile.',
       );
     }
-    final outputFormat = format ?? _detectFormat(file.name);
+    final outputFormat = format ?? _detectFormat(file);
     final bytes = await _compressXFile(
       file: file,
       config: customConfig ?? profiles[profile]!,
@@ -166,6 +167,15 @@ class ImageCompressTool {
     return XFile(targetPath, mimeType: _mimeType(outputFormat));
   }
 
+  /// Compresses [files] concurrently, [concurrency] at a time, and returns
+  /// a map keyed by a unique identifier for each input.
+  ///
+  /// Key rule for the file at index `i`: `file.path` when non-empty,
+  /// otherwise `file.name` when non-empty, otherwise `'#$i'`. If that
+  /// candidate key was already produced for an earlier file in this call
+  /// (for example, two inputs share a path, or two byte-backed files both
+  /// have an empty path and name), the key becomes `'$key#$i'` instead so
+  /// no entry silently overwrites another.
   static Future<Map<String, XFile?>> batchCompressFiles({
     required List<XFile> files,
     ImageCompressProfile profile = ImageCompressProfile.standard,
@@ -173,17 +183,23 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
+
     /// Android only: retries after OutOfMemoryError with a doubled sample size.
     int numberOfRetries = 5,
     int concurrency = 3,
     void Function(int completed, int total)? onProgress,
   }) async {
+    final keys = _batchKeysFor(files);
     final results = <String, XFile?>{};
     var completed = 0;
     for (var i = 0; i < files.length; i += concurrency) {
-      final batch = files.skip(i).take(concurrency);
+      final batchIndexes = [
+        for (var j = i; j < files.length && j < i + concurrency; j++) j,
+      ];
       final batchResults = await Future.wait(
-        batch.map((file) async {
+        batchIndexes.map((index) async {
+          final file = files[index];
+          final key = keys[index];
           try {
             final compressed = await compressFile(
               file: file,
@@ -194,10 +210,10 @@ class ImageCompressTool {
               keepExif: keepExif,
               numberOfRetries: numberOfRetries,
             );
-            return MapEntry(file.path, compressed);
+            return MapEntry(key, compressed);
           } on Object catch (e) {
             debugPrint('Failed to compress ${file.path}: $e');
-            return MapEntry<String, XFile?>(file.path, null);
+            return MapEntry<String, XFile?>(key, null);
           }
         }),
       );
@@ -208,6 +224,24 @@ class ImageCompressTool {
       }
     }
     return results;
+  }
+
+  /// Computes [batchCompressFiles]' result keys, in input order, so a
+  /// collision against an earlier file's key is always detected regardless
+  /// of how the batch executes concurrently.
+  static List<String> _batchKeysFor(List<XFile> files) {
+    final used = <String>{};
+    final keys = <String>[];
+    for (var i = 0; i < files.length; i++) {
+      final file = files[i];
+      final candidate = file.path.isNotEmpty
+          ? file.path
+          : (file.name.isNotEmpty ? file.name : '#$i');
+      final key = used.contains(candidate) ? '$candidate#$i' : candidate;
+      used.add(key);
+      keys.add(key);
+    }
+    return keys;
   }
 
   static Future<CompressionResult> getCompressionResult({
@@ -221,8 +255,9 @@ class ImageCompressTool {
       originalSize: originalSize,
       compressedSize: compressedSize,
       sizeReduction: reduction,
-      reductionPercentage:
-          originalSize == 0 ? 0 : (reduction / originalSize) * 100,
+      reductionPercentage: originalSize == 0
+          ? 0
+          : (reduction / originalSize) * 100,
     );
   }
 
@@ -307,8 +342,15 @@ class ImageCompressTool {
     return 'compressed_${basename}_$timestamp${_getExtensionForFormat(format)}';
   }
 
-  static CompressFormat _detectFormat(String fileName) {
-    switch (p.extension(fileName).toLowerCase()) {
+  /// Detects the output format for [file].
+  ///
+  /// The extension of [XFile.name] wins when it is a known one (`.png`,
+  /// `.webp`, `.heic`/`.heif`, `.jpg`/`.jpeg`). When the extension is empty
+  /// or unrecognized, falls back to [XFile.mimeType] (`image/png`,
+  /// `image/webp`, `image/heic`/`image/heif`, `image/jpeg`/`image/jpg`,
+  /// case-insensitive). When neither yields a match, defaults to jpeg.
+  static CompressFormat _detectFormat(XFile file) {
+    switch (p.extension(file.name).toLowerCase()) {
       case '.png':
         return CompressFormat.png;
       case '.webp':
@@ -318,6 +360,23 @@ class ImageCompressTool {
         return CompressFormat.heic;
       case '.jpg':
       case '.jpeg':
+        return CompressFormat.jpeg;
+      default:
+        return _formatFromMimeType(file.mimeType);
+    }
+  }
+
+  static CompressFormat _formatFromMimeType(String? mimeType) {
+    switch (mimeType?.toLowerCase()) {
+      case 'image/png':
+        return CompressFormat.png;
+      case 'image/webp':
+        return CompressFormat.webp;
+      case 'image/heic':
+      case 'image/heif':
+        return CompressFormat.heic;
+      case 'image/jpeg':
+      case 'image/jpg':
       default:
         return CompressFormat.jpeg;
     }
@@ -386,11 +445,7 @@ class ImageCompressConfig {
   final int quality;
 
   /// Creates a copy with optional parameter overrides
-  ImageCompressConfig copyWith({
-    int? minWidth,
-    int? minHeight,
-    int? quality,
-  }) {
+  ImageCompressConfig copyWith({int? minWidth, int? minHeight, int? quality}) {
     return ImageCompressConfig(
       minWidth: minWidth ?? this.minWidth,
       minHeight: minHeight ?? this.minHeight,

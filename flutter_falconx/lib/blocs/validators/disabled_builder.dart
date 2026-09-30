@@ -2,11 +2,10 @@
 
 import 'package:flutter_falconx/src/src.dart';
 
-typedef DisabledWidgetBuilder =
-    Widget Function(
-      BuildContext context,
-      bool disabled,
-    );
+typedef DisabledWidgetBuilder = Widget Function(
+  BuildContext context,
+  bool disabled,
+);
 
 class DisabledCubit extends Cubit<bool> {
   new() : super(false);
@@ -19,11 +18,7 @@ class DisabledCubit extends Cubit<bool> {
 }
 
 class DisabledBuilder<B extends DisabledCubit, DATA> extends StatelessWidget {
-  const new({
-    super.key,
-    this.source,
-    required this.builder,
-  });
+  const new({super.key, this.source, required this.builder});
 
   final B? source;
   final DisabledWidgetBuilder builder;
