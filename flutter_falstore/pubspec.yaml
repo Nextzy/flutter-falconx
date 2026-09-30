@@ -1,6 +1,6 @@
 name: flutter_falstore
 description: A secure storage solution for Flutter applications with comprehensive error handling and batch operations.
-version: 4.0.1
+version: 4.1.0
 publish_to: none
 
 environment:
@@ -14,7 +14,7 @@ dependencies:
   flutter_faltool:
     git:
       url: https://github.com/Nextzy/flutter-falconx
-      ref: 4.0.1
+      ref: 4.1.0
       path: flutter_faltool
 
   # PLATFORM: All
