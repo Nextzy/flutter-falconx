@@ -4,8 +4,8 @@ class InternetConnectionBloc extends BlocBase<List<ConnectivityResult>> {
   new({
     required List<ConnectivityResult> initialResult,
     Connectivity? connectivity,
-  })  : _connectivity = connectivity ?? Connectivity(),
-        super(initialResult) {
+  }) : _connectivity = connectivity ?? Connectivity(),
+       super(initialResult) {
     _subscription = stream.listen(onConnectivityChanged);
   }
 

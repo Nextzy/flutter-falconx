@@ -1,4 +1,3 @@
-
 import 'package:flutter_falconnect/src/src.dart';
 
 /// A stream fetcher that handles Either&lt;Failure, T&gt; streams and manages
@@ -8,8 +7,8 @@ import 'package:flutter_falconnect/src/src.dart';
 /// proper subscription and controller cleanup.
 class EitherStreamFetcher<T> {
   new([StreamController<WidgetDataState<T?>>? controller])
-      : _streamController =
-            controller ?? StreamController<WidgetDataState<T?>>.broadcast();
+    : _streamController =
+          controller ?? StreamController<WidgetDataState<T?>>.broadcast();
 
   final StreamController<WidgetDataState<T?>> _streamController;
   StreamSubscription<Object>? _streamSubscription;
@@ -27,9 +26,7 @@ class EitherStreamFetcher<T> {
   /// Returns a stream of [WidgetDataState] that emits loading, success, or
   /// error states. Automatically handles cleanup when the stream completes or
   /// encounters errors.
-  Stream<WidgetDataState<T?>> fetch(
-    Stream<Either<Failure, T>> call,
-  ) {
+  Stream<WidgetDataState<T?>> fetch(Stream<Either<Failure, T>> call) {
     if (_isClosed) {
       throw StateError('Cannot fetch on a closed EitherStreamFetcher');
     }

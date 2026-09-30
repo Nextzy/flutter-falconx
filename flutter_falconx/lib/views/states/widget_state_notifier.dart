@@ -121,9 +121,7 @@ class FullWidgetStatesNotifier extends ValueNotifier<FullWidgetStates> {
 
   void removeAllState(List<FullWidgetState> states) {
     if (!_isDisposed) {
-      value = value.copy(
-        value.value.where((s) => !states.contains(s)).toSet(),
-      );
+      value = value.copy(value.value.where((s) => !states.contains(s)).toSet());
     }
   }
 

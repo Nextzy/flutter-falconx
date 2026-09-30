@@ -1,4 +1,3 @@
-
 import 'package:flutter_falconx/src/src.dart';
 
 // extension WidgetDataStateEmitterExtensions<T>
@@ -261,11 +260,8 @@ extension WidgetDataStateEmitterExtensions<T> on Emitter<WidgetDataState<T>> {
 
   /// Or use:
   /// emitter.emit(state.addEvent(...))
-  void event(
-    WidgetDataState<T> currentState,
-    Object event, {
-    Object? data,
-  }) => call(currentState.addEvent(event, data));
+  void event(WidgetDataState<T> currentState, Object event, {Object? data}) =>
+      call(currentState.addEvent(event, data));
 
   Future<void> callStream<A>({
     required Stream<WidgetDataState<A?>> call,
@@ -281,10 +277,7 @@ extension WidgetDataStateEmitterExtensions<T> on Emitter<WidgetDataState<T>> {
         onFailure?.call(error);
       } else {
         FlutterError.reportError(
-          FlutterErrorDetails(
-            exception: error,
-            stack: stackTrace,
-          ),
+          FlutterErrorDetails(exception: error, stack: stackTrace),
         );
       }
     },
@@ -311,23 +304,21 @@ extension WidgetDataStateEmitterExtensions<T> on Emitter<WidgetDataState<T>> {
                 unawaited(controller.close());
               },
             )
-            ..onData(
-              (data) {
-                data.fold(
-                  (failure) {
-                    if (!controller.isClosed) {
-                      controller.addError(failure);
-                    }
-                    unawaited(controller.close());
-                  },
-                  (data) {
-                    if (!controller.isClosed) {
-                      controller.add(WidgetDataState.success(data));
-                    }
-                  },
-                );
-              },
-            )
+            ..onData((data) {
+              data.fold(
+                (failure) {
+                  if (!controller.isClosed) {
+                    controller.addError(failure);
+                  }
+                  unawaited(controller.close());
+                },
+                (data) {
+                  if (!controller.isClosed) {
+                    controller.add(WidgetDataState.success(data));
+                  }
+                },
+              );
+            })
             ..onDone(controller.close);
       controller.onCancel = subscription.cancel;
     };
@@ -360,23 +351,21 @@ extension WidgetDataStateEmitterExtensions<T> on Emitter<WidgetDataState<T>> {
                 unawaited(controller.close());
               },
             )
-            ..onData(
-              (data) {
-                data.resolve(
-                  (data) {
-                    if (!controller.isClosed) {
-                      controller.add(WidgetDataState.success(data));
-                    }
-                  },
-                  (failure, stacktrace) {
-                    if (!controller.isClosed) {
-                      controller.addError(failure);
-                    }
-                    unawaited(controller.close());
-                  },
-                );
-              },
-            )
+            ..onData((data) {
+              data.resolve(
+                (data) {
+                  if (!controller.isClosed) {
+                    controller.add(WidgetDataState.success(data));
+                  }
+                },
+                (failure, stacktrace) {
+                  if (!controller.isClosed) {
+                    controller.addError(failure);
+                  }
+                  unawaited(controller.close());
+                },
+              );
+            })
             ..onDone(controller.close);
       controller.onCancel = subscription.cancel;
     };
@@ -409,23 +398,21 @@ extension WidgetDataStateEmitterExtensions<T> on Emitter<WidgetDataState<T>> {
                 unawaited(controller.close());
               },
             )
-            ..onData(
-              (data) {
-                data.fold(
-                  (failure) {
-                    if (!controller.isClosed) {
-                      controller.addError(failure);
-                    }
-                    unawaited(controller.close());
-                  },
-                  (data) {
-                    if (!controller.isClosed) {
-                      controller.add(WidgetDataState.success(data));
-                    }
-                  },
-                );
-              },
-            )
+            ..onData((data) {
+              data.fold(
+                (failure) {
+                  if (!controller.isClosed) {
+                    controller.addError(failure);
+                  }
+                  unawaited(controller.close());
+                },
+                (data) {
+                  if (!controller.isClosed) {
+                    controller.add(WidgetDataState.success(data));
+                  }
+                },
+              );
+            })
             ..onDone(controller.close);
       controller.onCancel = subscription.cancel;
     };
@@ -458,23 +445,21 @@ extension WidgetDataStateEmitterExtensions<T> on Emitter<WidgetDataState<T>> {
                 unawaited(controller.close());
               },
             )
-            ..onData(
-              (data) {
-                data.resolve(
-                  (data) {
-                    if (!controller.isClosed) {
-                      controller.add(WidgetDataState.success(data));
-                    }
-                  },
-                  (failure, stacktrace) {
-                    if (!controller.isClosed) {
-                      controller.addError(failure);
-                    }
-                    unawaited(controller.close());
-                  },
-                );
-              },
-            )
+            ..onData((data) {
+              data.resolve(
+                (data) {
+                  if (!controller.isClosed) {
+                    controller.add(WidgetDataState.success(data));
+                  }
+                },
+                (failure, stacktrace) {
+                  if (!controller.isClosed) {
+                    controller.addError(failure);
+                  }
+                  unawaited(controller.close());
+                },
+              );
+            })
             ..onDone(controller.close);
       controller.onCancel = subscription.cancel;
     };
