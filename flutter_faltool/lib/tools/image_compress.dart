@@ -14,6 +14,8 @@ import 'package:path_provider/path_provider.dart';
 export 'package:flutter_faltool/tools/src/dart_image_compress_engine.dart';
 export 'package:flutter_faltool/tools/src/image_compress_engine.dart';
 export 'package:flutter_faltool/tools/src/native_image_compress_engine.dart';
+export 'package:flutter_image_compress/flutter_image_compress.dart'
+    show CompressFormat;
 
 /// Image compression that works on every Flutter platform.
 ///
