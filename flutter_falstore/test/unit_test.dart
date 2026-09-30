@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// Mock implementation of FlutterSecureStorage for testing.
 class MockFlutterSecureStorage extends Fake implements FlutterSecureStorage {
-
   new({bool shouldThrow = false}) : _shouldThrow = shouldThrow;
   final Map<String, String> _storage = {};
   final bool _shouldThrow;
@@ -113,8 +112,7 @@ class MockFlutterSecureStorage extends Fake implements FlutterSecureStorage {
     WebOptions? webOptions,
     AppleOptions? mOptions,
     WindowsOptions? wOptions,
-  }) async =>
-      SecureStorageUpgradeStatus.unsupported;
+  }) async => SecureStorageUpgradeStatus.unsupported;
 }
 
 /// Mock that fails on the second write operation for testing rollback.
@@ -243,10 +241,7 @@ void main() {
             'id': 123,
             'profile': {
               'name': 'John',
-              'settings': {
-                'theme': 'dark',
-                'notifications': true,
-              },
+              'settings': {'theme': 'dark', 'notifications': true},
             },
           },
           'metadata': ['tag1', 'tag2'],
@@ -315,11 +310,7 @@ void main() {
 
     group('batch operations', () {
       test('should save multiple values', () async {
-        final data = {
-          'key1': 'value1',
-          'key2': 'value2',
-          'key3': 'value3',
-        };
+        final data = {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'};
 
         await secureStorage.saveMultiple(data);
 
@@ -333,11 +324,7 @@ void main() {
         // Create a storage that fails on the second write
         final customMock = _FailOnSecondWriteMockStorage();
         final customStorage = SecureStorage.testing(storage: customMock);
-        final data = {
-          'key1': 'value1',
-          'key2': 'value2',
-          'key3': 'value3',
-        };
+        final data = {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'};
 
         await expectLater(
           customStorage.saveMultiple(data),
@@ -350,11 +337,7 @@ void main() {
       });
 
       test('should load multiple values', () async {
-        final data = {
-          'key1': 'value1',
-          'key2': 'value2',
-          'key3': 'value3',
-        };
+        final data = {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'};
 
         // Save data first
         for (final entry in data.entries) {
@@ -446,11 +429,7 @@ void main() {
       });
 
       test('should delete all keys', () async {
-        final data = {
-          'key1': 'value1',
-          'key2': 'value2',
-          'key3': 'value3',
-        };
+        final data = {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'};
 
         for (final entry in data.entries) {
           await secureStorage.save(entry.key, data: entry.value);
@@ -477,11 +456,7 @@ void main() {
 
     group('loadAll', () {
       test('should load all stored values', () async {
-        final data = {
-          'key1': 'value1',
-          'key2': 'value2',
-          'key3': 'value3',
-        };
+        final data = {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'};
 
         for (final entry in data.entries) {
           await secureStorage.save(entry.key, data: entry.value);
@@ -500,10 +475,7 @@ void main() {
         final errorStorage = MockFlutterSecureStorage(shouldThrow: true);
         final errorSecureStorage = SecureStorage.testing(storage: errorStorage);
 
-        expect(
-          errorSecureStorage.loadAll,
-          throwsA(isA<StorageException>()),
-        );
+        expect(errorSecureStorage.loadAll, throwsA(isA<StorageException>()));
       });
     });
 

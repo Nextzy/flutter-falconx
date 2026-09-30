@@ -106,7 +106,7 @@ static Future<Map<String, XFile?>> batchCompressFiles({
   int numberOfRetries = 5,
   int concurrency = 3,
   void Function(int completed, int total)? onProgress,
-}); // per-file failure maps to a null value, never throws
+}); // per-file failure maps to a null value, never throws; see the key rule below
 
 static Future<CompressionResult> getCompressionResult({required XFile originalFile, required XFile compressedFile});
 static Future<int> estimateCompressedSize({required XFile file, ImageCompressProfile profile = ImageCompressProfile.standard, ImageCompressConfig? customConfig});
@@ -142,7 +142,9 @@ final results = await ImageCompressTool.batchCompressFiles(
 
 `keepExif` is honored on Android, iOS, macOS, Windows, and Linux: the native engine passes it to `flutter_image_compress`; the Dart engine clears EXIF unless `keepExif: true`, for JPEG and WebP output only — `package:image`'s PNG encoder never writes EXIF, so `keepExif` has no observable effect for `CompressFormat.png` on Windows/Linux. The web plugin ignores `keepExif` and `autoCorrectionAngle`.
 
-`format` defaults to detection from the input `XFile.name`'s extension when omitted (`compressFile`/`compressAndSaveFile`/`batchCompressFiles`); `compressBytes` defaults to `CompressFormat.jpeg` since bytes carry no filename.
+`batchCompressFiles` key rule (since 4.0.1): the key for the file at index `i` is `file.path` when non-empty, otherwise `file.name` when non-empty, otherwise `'#$i'`. When that candidate key was already produced for an earlier file in the same call — two inputs sharing a path, or two byte-backed `XFile`s that both have an empty path and name — the key becomes `'$key#$i'` instead, so no entry silently overwrites another.
+
+Format detection order (since 4.0.1), for `compressFile` and `compressAndSaveFile` when `format:` is omitted: the extension of `XFile.name` first, when it is a known one (`.png`, `.webp`, `.heic`/`.heif`, `.jpg`/`.jpeg`); when the extension is empty or unrecognized, falls back to `XFile.mimeType` (`image/png`, `image/webp`, `image/heic`/`image/heif`, `image/jpeg`/`image/jpg`, case-insensitive); otherwise defaults to jpeg. `batchCompressFiles` inherits this through `compressFile`. `compressBytes` still defaults to `CompressFormat.jpeg` unconditionally, since bytes carry neither a name nor a `mimeType`.
 
 ## `Log`
 
@@ -189,6 +191,7 @@ void printSuccess(Object? message);                     // green
 - The Dart engine throws `UnsupportedError` for `CompressFormat.heic` output, whether detected from a `.heic`/`.heif` file name or passed as `format:`. A HEIC input with another `format:` fails to decode (`package:image` has no HEIC decoder) and throws `ImageCompressException`.
 - `compressBytes`, `compressFile`, and `compressAndSaveFile` rethrow `UnsupportedError` (including the web plugin's `UnimplementedError` for HEIC and the macOS plugin's WebP rejection) and wrap every other compression failure in `ImageCompressException`. `batchCompressFiles` maps any per-file failure to `null`.
 - `numberOfRetries` on `compressFile`/`compressAndSaveFile`/`batchCompressFiles` is Android only and takes effect when the `XFile` has a path (compressed through `compressWithFile`); iOS, macOS, and web ignore it. `compressBytes` has no such parameter.
-- `CompressFormat` is re-exported by `flutter_faltool` (and so by every barrel); no `flutter_image_compress` import is needed to pass `format:`.
-- On native platforms `XFile.fromData(bytes, name: ...)` ignores `name`; when the input `XFile` you build for `compressFile`/`compressAndSaveFile`/`batchCompressFiles` is byte-backed rather than disk-backed, pass `format:` explicitly instead of relying on filename-extension detection.
+- `CompressFormat` is re-exported by `flutter_faltool`, and by the umbrella `flutter_falconx` (which re-exports `flutter_faltool`); no `flutter_image_compress` import is needed to pass `format:` when you depend on one of those two. Since 4.0.1 `flutter_falmodel` and `flutter_falstore` no longer chain to `flutter_faltool`, so they no longer carry `CompressFormat` either.
+- On native platforms `XFile.fromData(bytes, name: ...)` ignores `name` (the name comes from `path` instead). When the input `XFile` you build for `compressFile`/`compressAndSaveFile`/`batchCompressFiles` is byte-backed rather than disk-backed, pass `mimeType:` to `XFile.fromData` (it feeds the mimeType fallback — see the format detection order above) or pass `format:` directly to the `ImageCompressTool` call; a known name extension still wins over a conflicting `mimeType`, and with neither the format defaults to jpeg.
+- `batchCompressFiles` keys its result map per the rule above (`file.path`, else `file.name`, else `'#$i'`, de-duplicated with `'#$i'` on a repeat); do not assume `file.path` is always the key, especially for byte-backed inputs.
 - `flutter_udid` and `path_provider` have no web implementation; `DeviceIdGenerator` and `ImageCompressTool` route around this per-platform (see above) rather than calling them on web.

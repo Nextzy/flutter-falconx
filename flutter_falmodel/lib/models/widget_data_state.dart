@@ -23,7 +23,6 @@ import 'package:flutter_falmodel/src/src.dart';
 /// ```
 @immutable
 class WidgetDataState<T> {
-
   /// Creates a widget data state with the specified parameters.
   const new _({
     required this.state,
@@ -37,12 +36,12 @@ class WidgetDataState<T> {
   /// Factory constructor that creates a state with default feedback based on
   /// state type.
   factory create(
-      FullWidgetState state,
-      T data, {
-        String? id,
-        UserFeedback? feedback,
-        bool build = true,
-      }) {
+    FullWidgetState state,
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) {
     // Default feedback based on state
     final defaultFeedback = switch (state) {
       FullWidgetState.warning => const Warning(),
@@ -60,86 +59,206 @@ class WidgetDataState<T> {
   }
 
   // Optimized factory constructors using the create method
-  factory initial(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.initial, data,
-          id: id, feedback: feedback, build: build);
+  factory initial(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.initial,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory normal(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.normal, data,
-          id: id, feedback: feedback, build: build);
+  factory normal(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.normal,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory empty(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.empty, data,
-          id: id, feedback: feedback, build: build);
+  factory empty(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.empty,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory loading(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.loading, data,
-          id: id, feedback: feedback, build: build);
+  factory loading(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.loading,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory success(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.success, data,
-          id: id, feedback: feedback, build: build);
+  factory success(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.success,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory warning(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.warning, data,
-          id: id, feedback: feedback ?? const Warning(), build: build);
+  factory warning(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.warning,
+    data,
+    id: id,
+    feedback: feedback ?? const Warning(),
+    build: build,
+  );
 
-  factory fail(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.fail, data,
-          id: id, feedback: feedback ?? const Failure(), build: build);
+  factory fail(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.fail,
+    data,
+    id: id,
+    feedback: feedback ?? const Failure(),
+    build: build,
+  );
 
   // Additional factory constructors for all FullWidgetState values
-  factory hovered(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.hovered, data,
-          id: id, feedback: feedback, build: build);
+  factory hovered(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.hovered,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory focused(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.focused, data,
-          id: id, feedback: feedback, build: build);
+  factory focused(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.focused,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
   // factory WidgetDataState.focusedVisible(T data,
   //     {String? id, UserFeedback? feedback, bool build = true}) =>
   //     WidgetDataState.create(FullWidgetState.focusedVisible, data,
   //         id: id, feedback: feedback, build: build);
 
-  factory pressed(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.pressed, data,
-          id: id, feedback: feedback, build: build);
+  factory pressed(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.pressed,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory dragged(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.dragged, data,
-          id: id, feedback: feedback, build: build);
+  factory dragged(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.dragged,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory selected(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.selected, data,
-          id: id, feedback: feedback, build: build);
+  factory selected(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.selected,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory scrolledUnder(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.scrolledUnder, data,
-          id: id, feedback: feedback, build: build);
+  factory scrolledUnder(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.scrolledUnder,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory disabled(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.disabled, data,
-          id: id, feedback: feedback, build: build);
+  factory disabled(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.disabled,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  factory cancel(T data,
-      {String? id, UserFeedback? feedback, bool build = true}) =>
-      WidgetDataState.create(FullWidgetState.cancel, data,
-          id: id, feedback: feedback, build: build);
+  factory cancel(
+    T data, {
+    String? id,
+    UserFeedback? feedback,
+    bool build = true,
+  }) => WidgetDataState.create(
+    FullWidgetState.cancel,
+    data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
   /// The current widget state.
   final FullWidgetState state;
@@ -219,7 +338,8 @@ class WidgetDataState<T> {
 
   /// Maps the state using a transformation function.
   WidgetDataState<T> mapState(
-      FullWidgetState Function(FullWidgetState) mapper) {
+    FullWidgetState Function(FullWidgetState) mapper,
+  ) {
     return WidgetDataState._(
       state: mapper(state),
       id: id,
@@ -232,12 +352,12 @@ class WidgetDataState<T> {
 
   /// Generic state transition method that reduces duplication.
   WidgetDataState<T> toState(
-      FullWidgetState newState, {
-        T? data,
-        String? id,
-        UserFeedback? feedback,
-        bool? build,
-      }) {
+    FullWidgetState newState, {
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) {
     return WidgetDataState.create(
       newState,
       data ?? this.data,
@@ -248,87 +368,201 @@ class WidgetDataState<T> {
   }
 
   /// Convenience methods for common state transitions.
-  WidgetDataState<T> toInitial(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.initial,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toInitial({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.initial,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toNormal(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.normal,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toNormal({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.normal,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toEmpty(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.empty,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toEmpty({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.empty,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toLoading(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.loading,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toLoading({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.loading,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toSuccess(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.success,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toSuccess({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.success,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toWarning(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.warning,
-          data: data,
-          id: id,
-          feedback: feedback ?? const Warning(),
-          build: build);
+  WidgetDataState<T> toWarning({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.warning,
+    data: data,
+    id: id,
+    feedback: feedback ?? const Warning(),
+    build: build,
+  );
 
-  WidgetDataState<T> toFail(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.fail,
-          data: data,
-          id: id,
-          feedback: feedback ?? const Failure(),
-          build: build);
+  WidgetDataState<T> toFail({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.fail,
+    data: data,
+    id: id,
+    feedback: feedback ?? const Failure(),
+    build: build,
+  );
 
   // Additional convenience methods for all state transitions
-  WidgetDataState<T> toHovered(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.hovered,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toHovered({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.hovered,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toFocused(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.focused,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toFocused({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.focused,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toPressed(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.pressed,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toPressed({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.pressed,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toDragged(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.dragged,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toDragged({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.dragged,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toSelected(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.selected,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toSelected({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.selected,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toScrolledUnder(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.scrolledUnder,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toScrolledUnder({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.scrolledUnder,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toDisabled(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.disabled,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toDisabled({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.disabled,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
-  WidgetDataState<T> toCancel(
-      {T? data, String? id, UserFeedback? feedback, bool? build}) =>
-      toState(FullWidgetState.cancel,
-          data: data, id: id, feedback: feedback, build: build);
+  WidgetDataState<T> toCancel({
+    T? data,
+    String? id,
+    UserFeedback? feedback,
+    bool? build,
+  }) => toState(
+    FullWidgetState.cancel,
+    data: data,
+    id: id,
+    feedback: feedback,
+    build: build,
+  );
 
   /// Creates a copy of this state with optional parameter updates.
   /// Note: Events are never copied as they should be used only once.
@@ -365,7 +599,8 @@ class WidgetDataState<T> {
   }
 
   @override
-  String toString() => 'WidgetDataStateV2('
+  String toString() =>
+      'WidgetDataStateV2('
       'state: $state, '
       'id: $id, '
       'data: $data, '

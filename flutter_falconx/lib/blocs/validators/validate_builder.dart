@@ -3,13 +3,12 @@
 
 import 'package:flutter_falconx/src/src.dart';
 
-typedef ValidateWidgetBuilder<DATA> =
-    Widget Function(
-      BuildContext context,
-      bool valid,
-      DATA? data,
-      Failure? failure,
-    );
+typedef ValidateWidgetBuilder<DATA> = Widget Function(
+  BuildContext context,
+  bool valid,
+  DATA? data,
+  Failure? failure,
+);
 
 abstract class ValidatorCubit<DATA> extends Cubit<ValidateState<DATA?>> {
   new() : super(const ValidateState(data: null));
@@ -36,10 +35,7 @@ abstract class ValidatorCubit<DATA> extends Cubit<ValidateState<DATA?>> {
   }) {
     emit(
       ValidateState<DATA>(
-        failure: Failure(
-          message: userMessage,
-          level: level,
-        ),
+        failure: Failure(message: userMessage, level: level),
       ),
     );
   }
@@ -57,11 +53,7 @@ abstract class ValidatorCubit<DATA> extends Cubit<ValidateState<DATA?>> {
 
 class ValidateBuilder<B extends Cubit<ValidateState<DATA?>>, DATA>
     extends StatelessWidget {
-  const new({
-    super.key,
-    this.source,
-    required this.builder,
-  });
+  const new({super.key, this.source, required this.builder});
 
   final B? source;
   final ValidateWidgetBuilder<DATA> builder;
@@ -77,12 +69,8 @@ class ValidateBuilder<B extends Cubit<ValidateState<DATA?>>, DATA>
           return current.canBuild;
         }
       },
-      builder: (context, state) => builder(
-        context,
-        state.failure == null,
-        state.data,
-        state.failure,
-      ),
+      builder: (context, state) =>
+          builder(context, state.failure == null, state.data, state.failure),
     );
   }
 }

@@ -1,8 +1,5 @@
 class BlocEvent<Event> {
-  const new(
-    this.name, {
-    this.data,
-  });
+  const new(this.name, {this.data});
 
   final Event name;
   final Object? data;

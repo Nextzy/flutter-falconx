@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 
 class NLog {

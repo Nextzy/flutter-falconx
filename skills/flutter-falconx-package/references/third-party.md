@@ -1,6 +1,6 @@
 # Third-party
 
-Every package here reaches your app already, re-exported by whichever `flutter_fal*` package brings it in — do not add a duplicate direct dependency, and do not pin a different version than the one below without checking it resolves against the git-pinned `flutter_fal*` packages.
+Every package here reaches your app once you depend on the `flutter_fal*` package listed in `Brought in by` (or the umbrella `flutter_falconx`, which exports all four siblings and so everything below). Since 4.0.1 a non-umbrella package no longer chains to another: listing only `flutter_falconnect`, for example, no longer also brings in `flutter_faltool`'s third-party packages (`device_info_plus`, `path_provider`, ...) — list every `flutter_fal*` package whose row you need, or depend on `flutter_falconx` alone. Do not add a duplicate direct dependency for what your chosen package(s) already bring in, and do not pin a different version than the one below without checking it resolves against the git-pinned `flutter_fal*` packages.
 
 | Package | Version constraint | Brought in by | For | Platform gaps |
 |---|---|---|---|---|

@@ -1,33 +1,17 @@
 import 'package:flutter_falconx/src/src.dart';
 
-enum PopResultStatus {
-  info,
-  fail,
-  warning,
-  success,
-  cancel,
-}
+enum PopResultStatus { info, fail, warning, success, cancel }
 
 class PopResult<D extends Object?> extends Equatable {
-  const new success([
-    this.data,
-  ]) : status = PopResultStatus.success;
+  const new success([this.data]) : status = PopResultStatus.success;
 
-  const new fail([
-    this.data,
-  ]) : status = PopResultStatus.fail;
+  const new fail([this.data]) : status = PopResultStatus.fail;
 
-  const new warning([
-    this.data,
-  ]) : status = PopResultStatus.warning;
+  const new warning([this.data]) : status = PopResultStatus.warning;
 
-  const new cancel([
-    this.data,
-  ]) : status = PopResultStatus.cancel;
+  const new cancel([this.data]) : status = PopResultStatus.cancel;
 
-  const new info([
-    this.data,
-  ]) : status = PopResultStatus.info;
+  const new info([this.data]) : status = PopResultStatus.info;
 
   final PopResultStatus status;
   final D? data;
