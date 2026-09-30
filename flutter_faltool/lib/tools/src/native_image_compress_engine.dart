@@ -38,4 +38,35 @@ class NativeImageCompressEngine implements ImageCompressEngine {
       keepExif: keepExif,
     );
   }
+
+  /// Compresses the file at [path] without loading it into Dart memory.
+  ///
+  /// Uses `FlutterImageCompress.compressWithFile`. [numberOfRetries] is
+  /// Android only: after an `OutOfMemoryError` the plugin decodes again with
+  /// a doubled sample size, at most [numberOfRetries] times. Throws
+  /// [ImageCompressException] when the plugin returns no bytes. Not for web:
+  /// the web plugin throws `UnimplementedError` for file paths.
+  Future<Uint8List> compressPath({
+    required String path,
+    required ImageCompressConfig config,
+    required CompressFormat format,
+    bool autoCorrectionAngle = true,
+    bool keepExif = false,
+    int numberOfRetries = 5,
+  }) async {
+    final output = await FlutterImageCompress.compressWithFile(
+      path,
+      minWidth: _pluginBound(config.minWidth),
+      minHeight: _pluginBound(config.minHeight),
+      quality: config.quality,
+      format: format,
+      autoCorrectionAngle: autoCorrectionAngle,
+      keepExif: keepExif,
+      numberOfRetries: numberOfRetries,
+    );
+    if (output == null) {
+      throw ImageCompressException('Compression returned no data for $path');
+    }
+    return output;
+  }
 }
