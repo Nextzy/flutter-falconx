@@ -1,6 +1,6 @@
 # Network
 
-`package: flutter_falconnect` (re-exports `connectivity_plus`, `dart_falconnect`, `flutter_falmodel`), except `InternetConnectionBloc`, which lives in `package: flutter_falconx` (`lib/networks/internet_connection_bloc.dart`).
+`package: flutter_falconnect` (re-exports `connectivity_plus` and `dart_falconnect`), except `InternetConnectionBloc`, which lives in `package: flutter_falconx` (`lib/networks/internet_connection_bloc.dart`). Since 4.0.1 `flutter_falconnect` no longer re-exports `flutter_falmodel`: `EitherStreamFetcher`/`EitherStreamFetcherList` below return `WidgetDataState<T?>`, so add `flutter_falmodel` directly (or depend on the umbrella `flutter_falconx`) to name that type.
 
 For `BaseHttpClient`, Retrofit, `HttpClientConfig`, interceptor configuration, and exceptions, see the `dart-falconx-package` skill's `references/http.md` — `flutter_falconnect` does not add its own HTTP client, only a connectivity gate and stream/future fetch plumbing on top of `dart_falconnect`.
 
