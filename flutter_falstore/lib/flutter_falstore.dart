@@ -13,7 +13,7 @@
 /// ## Getting Started
 ///
 /// ```dart
-/// import 'package:falstore/flutter_falstore.dart';
+/// import 'package:flutter_falstore/flutter_falstore.dart';
 ///
 /// // Save data
 /// await SecureStorage.instance.save('token', data: 'my-secret-token');

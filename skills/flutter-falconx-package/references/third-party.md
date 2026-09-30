@@ -19,17 +19,18 @@ Every package here reaches your app already, re-exported by whichever `flutter_f
 | `path_provider` | `^2.1.6` | flutter_faltool | Filesystem paths (temp dir for `ImageCompressTool.compressFile`'s non-web output) | no web implementation — `ImageCompressTool` avoids it on web |
 | `leak_tracker` | `^11.0.2` | flutter_faltool | Memory leak detection in debug/test builds | none |
 | `rate_limiter` | `^1.1.1` | flutter_faltool | Debounce/throttle primitives | none |
-| `cross_file` | `^0.3.5+5` | flutter_faltool | `XFile`, the cross-platform file handle `ImageCompressTool` and `SecureStorage` callers pass around | none |
+| `cross_file` | `^0.3.5+5` | flutter_faltool | `XFile`, the cross-platform file handle `ImageCompressTool` takes and returns | none |
 
 ## Not re-exported
 
-These are direct or transitive dependencies of a `flutter_fal*` package but are never `export`ed by any barrel — import them yourself and add them to your own `pubspec.yaml` if you reference their types directly (otherwise `flutter analyze` flags `depend_on_referenced_packages`):
+These are direct or transitive dependencies of a `flutter_fal*` package but are never `export`ed by any barrel (the one exception is `flutter_image_compress`'s `CompressFormat`) — import them yourself and add them to your own `pubspec.yaml` if you reference their types directly (otherwise `flutter analyze` flags `depend_on_referenced_packages`):
 
 | Package | Why you might import it | Brought in transitively by |
 |---|---|---|
 | `retrofit` | `@Path`, `@Headers`, `@noToken` annotations (`flutter_falconx` hides Retrofit's `Path`) | dart_falconnect → flutter_falconnect |
 | `dart_falconnect` | `RefreshCallback` typedef (hidden by `flutter_falconx`'s `flutter_falconnect` export) | flutter_falconnect |
-| `flutter_image_compress` | `CompressFormat` enum, needed to pass `format:` explicitly to `ImageCompressTool` methods | flutter_faltool (never exported) |
+| `flutter_image_compress` | `FlutterImageCompress` and the rest of the plugin API; `CompressFormat` alone is re-exported by `flutter_faltool` | flutter_faltool (only `CompressFormat` exported) |
 | `ansicolor` | Only used internally by `Log`/`printInfo`/`printError`/`printSuccess`; no public API needs it | flutter_faltool (never exported) |
 | `image` (`package:image`) | Only used internally by the Dart image-compress engine (Windows/Linux) | flutter_faltool (never exported) |
 | `path` | Only used internally for filename handling in `ImageCompressTool` | flutter_faltool (never exported) |
+| `web` (`package:web`) | Only used internally to read the browser's user agent for `PlatformChecker` | flutter_faltool (never exported) |

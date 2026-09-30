@@ -58,17 +58,22 @@ import 'package:flutter_faltool/flutter_faltool.dart';
 ## Do not reinvent
 
 - Before adding a pub dependency, scan the map above, `references/third-party.md`, and the `dart-falconx-package` skill.
-- Never `import 'dart:io'` in shared code; these packages compile to web. Use `PlatformChecker`, `XFile`, or `package:universal_io/io.dart` added to your own pubspec.
+- Never `import 'dart:io'` in shared code; these packages target web. Use `PlatformChecker`, `XFile`, or `package:universal_io/io.dart` added to your own pubspec.
 - Do not write a `File`-based compressor; `ImageCompressTool` already handles Windows and Linux through `package:image`.
 - Do not write a router; `flutter_falconx/lib/routers/routers.dart` is empty at 4.0.0 — see `references/routing.md`.
 
 ## Gotchas
 
-- `ImageCompressTool.compressAndSaveFile` throws `UnsupportedError` on web (no filesystem); the Dart engine (Windows, Linux) throws `UnsupportedError` for HEIC input or output — only the native engine (Android, iOS, macOS, web) handles HEIC.
+- `ImageCompressTool.compressAndSaveFile` throws `UnsupportedError` on web (no filesystem).
+- The plugin accepts HEIC output on Android (API 28+), iOS (11+), and macOS. The Dart engine (Windows, Linux) throws `UnsupportedError` for HEIC output, which a `.heic` file name selects when `format:` is omitted; on web the plugin throws `UnimplementedError`, a subtype of `UnsupportedError`. A HEIC input with `format: CompressFormat.jpeg` on the Dart engine fails to decode and throws `ImageCompressException`.
+- WebP output on macOS throws `UnsupportedError` (the plugin rejects it before encoding). On web the plugin ignores `keepExif` and `autoCorrectionAngle`.
+- `compressBytes`, `compressFile`, and `compressAndSaveFile` rethrow `UnsupportedError` and wrap every other compression failure in `ImageCompressException`; catch both.
 - On native platforms `XFile.fromData(bytes, name: ...)` ignores `name` (a `cross_file` limitation), so `ImageCompressTool`'s extension-based format detection cannot see it: pass `format:` explicitly whenever the input `XFile` is byte-backed rather than disk-backed.
-- `numberOfRetries` on `compressFile`, `compressAndSaveFile`, and `batchCompressFiles` is `@Deprecated` (no effect since 4.0.0, removed in 5.0.0); `compressBytes` never had this parameter.
+- `numberOfRetries` on `compressFile`, `compressAndSaveFile`, and `batchCompressFiles` is Android only: after an `OutOfMemoryError` the plugin decodes again with a doubled sample size. It takes effect when the `XFile` has a path, because only then does `ImageCompressTool` compress by path (`compressWithFile`); iOS, macOS, and web ignore it, and `compressBytes` has no such parameter.
+- In a browser `PlatformChecker.platform` and `isAndroid`/`isIos`/`isMacOs`/... report the browser's OS, never `DevicePlatform.web`. Test `PlatformChecker.isWeb` first; use `isAndroidOnWeb`, `isIosOnWeb`, ... for the browser's OS.
 - `flutter_falconx` hides `Path`, `RefreshCallback`, and `TextDirection` on its `flutter_falconnect` export, and `TextDirection` on its `flutter_falmodel`, `flutter_falstore`, and `flutter_faltool` exports. `Path` is Retrofit's annotation; `RefreshCallback` is `dart_falconnect`'s auth typedef. Import `package:retrofit/retrofit.dart` directly for `@Path`/`@Headers`, or `package:dart_falconnect/dart_falconnect.dart` for `RefreshCallback`.
-- `CompressFormat` (from `flutter_image_compress`) is never re-exported by any barrel in this repo; import `package:flutter_image_compress/flutter_image_compress.dart` directly to reference it (for example to pass `format: CompressFormat.png`).
+- Importing a single package next to `package:flutter/material.dart` needs the same hides on your import: `import 'package:flutter_falconnect/flutter_falconnect.dart' hide Path, RefreshCallback, TextDirection;`, and `hide TextDirection` for `flutter_falmodel`, `flutter_falstore`, or `flutter_faltool`. Without it intl's `TextDirection` and Retrofit's `Path` replace Flutter's (`TextDirection.ltr` stops compiling) and `RefreshCallback` is ambiguous.
+- `CompressFormat` is re-exported by `flutter_faltool` and so by every barrel; pass `format: CompressFormat.png` without importing `flutter_image_compress`.
 - An app that imports a hidden or non-re-exported package directly (`retrofit`, `dart_falconnect`, `flutter_image_compress`, ...) must also list that package in its own `pubspec.yaml`; otherwise `flutter analyze` flags `depend_on_referenced_packages`.
 - `flutter_local_notifications` 22 uses named parameters in `initialize()` and `show()`.
 

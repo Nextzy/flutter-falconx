@@ -84,8 +84,9 @@ Uint8List _compressSync(_DartCompressRequest request) {
     image.exif.clear();
   }
 
-  // Mirror flutter_image_compress: scale down so the result is never
-  // smaller than minWidth x minHeight; never scale up; 0 disables resizing.
+  // Same rule as NativeImageCompressEngine: scale down so the result is
+  // never smaller than minWidth x minHeight; never scale up; a 0 in either
+  // dimension disables resizing on every engine.
   if (request.minWidth > 0 &&
       request.minHeight > 0 &&
       image.width > request.minWidth &&
