@@ -167,6 +167,15 @@ class ImageCompressTool {
     return XFile(targetPath, mimeType: _mimeType(outputFormat));
   }
 
+  /// Compresses [files] concurrently, [concurrency] at a time, and returns
+  /// a map keyed by a unique identifier for each input.
+  ///
+  /// Key rule for the file at index `i`: `file.path` when non-empty,
+  /// otherwise `file.name` when non-empty, otherwise `'#$i'`. If that
+  /// candidate key was already produced for an earlier file in this call
+  /// (for example, two inputs share a path, or two byte-backed files both
+  /// have an empty path and name), the key becomes `'$key#$i'` instead so
+  /// no entry silently overwrites another.
   static Future<Map<String, XFile?>> batchCompressFiles({
     required List<XFile> files,
     ImageCompressProfile profile = ImageCompressProfile.standard,
@@ -180,12 +189,17 @@ class ImageCompressTool {
     int concurrency = 3,
     void Function(int completed, int total)? onProgress,
   }) async {
+    final keys = _batchKeysFor(files);
     final results = <String, XFile?>{};
     var completed = 0;
     for (var i = 0; i < files.length; i += concurrency) {
-      final batch = files.skip(i).take(concurrency);
+      final batchIndexes = [
+        for (var j = i; j < files.length && j < i + concurrency; j++) j,
+      ];
       final batchResults = await Future.wait(
-        batch.map((file) async {
+        batchIndexes.map((index) async {
+          final file = files[index];
+          final key = keys[index];
           try {
             final compressed = await compressFile(
               file: file,
@@ -196,10 +210,10 @@ class ImageCompressTool {
               keepExif: keepExif,
               numberOfRetries: numberOfRetries,
             );
-            return MapEntry(file.path, compressed);
+            return MapEntry(key, compressed);
           } on Object catch (e) {
             debugPrint('Failed to compress ${file.path}: $e');
-            return MapEntry<String, XFile?>(file.path, null);
+            return MapEntry<String, XFile?>(key, null);
           }
         }),
       );
@@ -210,6 +224,24 @@ class ImageCompressTool {
       }
     }
     return results;
+  }
+
+  /// Computes [batchCompressFiles]' result keys, in input order, so a
+  /// collision against an earlier file's key is always detected regardless
+  /// of how the batch executes concurrently.
+  static List<String> _batchKeysFor(List<XFile> files) {
+    final used = <String>{};
+    final keys = <String>[];
+    for (var i = 0; i < files.length; i++) {
+      final file = files[i];
+      final candidate = file.path.isNotEmpty
+          ? file.path
+          : (file.name.isNotEmpty ? file.name : '#$i');
+      final key = used.contains(candidate) ? '$candidate#$i' : candidate;
+      used.add(key);
+      keys.add(key);
+    }
+    return keys;
   }
 
   static Future<CompressionResult> getCompressionResult({
