@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:flutter_faltool/tools/image_compress.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 /// One compression backend. [ImageCompressTool] picks an implementation per
 /// platform and delegates every byte-level operation here.

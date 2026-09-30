@@ -29,6 +29,7 @@ dependencies:
   rate_limiter: ^1.1.1
   share_plus: ^13.3.0
   shared_preferences: ^2.5.5
+  web: ^1.1.1
 
   #PLATFORM: Android, iOS, Linux, macOS, Windows (no web)
   flutter_udid: ^4.1.6

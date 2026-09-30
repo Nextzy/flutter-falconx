@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/tools/image_compress.dart';
 import 'package:flutter_faltool/tools/src/image_compress_engine.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart' as img;
 
 /// Pure-Dart backend for platforms without a native plugin (Windows, Linux).
