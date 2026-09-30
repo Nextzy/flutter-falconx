@@ -86,7 +86,7 @@ class ImageCompressTool {
     /// Android only: retries after OutOfMemoryError with a doubled sample size.
     int numberOfRetries = 5,
   }) async {
-    final outputFormat = format ?? _detectFormat(file.name);
+    final outputFormat = format ?? _detectFormat(file);
     final bytes = await _compressXFile(
       file: file,
       config: customConfig ?? profiles[profile]!,
@@ -153,7 +153,7 @@ class ImageCompressTool {
         'use compressFile and keep the returned XFile.',
       );
     }
-    final outputFormat = format ?? _detectFormat(file.name);
+    final outputFormat = format ?? _detectFormat(file);
     final bytes = await _compressXFile(
       file: file,
       config: customConfig ?? profiles[profile]!,
@@ -342,8 +342,15 @@ class ImageCompressTool {
     return 'compressed_${basename}_$timestamp${_getExtensionForFormat(format)}';
   }
 
-  static CompressFormat _detectFormat(String fileName) {
-    switch (p.extension(fileName).toLowerCase()) {
+  /// Detects the output format for [file].
+  ///
+  /// The extension of [XFile.name] wins when it is a known one (`.png`,
+  /// `.webp`, `.heic`/`.heif`, `.jpg`/`.jpeg`). When the extension is empty
+  /// or unrecognized, falls back to [XFile.mimeType] (`image/png`,
+  /// `image/webp`, `image/heic`/`image/heif`, `image/jpeg`/`image/jpg`,
+  /// case-insensitive). When neither yields a match, defaults to jpeg.
+  static CompressFormat _detectFormat(XFile file) {
+    switch (p.extension(file.name).toLowerCase()) {
       case '.png':
         return CompressFormat.png;
       case '.webp':
@@ -353,6 +360,23 @@ class ImageCompressTool {
         return CompressFormat.heic;
       case '.jpg':
       case '.jpeg':
+        return CompressFormat.jpeg;
+      default:
+        return _formatFromMimeType(file.mimeType);
+    }
+  }
+
+  static CompressFormat _formatFromMimeType(String? mimeType) {
+    switch (mimeType?.toLowerCase()) {
+      case 'image/png':
+        return CompressFormat.png;
+      case 'image/webp':
+        return CompressFormat.webp;
+      case 'image/heic':
+      case 'image/heif':
+        return CompressFormat.heic;
+      case 'image/jpeg':
+      case 'image/jpg':
       default:
         return CompressFormat.jpeg;
     }
