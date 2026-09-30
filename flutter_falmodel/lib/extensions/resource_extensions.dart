@@ -11,21 +11,25 @@ extension FalModelStreamResourceExtension<T extends WidgetDataState<Object?>>
     VoidErrorCallback? onError,
   }) {
     StreamSubscription<T>? _subscription;
-    _subscription = this.listen((data) {
-      final state = data.state;
-      if (state == FullWidgetState.fail) {
-        if (onError != null) {
-          onError(Exception(data.data), StackTrace.current);
+    _subscription = this.listen(
+      (data) {
+        final state = data.state;
+        if (state == FullWidgetState.fail) {
+          if (onError != null) {
+            onError(Exception(data.data), StackTrace.current);
+          }
         }
-      }
-      onData(data);
-    }, onError: (Object error, StackTrace? stackTrace) {
-      if (onError != null) {
-        onError(error, stackTrace);
-      }
-    }, onDone: () {
-      unawaited(_subscription?.cancel());
-    });
+        onData(data);
+      },
+      onError: (Object error, StackTrace? stackTrace) {
+        if (onError != null) {
+          onError(error, stackTrace);
+        }
+      },
+      onDone: () {
+        unawaited(_subscription?.cancel());
+      },
+    );
     return _subscription;
   }
 }

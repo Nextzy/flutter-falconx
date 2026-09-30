@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/tools/src/dart_image_compress_engine.dart';
 import 'package:flutter_faltool/tools/src/directory_stub.dart'
@@ -83,6 +82,7 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
+
     /// Android only: retries after OutOfMemoryError with a doubled sample size.
     int numberOfRetries = 5,
   }) async {
@@ -143,6 +143,7 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
+
     /// Android only: retries after OutOfMemoryError with a doubled sample size.
     int numberOfRetries = 5,
   }) async {
@@ -173,6 +174,7 @@ class ImageCompressTool {
     CompressFormat? format,
     bool autoCorrectionAngle = true,
     bool keepExif = false,
+
     /// Android only: retries after OutOfMemoryError with a doubled sample size.
     int numberOfRetries = 5,
     int concurrency = 3,
@@ -221,8 +223,9 @@ class ImageCompressTool {
       originalSize: originalSize,
       compressedSize: compressedSize,
       sizeReduction: reduction,
-      reductionPercentage:
-          originalSize == 0 ? 0 : (reduction / originalSize) * 100,
+      reductionPercentage: originalSize == 0
+          ? 0
+          : (reduction / originalSize) * 100,
     );
   }
 
@@ -386,11 +389,7 @@ class ImageCompressConfig {
   final int quality;
 
   /// Creates a copy with optional parameter overrides
-  ImageCompressConfig copyWith({
-    int? minWidth,
-    int? minHeight,
-    int? quality,
-  }) {
+  ImageCompressConfig copyWith({int? minWidth, int? minHeight, int? quality}) {
     return ImageCompressConfig(
       minWidth: minWidth ?? this.minWidth,
       minHeight: minHeight ?? this.minHeight,

@@ -49,7 +49,6 @@ import 'package:flutter_falstore/src/src.dart';
 /// - Consider implementing key rotation for long-lived data
 /// - Always handle errors appropriately to avoid exposing sensitive data
 class SecureStorage {
-
   /// Creates a test instance of [SecureStorage] with a custom storage
   /// implementation.
   ///
@@ -57,6 +56,7 @@ class SecureStorage {
   factory testing({required FlutterSecureStorage storage}) {
     return SecureStorage._singleton(storage: storage);
   }
+
   /// Creates a singleton instance of [SecureStorage].
   ///
   /// The [storage] parameter allows injecting a custom [FlutterSecureStorage]
@@ -141,10 +141,7 @@ class SecureStorage {
   /// final theme = await storage.loadSafe('theme', defaultData: 'light');
   /// // Always returns a value, either stored or default
   /// ```
-  Future<String> loadSafe(
-    String key, {
-    required String defaultData,
-  }) async {
+  Future<String> loadSafe(String key, {required String defaultData}) async {
     try {
       final data = await _storage.read(key: key);
       final result = data ?? defaultData;
@@ -272,10 +269,7 @@ class SecureStorage {
       return data;
     } catch (error, stackTrace) {
       printError('Failed to load all data', stackTrace);
-      throw StorageException(
-        'Failed to load all data',
-        originalError: error,
-      );
+      throw StorageException('Failed to load all data', originalError: error);
     }
   }
 
@@ -343,10 +337,7 @@ class SecureStorage {
       printSuccess('Deleted all data from SecureStorage');
     } catch (error, stackTrace) {
       printError('Failed to delete all data', stackTrace);
-      throw StorageException(
-        'Failed to delete all data',
-        originalError: error,
-      );
+      throw StorageException('Failed to delete all data', originalError: error);
     }
   }
 
@@ -402,7 +393,7 @@ class SecureStorage {
   /// ```
   Future<Map<String, String>> loadMultiple(List<String> keys) async {
     final result = <String, String>{};
-    
+
     for (final key in keys) {
       try {
         final value = await load(key);
@@ -414,7 +405,7 @@ class SecureStorage {
         // Continue loading other keys
       }
     }
-    
+
     printInfo(
       'Loaded ${result.length} of ${keys.length} items from SecureStorage',
     );
@@ -454,11 +445,7 @@ class SecureStorage {
 /// Exception thrown when secure storage operations fail.
 class StorageException implements Exception {
   /// Creates a new storage exception.
-  const new(
-    this.message, {
-    this.key,
-    this.originalError,
-  });
+  const new(this.message, {this.key, this.originalError});
 
   /// A description of the error.
   final String message;

@@ -2,20 +2,20 @@ import 'package:flutter_falconnect/src/src.dart';
 
 /// Manages a collection of [EitherStreamFetcher] instances with automatic
 /// cleanup, debouncing, and type-safe operations.
-/// 
+///
 /// Provides centralized management of multiple stream fetchers with proper
 /// resource lifecycle management and memory leak prevention.
 class EitherStreamFetcherList {
-  final Map<dynamic, EitherStreamFetcher<Object?>> _fetcherMap = 
+  final Map<dynamic, EitherStreamFetcher<Object?>> _fetcherMap =
       <dynamic, EitherStreamFetcher<Object?>>{};
 
-  /// Fetches data from a stream with automatic debouncing and lifecycle 
+  /// Fetches data from a stream with automatic debouncing and lifecycle
   /// management.
-  /// 
+  ///
   /// [key] - Unique identifier for this fetch operation
   /// [call] - The stream to fetch data from
   /// [debounceFetch] - Whether to prevent duplicate fetches for the same key
-  /// 
+  ///
   /// Returns a stream of [WidgetDataState] for the requested data.
   Stream<WidgetDataState<T?>> fetchStream<T>({
     required Object key,
@@ -24,7 +24,7 @@ class EitherStreamFetcherList {
   }) {
     // Clean up closed fetchers to prevent memory leaks
     _cleanupClosedFetchers();
-    
+
     if (_canFetch(key, debounceFetch)) {
       final fetcher = EitherStreamFetcher<T>();
       _fetcherMap[key] = fetcher;
@@ -44,25 +44,23 @@ class EitherStreamFetcherList {
     }
   }
 
-  /// Fetches data from a future with automatic debouncing and lifecycle 
+  /// Fetches data from a future with automatic debouncing and lifecycle
   /// management.
-  /// 
+  ///
   /// [key] - Unique identifier for this fetch operation
   /// [call] - The future to fetch data from
   /// [debounceFetch] - Whether to prevent duplicate fetches for the same key
-  /// 
+  ///
   /// Returns a stream of [WidgetDataState] for the requested data.
   Stream<WidgetDataState<T?>> fetchFuture<T>({
     required Object key,
     required Future<Either<Failure, T>> call,
     bool debounceFetch = true,
-  }) =>
-      fetchStream<T>(
-        key: key,
-        call: Stream.fromFuture(call),
-        debounceFetch: debounceFetch,
-      );
-
+  }) => fetchStream<T>(
+    key: key,
+    call: Stream.fromFuture(call),
+    debounceFetch: debounceFetch,
+  );
 
   /// Removes closed fetchers from the map to prevent memory leaks
   void _cleanupClosedFetchers() {
@@ -82,7 +80,7 @@ class EitherStreamFetcherList {
   }
 
   /// Synchronously initiates close operations for all fetchers.
-  /// 
+  ///
   /// Note: This starts the close operations but doesn't wait for completion.
   /// Use [closeAsync] if you need to wait for all operations to complete.
   void closeSync() {
@@ -93,7 +91,7 @@ class EitherStreamFetcherList {
   }
 
   /// Asynchronously closes all fetchers and waits for completion.
-  /// 
+  ///
   /// This ensures all resources are properly cleaned up before returning.
   Future<void> closeAsync() async {
     final futures = _fetcherMap.values

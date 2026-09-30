@@ -39,8 +39,7 @@ import 'package:flutter_falconx/src/src.dart';
 
 abstract class FalconState<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
-  new({FullWidgetState? initialWidgetState})
-    : _initState = initialWidgetState;
+  new({FullWidgetState? initialWidgetState}) : _initState = initialWidgetState;
 
   final FullWidgetState? _initState;
   late final FullWidgetStatesNotifier stateNotifier;
@@ -94,11 +93,7 @@ abstract class FalconState<T extends StatefulWidget> extends State<T>
   }
 
   Widget stateBuilder(
-    Widget Function(
-      BuildContext context,
-      FullWidgetStates states,
-    )
-    builder,
+    Widget Function(BuildContext context, FullWidgetStates states) builder,
   ) => FullWidgetStatesBuilder(
     create: stateNotifier,
     builder: (context, states) => builder(context, states),

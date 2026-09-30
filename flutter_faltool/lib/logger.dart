@@ -232,9 +232,7 @@ class Log {
   static void title(Object? message) {
     if (!kReleaseMode) {
       const encoder = JsonEncoder.withIndent('  ');
-      final prettyPrint = encoder.convert(
-        message?.toString() ?? 'Null',
-      );
+      final prettyPrint = encoder.convert(message?.toString() ?? 'Null');
       _printLong(_title(prettyPrint));
     }
   }
@@ -246,9 +244,7 @@ class Log {
   static void success(Object? message) {
     if (!kReleaseMode) {
       const encoder = JsonEncoder.withIndent('  ');
-      final prettyPrint = encoder.convert(
-        message?.toString() ?? 'Null',
-      );
+      final prettyPrint = encoder.convert(message?.toString() ?? 'Null');
       _printLong(_success(prettyPrint));
     }
   }

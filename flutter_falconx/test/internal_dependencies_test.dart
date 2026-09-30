@@ -90,13 +90,14 @@ void main() {
       test(
         'non-umbrella barrel does not re-export a sibling package',
         () {
-          final barrel =
-              File('../$package/lib/$package.dart').readAsStringSync();
+          final barrel = File('../$package/lib/$package.dart')
+              .readAsStringSync();
           for (final other in otherPackages) {
             expect(
               barrel,
               isNot(contains("export 'package:$other/$other.dart'")),
-              reason: '$package must not re-export $other from its barrel; '
+              reason:
+                  '$package must not re-export $other from its barrel; '
                   'reach it through lib/src/src.dart instead',
             );
           }
@@ -109,8 +110,8 @@ void main() {
       test(
         'umbrella barrel exports all four sibling packages',
         () {
-          final barrel =
-              File('../$package/lib/$package.dart').readAsStringSync();
+          final barrel = File('../$package/lib/$package.dart')
+              .readAsStringSync();
           for (final other in otherPackages) {
             expect(
               barrel,

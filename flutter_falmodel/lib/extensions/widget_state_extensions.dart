@@ -3,13 +3,13 @@ import 'package:flutter_falmodel/src/src.dart';
 
 extension FullWidgetStateExtension on WidgetState {
   FullWidgetState? get toFullWidgetState => switch (this) {
-        WidgetState.hovered => FullWidgetState.hovered,
-        WidgetState.focused => FullWidgetState.focused,
-        WidgetState.pressed => FullWidgetState.pressed,
-        WidgetState.dragged => FullWidgetState.dragged,
-        WidgetState.selected => FullWidgetState.selected,
-        WidgetState.scrolledUnder => FullWidgetState.scrolledUnder,
-        WidgetState.disabled => FullWidgetState.disabled,
-        WidgetState.error => FullWidgetState.fail,
-      };
+    WidgetState.hovered => FullWidgetState.hovered,
+    WidgetState.focused => FullWidgetState.focused,
+    WidgetState.pressed => FullWidgetState.pressed,
+    WidgetState.dragged => FullWidgetState.dragged,
+    WidgetState.selected => FullWidgetState.selected,
+    WidgetState.scrolledUnder => FullWidgetState.scrolledUnder,
+    WidgetState.disabled => FullWidgetState.disabled,
+    WidgetState.error => FullWidgetState.fail,
+  };
 }
