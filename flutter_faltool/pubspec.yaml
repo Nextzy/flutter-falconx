@@ -1,6 +1,6 @@
 name: flutter_faltool
 description: A tools library for Flutter.
-version: 4.0.0
+version: 4.0.1
 publish_to: none
 
 environment:
