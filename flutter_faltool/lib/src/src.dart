@@ -2,4 +2,4 @@
 // this file; the public barrel never exports it.
 export 'package:ansicolor/ansicolor.dart';
 export 'package:flutter/foundation.dart';
-export 'package:flutter_faltool/flutter_faltool.dart' hide IterableFilter;
+export 'package:flutter_faltool/flutter_faltool.dart';
