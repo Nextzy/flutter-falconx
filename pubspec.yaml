@@ -115,3 +115,7 @@ melos:
     check:exports:
       description: Fail when a barrel exports a name that collides with a dart library or Flutter and tool/export_check/bin/check.dart does not allowlist it.
       run: cd tool/export_check && dart pub get && dart run bin/check.dart
+
+    check:exports:test:
+      description: Analyze and test tool/export_check, which melos run analyze and melos run test skip.
+      run: cd tool/export_check && dart pub get && dart analyze && dart test

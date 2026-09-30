@@ -61,6 +61,7 @@ flutter_falstore     → flutter_faltool only
 | `melos run test` | `flutter test` in every package with a `test/` dir, fail-fast |
 | `melos run build_runner` / `:check` / `:watch` | code generation; no package in this repo generates code today |
 | `melos run check:exports` | `tool/export_check`: fails on an export name collision with a `dart:` library or Flutter that its allowlist does not settle (about 25 s) |
+| `melos run check:exports:test` | `dart analyze` and `dart test` in `tool/export_check`, which `analyze` and `test` skip |
 
 - Run one test file from its package: `cd flutter_faltool && flutter test test/tools/dart_image_compress_engine_test.dart`.
 - Reset dependencies with `melos clean`, then `melos bootstrap`.
@@ -72,7 +73,7 @@ Feature work lands on `develop`. A release carries only the version bump:
 ```bash
 git flow release start X.Y.Z
 # set version: in the root and the five package pubspecs; set every sibling ref: to X.Y.Z
-melos run get && melos run analyze && melos run test && melos run check:exports
+melos run get && melos run analyze && melos run test && melos run check:exports:test && melos run check:exports
 git commit -am "chore: release X.Y.Z"
 git flow release finish X.Y.Z      # tags X.Y.Z (empty tag prefix), merges into main and back to develop
 git push origin main develop --tags
