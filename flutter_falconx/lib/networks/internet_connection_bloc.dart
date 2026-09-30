@@ -1,7 +1,7 @@
 import 'package:flutter_falconx/src/src.dart';
 
 class InternetConnectionBloc extends BlocBase<List<ConnectivityResult>> {
-  InternetConnectionBloc({
+  new({
     required List<ConnectivityResult> initialResult,
     Connectivity? connectivity,
   })  : _connectivity = connectivity ?? Connectivity(),

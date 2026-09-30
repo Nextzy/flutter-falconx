@@ -1,6 +1,4 @@
-import 'dart:typed_data';
 
-import 'package:cross_file/cross_file.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/tools/src/dart_image_compress_engine.dart';
 import 'package:flutter_faltool/tools/src/directory_stub.dart'
@@ -23,18 +21,38 @@ export 'package:flutter_image_compress/flutter_image_compress.dart'
 /// Linux use `package:image` in a background isolate. Files are [XFile]s so
 /// the same API compiles on web.
 class ImageCompressTool {
-  ImageCompressTool._();
+  new _();
 
   static const int defaultQuality = 85;
   static const int defaultMinWidth = 1920;
   static const int defaultMinHeight = 1080;
 
   static const Map<ImageCompressProfile, ImageCompressConfig> profiles = {
-    ImageCompressProfile.thumbnail: ImageCompressConfig(minWidth: 150, minHeight: 150, quality: 70),
-    ImageCompressProfile.preview: ImageCompressConfig(minWidth: 800, minHeight: 600, quality: 80),
-    ImageCompressProfile.standard: ImageCompressConfig(minWidth: 1920, minHeight: 1080, quality: 85),
-    ImageCompressProfile.high: ImageCompressConfig(minWidth: 2560, minHeight: 1440, quality: 90),
-    ImageCompressProfile.original: ImageCompressConfig(minWidth: 0, minHeight: 0, quality: 95),
+    ImageCompressProfile.thumbnail: ImageCompressConfig(
+      minWidth: 150,
+      minHeight: 150,
+      quality: 70,
+    ),
+    ImageCompressProfile.preview: ImageCompressConfig(
+      minWidth: 800,
+      minHeight: 600,
+      quality: 80,
+    ),
+    ImageCompressProfile.standard: ImageCompressConfig(
+      minWidth: 1920,
+      minHeight: 1080,
+      quality: 85,
+    ),
+    ImageCompressProfile.high: ImageCompressConfig(
+      minWidth: 2560,
+      minHeight: 1440,
+      quality: 90,
+    ),
+    ImageCompressProfile.original: ImageCompressConfig(
+      minWidth: 0,
+      minHeight: 0,
+      quality: 95,
+    ),
   };
 
   /// Test seam: when set, every call uses this engine.
@@ -105,6 +123,8 @@ class ImageCompressTool {
         autoCorrectionAngle: autoCorrectionAngle,
         keepExif: keepExif,
       );
+      // Part of the 4.0.0 contract: UnsupportedError escapes unwrapped.
+      // ignore: avoid_catching_errors
     } on UnsupportedError {
       rethrow;
     } on ImageCompressException {
@@ -175,7 +195,7 @@ class ImageCompressTool {
               numberOfRetries: numberOfRetries,
             );
             return MapEntry(file.path, compressed);
-          } catch (e) {
+          } on Object catch (e) {
             debugPrint('Failed to compress ${file.path}: $e');
             return MapEntry<String, XFile?>(file.path, null);
           }
@@ -201,7 +221,8 @@ class ImageCompressTool {
       originalSize: originalSize,
       compressedSize: compressedSize,
       sizeReduction: reduction,
-      reductionPercentage: originalSize == 0 ? 0 : (reduction / originalSize) * 100,
+      reductionPercentage:
+          originalSize == 0 ? 0 : (reduction / originalSize) * 100,
     );
   }
 
@@ -242,6 +263,8 @@ class ImageCompressTool {
           keepExif: keepExif,
           numberOfRetries: numberOfRetries,
         );
+        // Part of the 4.0.0 contract: UnsupportedError escapes unwrapped.
+        // ignore: avoid_catching_errors
       } on UnsupportedError {
         rethrow;
       } on ImageCompressException {
@@ -270,7 +293,10 @@ class ImageCompressTool {
     return output;
   }
 
-  static Future<String> _generateTargetPath(String sourceName, CompressFormat format) async {
+  static Future<String> _generateTargetPath(
+    String sourceName,
+    CompressFormat format,
+  ) async {
     final tempDir = await getTemporaryDirectory();
     return p.join(tempDir.path, _outputName(sourceName, format));
   }
@@ -344,7 +370,7 @@ enum ImageCompressProfile {
 
 /// Configuration for image compression
 class ImageCompressConfig {
-  const ImageCompressConfig({
+  const new({
     required this.minWidth,
     required this.minHeight,
     required this.quality,
@@ -375,7 +401,7 @@ class ImageCompressConfig {
 
 /// Result of image compression
 class CompressionResult {
-  const CompressionResult({
+  const new({
     required this.originalSize,
     required this.compressedSize,
     required this.sizeReduction,
@@ -414,7 +440,7 @@ class CompressionResult {
 
 /// Custom exception for image compression errors
 class ImageCompressException implements Exception {
-  ImageCompressException(this.message);
+  new(this.message);
 
   final String message;
 

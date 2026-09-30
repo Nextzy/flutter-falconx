@@ -1,7 +1,7 @@
 import 'package:flutter_falconx/src/src.dart';
 
 class NullableContentState<T> extends Cubit<WidgetDataState<T?>> {
-  NullableContentState.initial({T? data, UserFeedback? feedback})
+  new initial({T? data, UserFeedback? feedback})
       : super(WidgetDataState.initial(data, feedback: feedback));
 
   bool get isInitial => state.isInitial; //
@@ -69,7 +69,7 @@ class NullableContentState<T> extends Cubit<WidgetDataState<T?>> {
 
 class NullableContentBuilder<T>
     extends BlocBuilder<NullableContentState<T>, WidgetDataState<T?>> {
-  const NullableContentBuilder({
+  const new({
     super.key,
     required NullableContentState<T> content,
     super.buildWhen,

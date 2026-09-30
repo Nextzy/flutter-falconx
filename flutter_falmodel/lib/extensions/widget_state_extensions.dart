@@ -1,5 +1,5 @@
-import 'package:flutter_falmodel/src/src.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_falmodel/src/src.dart';
 
 extension FullWidgetStateExtension on WidgetState {
   FullWidgetState? get toFullWidgetState => switch (this) {

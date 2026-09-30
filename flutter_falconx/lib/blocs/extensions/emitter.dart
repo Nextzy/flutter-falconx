@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter_falconx/src/src.dart';
 
@@ -274,10 +273,10 @@ extension WidgetDataStateEmitterExtensions<T> on Emitter<WidgetDataState<T>> {
     VoidFailureCallback? onFailure,
   }) => onEach(
     call,
-    onData: (WidgetDataState<A?> data) {
+    onData: (data) {
       onData(data);
     },
-    onError: (Object error, StackTrace stackTrace) {
+    onError: (error, stackTrace) {
       if (error is Failure) {
         onFailure?.call(error);
       } else {

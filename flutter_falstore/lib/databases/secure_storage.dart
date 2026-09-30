@@ -49,11 +49,19 @@ import 'package:flutter_falstore/src/src.dart';
 /// - Consider implementing key rotation for long-lived data
 /// - Always handle errors appropriately to avoid exposing sensitive data
 class SecureStorage {
+
+  /// Creates a test instance of [SecureStorage] with a custom storage
+  /// implementation.
+  ///
+  /// This factory is intended for testing purposes only.
+  factory testing({required FlutterSecureStorage storage}) {
+    return SecureStorage._singleton(storage: storage);
+  }
   /// Creates a singleton instance of [SecureStorage].
   ///
   /// The [storage] parameter allows injecting a custom [FlutterSecureStorage]
   /// instance, primarily useful for testing.
-  const SecureStorage._singleton({
+  const new _singleton({
     FlutterSecureStorage storage = const FlutterSecureStorage(),
   }) : _storage = storage;
 
@@ -62,13 +70,6 @@ class SecureStorage {
 
   /// The singleton instance of [SecureStorage].
   static const SecureStorage instance = SecureStorage._singleton();
-
-  /// Creates a test instance of [SecureStorage] with a custom storage implementation.
-  ///
-  /// This factory is intended for testing purposes only.
-  factory SecureStorage.testing({required FlutterSecureStorage storage}) {
-    return SecureStorage._singleton(storage: storage);
-  }
 
   /// Saves a string value to secure storage.
   ///
@@ -147,9 +148,11 @@ class SecureStorage {
     try {
       final data = await _storage.read(key: key);
       final result = data ?? defaultData;
-      printInfo('Loaded key: $key with value: ${data != null ? "found" : "default"}');
+      printInfo(
+        'Loaded key: $key with value: ${data != null ? "found" : "default"}',
+      );
       return result;
-    } catch (error, stackTrace) {
+    } on Object catch (_, stackTrace) {
       printError('Failed to load key: $key, using default', stackTrace);
       return defaultData;
     }
@@ -160,7 +163,8 @@ class SecureStorage {
   /// [key] - The unique identifier for the stored value
   /// [data] - The object to encode and store (must be JSON-encodable)
   ///
-  /// Throws [StorageException] if the operation fails or if [data] is not JSON-encodable.
+  /// Throws [StorageException] if the operation fails or if [data] is not
+  /// JSON-encodable.
   ///
   /// Example:
   /// ```dart
@@ -190,7 +194,8 @@ class SecureStorage {
   /// [reviver] - Optional function to transform the decoded JSON
   ///
   /// Returns the decoded object or `null` if not found.
-  /// Throws [StorageException] if the operation fails or if data is not valid JSON.
+  /// Throws [StorageException] if the operation fails or if data is not
+  /// valid JSON.
   ///
   /// Example:
   /// ```dart
@@ -199,7 +204,10 @@ class SecureStorage {
   ///   final theme = prefs['theme'] as String?;
   /// }
   /// ```
-  Future<dynamic> loadJson(String key, {Object? Function(Object? key, Object? value)? reviver}) async {
+  Future<dynamic> loadJson(
+    String key, {
+    Object? Function(Object? key, Object? value)? reviver,
+  }) async {
     final jsonString = await load(key);
     if (jsonString == null) return null;
 
@@ -287,7 +295,7 @@ class SecureStorage {
     try {
       final value = await _storage.read(key: key);
       return value != null;
-    } catch (error) {
+    } on Object {
       // If we can't read, assume it doesn't exist
       return false;
     }
@@ -365,12 +373,12 @@ class SecureStorage {
         savedKeys.add(entry.key);
       }
       printSuccess('Saved ${data.length} items to SecureStorage');
-    } catch (error) {
+    } on Object {
       // Rollback on failure
       for (final key in savedKeys) {
         try {
           await delete(key: key);
-        } catch (_) {
+        } on Object {
           // Ignore rollback errors
         }
       }
@@ -387,7 +395,10 @@ class SecureStorage {
   ///
   /// Example:
   /// ```dart
-  /// final tokens = await storage.loadMultiple(['auth_token', 'refresh_token']);
+  /// final tokens = await storage.loadMultiple([
+  ///   'auth_token',
+  ///   'refresh_token',
+  /// ]);
   /// ```
   Future<Map<String, String>> loadMultiple(List<String> keys) async {
     final result = <String, String>{};
@@ -398,20 +409,23 @@ class SecureStorage {
         if (value != null) {
           result[key] = value;
         }
-      } catch (error) {
+      } on Object {
         printError('Failed to load key: $key in batch operation');
         // Continue loading other keys
       }
     }
     
-    printInfo('Loaded ${result.length} of ${keys.length} items from SecureStorage');
+    printInfo(
+      'Loaded ${result.length} of ${keys.length} items from SecureStorage',
+    );
     return result;
   }
 
   /// Updates an existing value or creates it if it doesn't exist.
   ///
   /// [key] - The unique identifier for the value
-  /// [updater] - Function that receives the current value (or null) and returns the new value
+  /// [updater] - Function that receives the current value (or null) and
+  /// returns the new value
   ///
   /// Returns the new value.
   /// Throws [StorageException] if the operation fails.
@@ -440,7 +454,7 @@ class SecureStorage {
 /// Exception thrown when secure storage operations fail.
 class StorageException implements Exception {
   /// Creates a new storage exception.
-  const StorageException(
+  const new(
     this.message, {
     this.key,
     this.originalError,

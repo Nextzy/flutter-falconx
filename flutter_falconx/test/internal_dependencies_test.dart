@@ -21,7 +21,12 @@ const _packages = [
 
 /// Allowed sibling dependencies, pointing down the diagram only.
 const _allowedSiblings = {
-  'flutter_falconx': {'flutter_falconnect', 'flutter_falmodel', 'flutter_falstore', 'flutter_faltool'},
+  'flutter_falconx': {
+    'flutter_falconnect',
+    'flutter_falmodel',
+    'flutter_falstore',
+    'flutter_faltool',
+  },
   'flutter_falconnect': {'flutter_falmodel', 'flutter_faltool'},
   'flutter_falmodel': {'flutter_faltool'},
   'flutter_falstore': {'flutter_faltool'},
@@ -32,7 +37,9 @@ Map<dynamic, dynamic> _pubspec(String path) =>
     loadYaml(File(path).readAsStringSync()) as Map<dynamic, dynamic>;
 
 Map<dynamic, dynamic> _dependencies(String package) =>
-    (_pubspec('../$package/pubspec.yaml')['dependencies'] as Map<dynamic, dynamic>?) ?? const {};
+    (_pubspec('../$package/pubspec.yaml')['dependencies']
+        as Map<dynamic, dynamic>?) ??
+    const {};
 
 void main() {
   final version = _pubspec('../pubspec.yaml')['version'] as String;
@@ -43,7 +50,10 @@ void main() {
         expect(_pubspec('../$package/pubspec.yaml')['version'], version);
       });
 
-      final siblings = _dependencies(package).keys.whereType<String>().where(_packages.contains).toSet();
+      final siblings = _dependencies(package).keys
+          .whereType<String>()
+          .where(_packages.contains)
+          .toSet();
 
       test('depends only on packages below it', () {
         expect(siblings, _allowedSiblings[package]);
@@ -52,7 +62,11 @@ void main() {
       for (final sibling in siblings) {
         test('pins $sibling to the release tag of this version', () {
           final dependency = _dependencies(package)[sibling];
-          expect(dependency, isA<Map<dynamic, dynamic>>(), reason: 'must be a git dependency, not path:');
+          expect(
+            dependency,
+            isA<Map<dynamic, dynamic>>(),
+            reason: 'must be a git dependency, not path:',
+          );
           final git = (dependency as Map<dynamic, dynamic>)['git'];
           expect(git, isA<Map<dynamic, dynamic>>(), reason: 'not a git dep');
           final gitMap = git as Map<dynamic, dynamic>;

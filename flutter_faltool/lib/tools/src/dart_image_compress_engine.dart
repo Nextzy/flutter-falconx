@@ -1,8 +1,6 @@
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/tools/image_compress.dart';
-import 'package:flutter_faltool/tools/src/image_compress_engine.dart';
 import 'package:image/image.dart' as img;
 
 /// Pure-Dart backend for platforms without a native plugin (Windows, Linux).
@@ -15,7 +13,7 @@ import 'package:image/image.dart' as img;
 /// encoder never writes EXIF, so `keepExif` has no observable effect for
 /// [CompressFormat.png].
 class DartImageCompressEngine implements ImageCompressEngine {
-  const DartImageCompressEngine();
+  const new();
 
   @override
   Future<Uint8List> compress({
@@ -47,7 +45,7 @@ class DartImageCompressEngine implements ImageCompressEngine {
 }
 
 class _DartCompressRequest {
-  const _DartCompressRequest({
+  const new({
     required this.bytes,
     required this.minWidth,
     required this.minHeight,

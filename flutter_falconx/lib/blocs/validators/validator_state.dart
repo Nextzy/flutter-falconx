@@ -1,7 +1,7 @@
 import 'package:flutter_falconx/src/src.dart';
 
 class ValidateState<DATA> {
-  const ValidateState({
+  const new({
     this.data,
     this.failure,
     this.canBuild = false,
@@ -19,7 +19,7 @@ class ValidateState<DATA> {
     return ValidateState(
       data: data ?? this.data,
       failure: failure ?? this.failure,
-      canBuild: build ?? this.canBuild,
+      canBuild: build ?? canBuild,
     );
   }
 

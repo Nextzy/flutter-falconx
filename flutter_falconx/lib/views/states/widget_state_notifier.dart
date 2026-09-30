@@ -1,7 +1,7 @@
 import 'package:flutter_falconx/src/src.dart';
 
 class FullWidgetStatesNotifier extends ValueNotifier<FullWidgetStates> {
-  FullWidgetStatesNotifier([dynamic state])
+  new([dynamic state])
     : super(
         state is FullWidgetStates
             ? state

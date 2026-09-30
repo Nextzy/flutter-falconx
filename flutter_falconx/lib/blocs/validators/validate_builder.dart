@@ -12,7 +12,7 @@ typedef ValidateWidgetBuilder<DATA> =
     );
 
 abstract class ValidatorCubit<DATA> extends Cubit<ValidateState<DATA?>> {
-  ValidatorCubit() : super(const ValidateState(data: null));
+  new() : super(const ValidateState(data: null));
 
   Failure? onValidate(DATA? data);
 
@@ -44,6 +44,8 @@ abstract class ValidatorCubit<DATA> extends Cubit<ValidateState<DATA?>> {
     );
   }
 
+  // Steers callers to validate/emitError; not a scheduled removal.
+  // ignore: remove_deprecations_in_breaking_versions
   @Deprecated('Please use [validate] or [emitError]')
   @protected
   @visibleForTesting
@@ -55,7 +57,7 @@ abstract class ValidatorCubit<DATA> extends Cubit<ValidateState<DATA?>> {
 
 class ValidateBuilder<B extends Cubit<ValidateState<DATA?>>, DATA>
     extends StatelessWidget {
-  const ValidateBuilder({
+  const new({
     super.key,
     this.source,
     required this.builder,

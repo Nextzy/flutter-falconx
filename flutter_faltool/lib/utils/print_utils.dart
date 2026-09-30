@@ -13,7 +13,7 @@ void printInfo(Object? message) {
     try {
       const encoder = JsonEncoder.withIndent('  ');
       print(_normal(encoder.convert(message?.toString())));
-    } catch (error) {
+    } on Object catch (error) {
       print(error);
     }
   }
@@ -28,7 +28,7 @@ void printError(Object? message, [StackTrace? stacktrace]) {
       if (stacktrace != null) {
         print(_error(stacktrace.toString().trimRight()));
       }
-    } catch (error) {
+    } on Object catch (error) {
       print(error);
     }
   }
@@ -40,7 +40,7 @@ void printSuccess(Object? message) {
     try {
       const encoder = JsonEncoder.withIndent('  ');
       print(_success(encoder.convert(message?.toString())));
-    } catch (error) {
+    } on Object catch (error) {
       print(error);
     }
   }

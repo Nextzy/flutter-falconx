@@ -5,7 +5,8 @@ import 'package:flutter_falconnect/flutter_falconnect.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('flutter_falconnect re-exports flutter_falmodel and flutter_faltool', () {
+  test('flutter_falconnect re-exports flutter_falmodel and '
+      'flutter_faltool', () {
     // WidgetDataState comes from flutter_falmodel.
     final state = WidgetDataState<int>.initial(1);
     expect(state.data, 1);

@@ -3,7 +3,7 @@ import 'package:flutter_falconx/src/src.dart';
 class NullableWidgetStateBlocConsumer<
 B extends StateStreamable<WidgetDataState<DATA?>>,
 DATA> extends BlocConsumer<B, WidgetDataState<DATA?>> {
-  NullableWidgetStateBlocConsumer({
+  new({
     super.key,
     super.bloc,
     BlocWidgetListenerEvent<Object>? listenEvent,
@@ -50,7 +50,7 @@ DATA> extends BlocConsumer<B, WidgetDataState<DATA?>> {
 
 class WidgetStateBlocConsumer<B extends StateStreamable<WidgetDataState<DATA>>,
 DATA> extends BlocConsumer<B, WidgetDataState<DATA>> {
-  WidgetStateBlocConsumer({
+  new({
     super.key,
     super.bloc,
     BlocWidgetListenerEvent<Object>? listenEvent,

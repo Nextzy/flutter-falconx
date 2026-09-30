@@ -9,23 +9,23 @@ enum PopResultStatus {
 }
 
 class PopResult<D extends Object?> extends Equatable {
-  const PopResult.success([
+  const new success([
     this.data,
   ]) : status = PopResultStatus.success;
 
-  const PopResult.fail([
+  const new fail([
     this.data,
   ]) : status = PopResultStatus.fail;
 
-  const PopResult.warning([
+  const new warning([
     this.data,
   ]) : status = PopResultStatus.warning;
 
-  const PopResult.cancel([
+  const new cancel([
     this.data,
   ]) : status = PopResultStatus.cancel;
 
-  const PopResult.info([
+  const new info([
     this.data,
   ]) : status = PopResultStatus.info;
 

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/src/src.dart';
 import 'package:flutter_faltool/utils/platform_checker_web.dart'
     if (dart.library.io) 'platform_checker_stub.dart' as web_impl;
@@ -47,7 +46,8 @@ class PlatformChecker {
 
   ///========================= PLATFORM =========================///
 
-  static bool get isAndroid => defaultTargetPlatform == TargetPlatform.android; //
+  static bool get isAndroid =>
+      defaultTargetPlatform == TargetPlatform.android; //
   static bool get isNotAndroid => !isAndroid; //
   static bool get isAndroidNative => isAndroid && isNotWeb; //
   static bool get isNotAndroidNative => !isAndroidNative; //
@@ -71,7 +71,8 @@ class PlatformChecker {
       isWeb && userAgent.toLowerCase().contains('linux'); //
   static bool get isNotLinuxOnWeb => !isLinuxOnWeb; //
 
-  static bool get isWindows => defaultTargetPlatform == TargetPlatform.windows; //
+  static bool get isWindows =>
+      defaultTargetPlatform == TargetPlatform.windows; //
   static bool get isNotWindows => !isWindows; //
   static bool get isWindowsNative => isWindows && isNotWeb; //
   static bool get isNotWindowsNative => !isWindowsNative; //
@@ -87,7 +88,8 @@ class PlatformChecker {
       isWeb && userAgent.toLowerCase().contains('macintosh'); //
   static bool get isNotMacOsOnWeb => !isMacOsOnWeb; //
 
-  static bool get isFuchsia => defaultTargetPlatform == TargetPlatform.fuchsia; //
+  static bool get isFuchsia =>
+      defaultTargetPlatform == TargetPlatform.fuchsia; //
   static bool get isNotFuchsia => !isFuchsia; //
   static bool get isFuchsiaNative => isFuchsia && isNotWeb; //
   static bool get isNotFuchsiaNative => !isFuchsiaNative; //

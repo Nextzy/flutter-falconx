@@ -1,13 +1,13 @@
-import 'dart:convert';
+// Ignore analysis
+// ignore_for_file: unused_field
 
 import 'package:flutter_faltool/src/src.dart';
-import 'package:flutter/foundation.dart';
 
 /// A comprehensive logging utility for Falcon applications.
 ///
-/// Provides structured logging with multiple severity levels, ANSI color support,
-/// and automatic stack trace handling. All logging is disabled in release mode
-/// to prevent sensitive information leakage.
+/// Provides structured logging with multiple severity levels, ANSI color
+/// support, and automatic stack trace handling. All logging is disabled in
+/// release mode to prevent sensitive information leakage.
 ///
 /// Example:
 /// ```dart
@@ -282,7 +282,7 @@ class Log {
   ///
   /// The default chunk size is 1020 characters to ensure compatibility with
   /// most platforms.
-  static void _printLong(Object? object) async {
+  static void _printLong(Object? object) {
     if (!kReleaseMode) {
       const defaultPrintLength = 1020;
       if (object == null || object.toString().length <= defaultPrintLength) {

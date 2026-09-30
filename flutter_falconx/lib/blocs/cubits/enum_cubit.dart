@@ -1,7 +1,7 @@
 import 'package:flutter_falconx/src/src.dart';
 
 class EnumCubit<T extends Enum> extends Cubit<T> {
-  EnumCubit(super.data);
+  new(super.initialState);
 
   T get data => state;
 

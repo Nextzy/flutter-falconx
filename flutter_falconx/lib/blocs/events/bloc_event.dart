@@ -1,5 +1,5 @@
 class BlocEvent<Event> {
-  const BlocEvent(
+  const new(
     this.name, {
     this.data,
   });
@@ -12,5 +12,3 @@ class BlocEvent<Event> {
     return 'BlocEvent{name: $name, data: $data}';
   }
 }
-
-

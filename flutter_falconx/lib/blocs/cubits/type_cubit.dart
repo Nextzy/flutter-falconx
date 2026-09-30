@@ -1,7 +1,7 @@
 import 'package:flutter_falconx/src/src.dart';
 
 class TypeCubit<T> extends Cubit<T> {
-  TypeCubit(super.data);
+  new(super.initialState);
 
   T get data => state;
 

@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:flutter_faltool/tools/image_compress.dart';
-import 'package:flutter_faltool/tools/src/image_compress_engine.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 /// Stand-in for a `minWidth` / `minHeight` of 0 (or less).
@@ -18,7 +17,7 @@ int _pluginBound(int dimension) => dimension <= 0 ? _noResizeBound : dimension;
 
 /// Native backend: Android, iOS, macOS and web through flutter_image_compress.
 class NativeImageCompressEngine implements ImageCompressEngine {
-  const NativeImageCompressEngine();
+  const new();
 
   @override
   Future<Uint8List> compress({

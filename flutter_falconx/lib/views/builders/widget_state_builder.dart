@@ -1,7 +1,7 @@
 import 'package:flutter_falconx/src/src.dart';
 
 class FullWidgetStatesBuilder extends StatelessWidget {
-  const FullWidgetStatesBuilder({
+  const new({
     super.key,
     required this.create,
     required this.builder,
@@ -18,7 +18,7 @@ class FullWidgetStatesBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<FullWidgetStates>(
       valueListenable: create,
-      builder: (context, FullWidgetStates value, child) =>
+      builder: (context, value, child) =>
           builder(context, value),
     );
   }
