@@ -31,18 +31,22 @@ flutter_falstore     → flutter_faltool only
 
 ## Platform support
 
-- Every package compiles and runs on Android, iOS, macOS, Windows, Linux, and web.
-- Never `import 'dart:io'` under `lib/` except in the `if (dart.library.io)` branch of a conditional import (see `flutter_faltool/lib/tools/src/directory_io.dart`). Detect platforms with `PlatformChecker`, which uses `defaultTargetPlatform` and `kIsWeb`. Handle files as `XFile` from `cross_file`.
+- Every package targets Android, iOS, macOS, Windows, Linux, and web. Web compilation is proven only by the Chrome test runs: `flutter_faltool` (`flutter test --platform chrome test/tools/ test/utils/`), `flutter_falconnect` (`flutter test --platform chrome test/barrel_test.dart`, which compiles `flutter_falconnect`, `flutter_falmodel`, and `flutter_faltool`), and `flutter_falstore` (`flutter test --platform chrome`). No test compiles `flutter_falconx` for web.
+- Never `import 'dart:io'` under `lib/` except in the `if (dart.library.io)` branch of a conditional import (see `flutter_faltool/lib/tools/src/directory_io.dart`). Detect platforms with `PlatformChecker`, which uses `defaultTargetPlatform` and `kIsWeb`. In a browser `defaultTargetPlatform` is the browser's OS, so `PlatformChecker.platform` and `isAndroid`/`isIos`/`isMacOs`/... report that OS; test `isWeb` first, and use the `*OnWeb` getters for the browser's OS. Handle files as `XFile` from `cross_file`.
 - Feature gaps that remain, and how they fail:
 
 | Feature | Platform | Behaviour |
 |---|---|---|
 | `ImageCompressTool` HEIC output | Windows, Linux | throws `UnsupportedError` |
+| `ImageCompressTool` HEIC output | web | the web plugin throws `UnimplementedError` (an `UnsupportedError`); `ImageCompressTool` rethrows it |
+| `ImageCompressTool` WebP output | macOS | the macOS plugin throws `UnsupportedError` before encoding; after `FlutterImageCompress.ignoreCheckSupportPlatform(true)` it encodes JPEG while `ImageCompressTool` names the file `.webp` with MIME type `image/webp` |
+| `ImageCompressTool` `keepExif`, `autoCorrectionAngle` | web | ignored; the web plugin does not forward them |
 | `ImageCompressTool.compressAndSaveFile` | web | throws `UnsupportedError`; use `compressFile` |
 | `flutter_udid` | web | plugin absent; `DeviceIdGenerator` never calls it on web |
 | `path_provider` | web | plugin absent; `ImageCompressTool` returns a bytes-backed `XFile` on web |
 
-- `ImageCompressTool` uses `flutter_image_compress` on Android, iOS, macOS, web and `package:image` inside `compute()` on Windows and Linux. Keep both engines' resize semantics identical (`minWidth`/`minHeight` are a floor; 0 disables resizing; never upscale).
+- `ImageCompressTool` uses `flutter_image_compress` on Android, iOS, macOS, web and `package:image` inside `compute()` on Windows and Linux. Keep both engines' resize semantics identical: `minWidth`/`minHeight` are a floor, a 0 in either disables resizing on every engine, and nothing is upscaled. The native engine sends a 0 bound to the plugin as `1 << 20`, because the plugin turns 0 into a 0x0 target.
+- On Android, iOS, and macOS, `compressFile` (and so `batchCompressFiles`) and `compressAndSaveFile` hand an `XFile` with a non-empty `path` to `NativeImageCompressEngine.compressPath` (`FlutterImageCompress.compressWithFile`), so `numberOfRetries` keeps Android's `OutOfMemoryError` retry. Web, `XFile`s without a path, `compressBytes`, and a `debugEngineOverride` that is not a `NativeImageCompressEngine` go through the engine's `compress` with bytes.
 - Run `cd flutter_faltool && flutter test --platform chrome test/tools/ test/utils/` after touching any `lib/` code that could behave differently on web.
 
 ## Commands
@@ -98,7 +102,7 @@ Bump the major version when a public symbol is removed or its signature changes.
 ## Gotchas
 
 - `Undefined name 'Platform'` after bumping `dart_faltool` means code reached `dart:io` through a re-export that no longer exists; use `PlatformChecker` or `defaultTargetPlatform`.
-- `flutter_falconx.dart` keeps `hide Path, RefreshCallback, TextDirection` on its `flutter_falconnect` export (Retrofit's `@Path` collides with `dart:ui`'s `Path`; dart_falconnect's `RefreshCallback` collides with material's; intl's `TextDirection` collides with `dart:ui`'s) and `hide TextDirection` on its `flutter_falmodel`, `flutter_falstore`, and `flutter_faltool` exports for the same intl/`dart:ui` collision.
+- `flutter_falconx.dart` keeps `hide Path, RefreshCallback, TextDirection` on its `flutter_falconnect` export (Retrofit's `@Path` collides with `dart:ui`'s `Path`; dart_falconnect's `RefreshCallback` collides with material's; intl's `TextDirection` collides with `dart:ui`'s) and `hide TextDirection` on its `flutter_falmodel`, `flutter_falstore`, and `flutter_faltool` exports for the same intl/`dart:ui` collision. An app that imports one of those packages next to `package:flutter/material.dart` needs the same `hide` list on its import.
 - On native platforms `cross_file` ignores `name` in `XFile.fromData` (the name comes from the path), so pass `format:` to `ImageCompressTool.compressFile` for byte-backed XFiles.
 - Apps that want path URLs on web call `usePathUrlStrategy()` from `flutter_web_plugins` themselves; this repo no longer depends on `url_strategy`.
 - `app_links` ^7.2.1 requires Flutter >=3.44.0 (the floor for this repo); `flutter_local_notifications` ^22.3.1 requires Flutter >=3.38.1. Both plugins build with Android `compileSdk` 36, so apps need `compileSdk` 36 or higher.
