@@ -1,0 +1,53 @@
+{
+  "skillListingBudgetFraction": 0.03,
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(echo:*)",
+      "Bash(pwd:*)",
+      "Bash(which:*)",
+      "Bash(tree:*)",
+      "Bash(file:*)",
+      "Bash(diff:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(env:*)",
+      "Bash(cp:*)",
+      "Bash(for:*)",
+      "Bash(xargs:*)",
+      "Bash(git:*)",
+      "Bash(dart:*)",
+      "Bash(melos:*)",
+      "Bash(python3:*)",
+      "Bash(mv:*)",
+      "mcp__serena__*",
+      "mcp__plugin_serena_serena__*",
+      "mcp__sequential-thinking__*",
+      "mcp__apidog__*",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "hooks": {
+  },
+  "worktree": {
+    "baseRef": "head"
+  },
+  "enabledPlugins": {
+    "core-pack@nonthawit-local": true,
+    "software-engineer-pack@nonthawit-local": true,
+    "dart-engineer-pack@nonthawit-local": true,
+    "flutter-engineer-pack@nonthawit-local": true
+  }
+}
