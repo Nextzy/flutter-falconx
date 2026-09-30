@@ -13,6 +13,11 @@ export 'dart:ui'
 
 export 'package:app_links/app_links.dart';
 export 'package:bloc_concurrency/bloc_concurrency.dart';
+// `ImageDecoderCallback` collides with dart:ui's. `Badge` and `Notification`
+// are hidden so apps that use the `badges` package or define their own
+// `Notification` model do not hit ambiguous imports; import
+// `package:flutter/material.dart` directly with `show Badge` to get
+// Material's.
 export 'package:flutter/material.dart'
     hide Badge, ImageDecoderCallback, Notification;
 export 'package:flutter/services.dart';
