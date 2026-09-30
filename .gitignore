@@ -7,6 +7,16 @@
 .Spotlight-V100
 .Trashes
 
+### AI ###
+.serena/
+.superpowers/
+.claude/worktrees/
+.claude/scheduled_tasks.lock
+.claude.local.md
+.claude/settings.local.json
+.mcp.local.json
+.playwright-mcp
+
 
 ### IntelliJ ###
 *.iml

@@ -1,6 +1,6 @@
 name: flutter_falconx_core
 description: A flutter falcon package.
-version: 4.0.1
+version: 4.1.0
 
 environment:
   flutter: ">=3.44.0"
@@ -111,3 +111,7 @@ melos:
       exec:
         command: flutter pub outdated
         concurrency: 5
+
+    check:exports:
+      description: Fail when a barrel exports a name that collides with a dart library or Flutter and tool/export_check/bin/check.dart does not allowlist it.
+      run: cd tool/export_check && dart pub get && dart run bin/check.dart
