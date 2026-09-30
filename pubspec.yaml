@@ -1,6 +1,6 @@
 name: flutter_falconx_core
 description: A flutter falcon package.
-version: 4.0.0
+version: 4.0.1
 
 environment:
   flutter: ">=3.44.0"
