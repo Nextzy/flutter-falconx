@@ -25,7 +25,21 @@ class DeviceIdGenerator {
     final deviceData = StringBuffer();
 
     try {
-      if (PlatformChecker.isAndroid) {
+      // Web first: in a browser defaultTargetPlatform reports the browser's
+      // OS, so an OS branch would match and call FlutterUdid, which has no
+      // web implementation.
+      if (PlatformChecker.isWeb) {
+        final webInfo = await _deviceInfo.webBrowserInfo;
+        deviceData.writeAll([
+          webInfo.userAgent ?? '', // User agent
+          webInfo.browserName.name, // Browser name
+          webInfo.platform ?? '', // Platform
+          webInfo.language ?? '', // Language
+          webInfo.vendor ?? '', // Vendor
+          webInfo.hardwareConcurrency?.toString() ?? '', // CPU cores
+          webInfo.deviceMemory?.toString() ?? '', // Device memory
+        ]);
+      } else if (PlatformChecker.isAndroid) {
         final udid = await FlutterUdid.udid;
         final androidInfo = await _deviceInfo.androidInfo;
         deviceData.writeAll([
@@ -85,17 +99,6 @@ class DeviceIdGenerator {
           linuxInfo.version, // Linux version
           linuxInfo.machineId ?? '', // Machine ID
           linuxInfo.prettyName, // Pretty name
-        ]);
-      } else if (PlatformChecker.isWeb) {
-        final webInfo = await _deviceInfo.webBrowserInfo;
-        deviceData.writeAll([
-          webInfo.userAgent ?? '', // User agent
-          webInfo.browserName.name, // Browser name
-          webInfo.platform ?? '', // Platform
-          webInfo.language ?? '', // Language
-          webInfo.vendor ?? '', // Vendor
-          webInfo.hardwareConcurrency?.toString() ?? '', // CPU cores
-          webInfo.deviceMemory?.toString() ?? '', // Device memory
         ]);
       } else {
         // Fallback for other platforms
