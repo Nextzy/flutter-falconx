@@ -1,8 +1,113 @@
-name: falconx_project
-description: A falcon package.
-version: 1.0.0
+name: flutter_falconx_core
+description: A flutter falcon package.
+version: 4.0.0
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  flutter: ">=3.44.0"
+  sdk: ">=3.13.0 <4.0.0"
+
+workspace:
+  - flutter_falconx
+  - flutter_falconnect
+  - flutter_falstore
+  - flutter_falmodel
+  - flutter_faltool
+
 dev_dependencies:
-  melos: ^6.3.3
+  melos: ^8.9.0
+
+melos:
+  scripts:
+    analyze:
+      description: Run dart analyze across all packages.
+      exec:
+        command: flutter analyze
+        concurrency: 4
+
+    format:
+      description: Run dart format across all packages.
+      exec:
+        command: dart format --set-exit-if-changed .
+        concurrency: 4
+
+    fix:
+      description: Fix all packages.
+      exec:
+        command: >-
+          dart fix --apply
+          --code=always_put_required_named_parameters_first
+          --code=avoid_unused_constructor_parameters
+          --code=cast_nullable_to_non_nullable
+          --code=directives_ordering
+          --code=omit_local_variable_types
+          --code=prefer_const_constructors
+          --code=unnecessary_breaks
+          --code=unnecessary_cast
+          --code=unnecessary_const
+          --code=unnecessary_import
+          --code=unnecessary_non_null_assertion
+          --code=unnecessary_null_comparison
+          --code=unnecessary_lambdas
+          --code=unused_catch_stack
+          --code=unused_import
+          --code=use_null_aware_elements
+        concurrency: 4
+
+    fix:format:
+      description: Run fix and format together.
+      steps:
+        - fix
+        - format
+
+    test:
+      description: Run tests across all packages.
+      exec:
+        command: flutter test
+        concurrency: 4
+        failFast: true
+      packageFilters:
+        dirExists: test
+
+    build_runner:
+      description: Run build_runner for code generation in all packages.
+      exec:
+        command: dart run build_runner build
+        concurrency: 1
+        failFast: false
+      packageFilters:
+        dependsOn: build_runner
+
+    build_runner:check:
+      description: Fail when any committed generated file differs from what build_runner would write; writes nothing.
+      exec:
+        command: dart run build_runner build --only-check
+        concurrency: 1
+        failFast: false
+      packageFilters:
+        dependsOn: build_runner
+
+    build_runner:watch:
+      description: Run build_runner watch for code generation.
+      exec:
+        command: dart run build_runner watch
+        concurrency: 1
+      packageFilters:
+        dependsOn: build_runner
+
+    get:
+      description: Get the current package's dependencies.
+      exec:
+        command: flutter pub get
+        concurrency: 5
+
+    upgrade:
+      description: Upgrade the current package's dependencies to latest versions.
+      exec:
+        command: flutter pub upgrade
+        concurrency: 5
+
+    outdated:
+      description: Analyze your dependencies to find which ones can be upgraded.
+      exec:
+        command: flutter pub outdated
+        concurrency: 5

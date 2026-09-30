@@ -1,0 +1,29 @@
+name: flutter_falmodel
+description: Widget data state and model helpers for Flutter.
+version: 4.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  dart_falmodel:
+    git:
+      url: https://github.com/Nextzy/dart-falconx
+      ref: 2.3.1
+      path: dart_falmodel
+  flutter:
+    sdk: flutter
+  flutter_faltool:
+    git:
+      url: https://github.com/Nextzy/flutter-falconx
+      ref: 4.0.0
+      path: flutter_faltool
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^11.0.0

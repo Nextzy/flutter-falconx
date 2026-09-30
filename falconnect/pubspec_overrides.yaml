@@ -1,6 +1,0 @@
-# melos_managed_dependency_overrides: falmodel,faltool
-dependency_overrides:
-  falmodel:
-    path: ../falmodel
-  faltool:
-    path: ../faltool
