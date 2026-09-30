@@ -1,5 +1,27 @@
 # Changelog
 
+## 4.0.1 — 2026-09-30
+
+### Breaking
+
+1. A non-umbrella package barrel no longer re-exports a sibling package; only the umbrella `flutter_falconx` exports all four. An app must list and import every package it uses directly, or depend on `flutter_falconx` alone.
+   - `flutter_falconnect` no longer re-exports `flutter_falmodel` (so no longer `flutter_faltool` transitively through it either). A consumer that imported only `flutter_falconnect` and used `WidgetDataState` (from `flutter_falmodel`) or `PlatformChecker`/`DeviceIdGenerator`/`ImageCompressTool`/`Log`/print helpers (from `flutter_faltool`) must now add those packages directly.
+   - `flutter_falmodel` no longer re-exports `flutter_faltool`.
+   - `flutter_falstore` no longer re-exports `flutter_faltool`.
+   - `flutter_faltool` has no sibling package to re-export; unaffected by this rule.
+2. `flutter_faltool` (and so `flutter_falconx`, which re-exports it) no longer exports dartx's `IterableFilter` extension (the `.filter()` method on `Iterable`); use `where` instead.
+3. `flutter_falconx` drops `hide` clauses that no longer hide anything, now that the packages above stopped chaining to `flutter_faltool`: `TextDirection` is no longer hidden on its `flutter_falmodel` and `flutter_falstore` exports, and no longer part of the `hide` list on its `flutter_falconnect` export (now `hide Path, RefreshCallback`). `flutter_falconx` itself is unaffected: `dart:ui`'s `TextDirection` is still the only one reachable, since intl's `TextDirection` is still hidden on the `flutter_faltool` export.
+
+### Fixed
+
+- `ImageCompressTool.batchCompressFiles` keyed its result map by `file.path`, so two inputs sharing a path — or two byte-backed `XFile`s with no path — silently collapsed into one entry. The key for the file at index `i` is now `file.path` when non-empty, otherwise `file.name` when non-empty, otherwise `'#$i'`; a candidate key already produced for an earlier file in the same call becomes `'$key#$i'` instead.
+- `ImageCompressTool`'s format detection (`compressFile`, `compressAndSaveFile`) now falls back to the input `XFile.mimeType` when the file name's extension is empty or unrecognized (`image/png` → png, `image/webp` → webp, `image/heic`/`image/heif` → heic, `image/jpeg`/`image/jpg` → jpeg, case-insensitive), instead of always defaulting to jpeg. A known extension still wins over a conflicting `mimeType`.
+
+### Changed
+
+- `flutter_falconx/test/internal_dependencies_test.dart` now reads sibling dependencies from both `dependencies` and `dev_dependencies`; the version, direction, and git-shape checks apply to the union. The same test file gained a drift check: a non-umbrella barrel must contain no `export 'package:flutter_fal...'` line naming another package in this repo, and the umbrella barrel must export all four siblings.
+- Repo-wide `dart format .` pass (formatting only, no behavior change).
+
 ## 4.0.0 — 2026-09-30
 
 ### Breaking
