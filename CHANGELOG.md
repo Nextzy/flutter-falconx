@@ -1,5 +1,21 @@
 # Changelog
 
+## 4.1.0 — 2026-09-30
+
+### Breaking
+
+1. Every `dart-falconx` dependency moves to 2.4.0, whose barrels changed:
+   - `dart_faltool` no longer exports `dart:math`'s `log`, which collided with `dart:developer`'s; write `import 'dart:math' as math;` and call `math.log`.
+   - `dart_falconnect`'s `SocketException` is now `SocketClientException`, so `SocketException` next to `dart:io` means `dart:io`'s class again.
+   - `dart_falconnect`'s `RefreshCallback` is now `TokenRefreshCallback`.
+   - `dart_falmodel`'s `RemoteError` is now `RemoteErrorBody`.
+2. `flutter_falconx` hides `log` on its `dart:math` export for the same reason.
+3. `flutter_falconx` no longer hides the auth typedef on its `flutter_falconnect` export; it exports `TokenRefreshCallback`.
+
+### Changed
+
+- `melos run check:exports` (`tool/export_check/`) fails when a barrel exports a name that collides with a `dart:` library or Flutter and the allowlist in `tool/export_check/bin/check.dart` does not record it.
+
 ## 4.0.1 — 2026-09-30
 
 ### Breaking

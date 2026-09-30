@@ -1,6 +1,6 @@
 name: flutter_faltool
 description: A tools library for Flutter.
-version: 4.0.1
+version: 4.1.0
 publish_to: none
 
 environment:
@@ -14,7 +14,7 @@ dependencies:
   dart_faltool:
     git:
       url: https://github.com/Nextzy/dart-falconx
-      ref: 2.3.1
+      ref: 2.4.0
       path: dart_faltool
   device_info_plus: ^13.2.0
   flutter:
