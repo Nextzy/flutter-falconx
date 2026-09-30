@@ -41,7 +41,8 @@ abstract class ValidatorCubit<DATA> extends Cubit<ValidateState<DATA?>> {
   }
 
   // Steers callers to validate/emitError; not a scheduled removal.
-  // ignore: remove_deprecations_in_breaking_versions
+  // remove_deprecations_in_breaking_versions flags this only in an X.0.0
+  // version; add `// ignore: remove_deprecations_in_breaking_versions` then.
   @Deprecated('Please use [validate] or [emitError]')
   @protected
   @visibleForTesting
