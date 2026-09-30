@@ -36,10 +36,17 @@ const _allowedSiblings = {
 Map<dynamic, dynamic> _pubspec(String path) =>
     loadYaml(File(path).readAsStringSync()) as Map<dynamic, dynamic>;
 
-Map<dynamic, dynamic> _dependencies(String package) =>
-    (_pubspec('../$package/pubspec.yaml')['dependencies']
-        as Map<dynamic, dynamic>?) ??
-    const {};
+/// Sibling detection reads both `dependencies` and `dev_dependencies`; a
+/// sibling declared under either section is subject to the same direction
+/// and git-shape checks.
+Map<dynamic, dynamic> _dependencies(String package) {
+  final pubspec = _pubspec('../$package/pubspec.yaml');
+  final dependencies =
+      (pubspec['dependencies'] as Map<dynamic, dynamic>?) ?? const {};
+  final devDependencies =
+      (pubspec['dev_dependencies'] as Map<dynamic, dynamic>?) ?? const {};
+  return {...dependencies, ...devDependencies};
+}
 
 void main() {
   final version = _pubspec('../pubspec.yaml')['version'] as String;
