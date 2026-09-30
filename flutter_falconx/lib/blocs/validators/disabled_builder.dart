@@ -1,5 +1,4 @@
 // Ignore because is not necessary
-// ignore_for_file: deprecated_member_use_from_same_package
 
 import 'package:flutter_falconx/src/src.dart';
 
@@ -10,7 +9,7 @@ typedef DisabledWidgetBuilder =
     );
 
 class DisabledCubit extends Cubit<bool> {
-  DisabledCubit() : super(false);
+  new() : super(false);
 
   bool get disabled => state;
 
@@ -20,7 +19,7 @@ class DisabledCubit extends Cubit<bool> {
 }
 
 class DisabledBuilder<B extends DisabledCubit, DATA> extends StatelessWidget {
-  const DisabledBuilder({
+  const new({
     super.key,
     this.source,
     required this.builder,

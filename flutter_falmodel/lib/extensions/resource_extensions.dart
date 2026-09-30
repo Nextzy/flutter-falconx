@@ -4,14 +4,14 @@
 
 import 'package:flutter_falmodel/src/src.dart';
 
-extension FalModelStreamResourceExtension<T extends WidgetDataState>
+extension FalModelStreamResourceExtension<T extends WidgetDataState<Object?>>
     on Stream<T> {
   StreamSubscription<T> listen({
     required void Function(T data) onData,
     VoidErrorCallback? onError,
   }) {
     StreamSubscription<T>? _subscription;
-    _subscription = this.listen((T data) {
+    _subscription = this.listen((data) {
       final state = data.state;
       if (state == FullWidgetState.fail) {
         if (onError != null) {
@@ -24,7 +24,7 @@ extension FalModelStreamResourceExtension<T extends WidgetDataState>
         onError(error, stackTrace);
       }
     }, onDone: () {
-      _subscription?.cancel();
+      unawaited(_subscription?.cancel());
     });
     return _subscription;
   }

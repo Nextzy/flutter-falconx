@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter_falconnect/src/src.dart';
 
@@ -8,12 +7,12 @@ import 'package:flutter_falconnect/src/src.dart';
 /// Provides automatic memory management and prevents resource leaks through
 /// proper subscription and controller cleanup.
 class EitherStreamFetcher<T> {
-  EitherStreamFetcher([StreamController<WidgetDataState<T?>>? controller])
+  new([StreamController<WidgetDataState<T?>>? controller])
       : _streamController =
             controller ?? StreamController<WidgetDataState<T?>>.broadcast();
 
   final StreamController<WidgetDataState<T?>> _streamController;
-  StreamSubscription? _streamSubscription;
+  StreamSubscription<Object>? _streamSubscription;
   bool _isClosed = false;
 
   /// The output stream of widget data states
@@ -36,9 +35,10 @@ class EitherStreamFetcher<T> {
     }
 
     // Cancel any existing subscription before starting a new one
-    _streamSubscription?.cancel();
+    unawaited(_streamSubscription?.cancel());
 
-    // Use scheduleMicrotask to ensure loading state is emitted after listeners are attached
+    // Use scheduleMicrotask to ensure loading state is emitted after
+    // listeners are attached
     scheduleMicrotask(() {
       if (!_streamController.isClosed && !_isClosed) {
         _streamController.add(WidgetDataState.loading(null));
@@ -54,9 +54,9 @@ class EitherStreamFetcher<T> {
             if (!_streamController.isClosed) {
               _streamController.addError(failure);
             }
-            _closeInternal();
+            unawaited(_closeInternal());
           },
-          (T data) {
+          (data) {
             if (!_streamController.isClosed) {
               _streamController.add(WidgetDataState.success(data));
             }
@@ -65,13 +65,13 @@ class EitherStreamFetcher<T> {
       },
       onDone: () {
         printSuccess('Fetch: onDone called');
-        _closeInternal();
+        unawaited(_closeInternal());
       },
       onError: (Object error, StackTrace? stackTrace) {
         if (!_streamController.isClosed) {
           _streamController.addError(error, stackTrace);
         }
-        _closeInternal();
+        unawaited(_closeInternal());
       },
     );
     return _streamController.stream;

@@ -219,7 +219,7 @@ abstract class FalconNullableWidgetBlocState<WIDGET extends StatefulWidget, BLOC
 }
 ```
 
-`buildWithBloc` picks `failBuilder`/`warningBuilder`/`loadingBuilder` by `state.isFail`/`isWarning`/`isLoading`, falls back to `builder`, wraps the result in a `GestureDetector` that clears focus on tap, and applies `PopScope` when `canPop`/`onPop` is set (or the deprecated `WillPopScope` via `onWillPop`).
+`buildWithBloc` picks `failBuilder`/`warningBuilder`/`loadingBuilder` by `state.isFail`/`isWarning`/`isLoading`, falls back to `builder`, wraps the result in a `GestureDetector` that clears focus on tap, and applies `PopScope` when `canPop`/`onPop` is set.
 
 ```dart
 class UsersScreen extends StatefulWidget {
@@ -295,6 +295,6 @@ on<LoadProfile>((event, emit) => emit.callResultFuture(
 ## Gotchas
 
 - `ValidatorCubit.emit` is `@Deprecated`; call `validate(...)`, `clear()`, or `emitErrorMessage(...)` instead of emitting a `ValidateState` directly.
-- `WillPopListener` (used by `onWillPop` on `buildWithBloc`) is `@Deprecated` since `v3.12.0-1.0.pre`; use `onPop`/`canPop`.
+- `WillPopListener` and the `onWillPop` parameter were removed in 4.0.0; pass `canPop`/`onPop` to `buildWithBloc`.
 - `copyWith` on `WidgetDataState` never copies `event` — events are one-shot by design.
 - `BehaviorBloc`/`PublishBloc`/`ReplayBloc` only change which `rxdart` subject backs `stream`; they do not publish into that subject automatically — `emit` still drives it through the normal `Bloc` machinery.

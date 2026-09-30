@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/src/src.dart';
 
 class DeviceIdGenerator {
@@ -104,7 +103,7 @@ class DeviceIdGenerator {
         // Fallback for other platforms
         deviceData.write(fallbackFingerprint());
       }
-    } catch (e) {
+    } on Exception {
       // Fallback if device info fails
       deviceData.write(fallbackFingerprint());
     }
@@ -112,7 +111,7 @@ class DeviceIdGenerator {
     // Add some common system properties for additional uniqueness
     deviceData.writeAll([
       defaultTargetPlatform.name,
-      kIsWeb ? 'web' : 'native',
+      if (kIsWeb) 'web' else 'native',
       DateTime.now().timeZoneName,
     ]);
 
@@ -131,7 +130,7 @@ class DeviceIdGenerator {
       now.millisecondsSinceEpoch.toString(),
       now.timeZoneName,
       defaultTargetPlatform.name,
-      kIsWeb ? 'web' : 'native',
+      if (kIsWeb) 'web' else 'native',
     ].join('|');
   }
 }

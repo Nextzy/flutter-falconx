@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_falmodel/models/constants.dart';
 
 enum FullWidgetState {
   initial,
@@ -64,7 +63,7 @@ enum FullWidgetState {
 }
 
 class FullWidgetStates {
-  const FullWidgetStates(this._value);
+  const new(this._value);
 
   final Set<FullWidgetState> _value;
 

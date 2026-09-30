@@ -9,6 +9,7 @@ environment:
 resolution: workspace
 
 dependencies:
+  connectivity_plus: ^7.0.0
   dart_falconnect:
     git:
       url: https://github.com/Nextzy/dart-falconx
@@ -26,9 +27,6 @@ dependencies:
       url: https://github.com/Nextzy/flutter-falconx
       ref: 4.0.0
       path: flutter_faltool
-
-  #PLATFORM: All
-  connectivity_plus: ^7.0.0
 
 dev_dependencies:
   flutter_lints: ^6.0.0

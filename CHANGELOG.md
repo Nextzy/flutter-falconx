@@ -17,6 +17,8 @@
 11. `flutter_falconx` no longer re-exports `flutter_falkit`'s third-party packages: `extended_image`, `flutter_animate`, `flutter_svg`, `gap`, `smooth_page_indicator`. Add the ones you use to your app's `pubspec.yaml`.
 12. `ImageCompressTool.compressBytes`, `compressFile`, and `compressAndSaveFile` let `UnsupportedError` escape. That covers the Dart engine's HEIC rejection, the `UnimplementedError` the web plugin throws for HEIC output, and the macOS plugin's WebP rejection. Before 4.0.0 every failure became `ImageCompressException`; catch both. `batchCompressFiles` still maps any per-file failure to `null`.
 13. An app that imports a single package next to `package:flutter/material.dart` must hide the names that shadow Flutter's: `flutter_falconnect` needs `hide Path, RefreshCallback, TextDirection`; `flutter_falmodel`, `flutter_falstore`, and `flutter_faltool` need `hide TextDirection`. Without the hide, intl's `TextDirection` and Retrofit's `Path` replace `dart:ui`'s (`TextDirection.ltr` and `Path()..moveTo(...)` stop compiling), and `RefreshCallback` is an ambiguous import.
+14. `WillPopListener` is removed, along with the `onWillPop` parameter of `buildWithBloc` (`FalconWidgetBlocState`, `FalconNullableWidgetBlocState`) and of `FalconBlocState.buildCompatPopScope`, which now builds only `PopScope`. Pass `canPop` and `onPop` instead.
+15. `DeviceIdGenerator` falls back to its fingerprint only when device info throws an `Exception`; an `Error` from a device-info plugin now propagates.
 
 ### Added
 

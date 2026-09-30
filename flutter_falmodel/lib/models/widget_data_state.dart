@@ -25,7 +25,7 @@ import 'package:flutter_falmodel/src/src.dart';
 class WidgetDataState<T> {
 
   /// Creates a widget data state with the specified parameters.
-  const WidgetDataState._({
+  const new _({
     required this.state,
     required this.data,
     required this.feedback,
@@ -34,8 +34,9 @@ class WidgetDataState<T> {
     this.build = true,
   });
 
-  /// Factory constructor that creates a state with default feedback based on state type.
-  factory WidgetDataState.create(
+  /// Factory constructor that creates a state with default feedback based on
+  /// state type.
+  factory create(
       FullWidgetState state,
       T data, {
         String? id,
@@ -59,48 +60,48 @@ class WidgetDataState<T> {
   }
 
   // Optimized factory constructors using the create method
-  factory WidgetDataState.initial(T data,
+  factory initial(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.initial, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.normal(T data,
+  factory normal(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.normal, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.empty(T data,
+  factory empty(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.empty, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.loading(T data,
+  factory loading(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.loading, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.success(T data,
+  factory success(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.success, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.warning(T data,
+  factory warning(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.warning, data,
           id: id, feedback: feedback ?? const Warning(), build: build);
 
-  factory WidgetDataState.fail(T data,
+  factory fail(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.fail, data,
           id: id, feedback: feedback ?? const Failure(), build: build);
 
   // Additional factory constructors for all FullWidgetState values
-  factory WidgetDataState.hovered(T data,
+  factory hovered(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.hovered, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.focused(T data,
+  factory focused(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.focused, data,
           id: id, feedback: feedback, build: build);
@@ -110,32 +111,32 @@ class WidgetDataState<T> {
   //     WidgetDataState.create(FullWidgetState.focusedVisible, data,
   //         id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.pressed(T data,
+  factory pressed(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.pressed, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.dragged(T data,
+  factory dragged(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.dragged, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.selected(T data,
+  factory selected(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.selected, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.scrolledUnder(T data,
+  factory scrolledUnder(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.scrolledUnder, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.disabled(T data,
+  factory disabled(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.disabled, data,
           id: id, feedback: feedback, build: build);
 
-  factory WidgetDataState.cancel(T data,
+  factory cancel(T data,
       {String? id, UserFeedback? feedback, bool build = true}) =>
       WidgetDataState.create(FullWidgetState.cancel, data,
           id: id, feedback: feedback, build: build);
@@ -200,7 +201,8 @@ class WidgetDataState<T> {
   /// Applies a function to the state and data.
   R apply<R>(R Function(FullWidgetState state, T data) f) => f(state, data);
 
-  /// Converts the current FullWidgetState to Flutter's WidgetState if applicable.
+  /// Converts the current FullWidgetState to Flutter's WidgetState if
+  /// applicable.
   WidgetState? get toWidgetState => state.toWidgetState;
 
   /// Maps the data to a new type.
@@ -375,7 +377,7 @@ class WidgetDataState<T> {
 /// Event class for one-time communication from BLoC to Widget.
 @immutable
 class WidgetEvent {
-  const WidgetEvent(this.name, [this.data]);
+  const new(this.name, [this.data]);
 
   /// The name/type of the event.
   final Object name;
@@ -386,5 +388,3 @@ class WidgetEvent {
   @override
   String toString() => 'WidgetEvent(name: $name, data: $data)';
 }
-
-

@@ -4,7 +4,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 /// Arguments of one call that reached [FakeImageCompressPlatform].
 class RecordedCompressCall {
-  const RecordedCompressCall({
+  const new({
     required this.minWidth,
     required this.minHeight,
     required this.quality,

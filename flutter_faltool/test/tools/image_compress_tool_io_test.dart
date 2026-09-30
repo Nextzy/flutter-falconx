@@ -34,7 +34,8 @@ void main() {
     tempDir.deleteSync(recursive: true);
   });
 
-  test('compressFile on a .heic input on a desktop platform surfaces UnsupportedError', () async {
+  test('compressFile on a .heic input on a desktop platform '
+      'surfaces UnsupportedError', () async {
     final heicFile = File('${tempDir.path}/photo.heic')
       ..writeAsBytesSync(_png());
 

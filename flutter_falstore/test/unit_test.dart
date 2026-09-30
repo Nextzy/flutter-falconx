@@ -1,13 +1,12 @@
 import 'package:flutter_falstore/flutter_falstore.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Mock implementation of FlutterSecureStorage for testing.
 class MockFlutterSecureStorage extends Fake implements FlutterSecureStorage {
+
+  new({bool shouldThrow = false}) : _shouldThrow = shouldThrow;
   final Map<String, String> _storage = {};
   final bool _shouldThrow;
-
-  MockFlutterSecureStorage({bool shouldThrow = false}) : _shouldThrow = shouldThrow;
 
   @override
   Future<void> write({
@@ -187,7 +186,10 @@ void main() {
         const defaultValue = 'default_value';
 
         await secureStorage.save(key, data: value);
-        final loaded = await secureStorage.loadSafe(key, defaultData: defaultValue);
+        final loaded = await secureStorage.loadSafe(
+          key,
+          defaultData: defaultValue,
+        );
 
         expect(loaded, equals(value));
       });
@@ -196,7 +198,10 @@ void main() {
         const key = 'non_existent_key';
         const defaultValue = 'default_value';
 
-        final loaded = await secureStorage.loadSafe(key, defaultData: defaultValue);
+        final loaded = await secureStorage.loadSafe(
+          key,
+          defaultData: defaultValue,
+        );
 
         expect(loaded, equals(defaultValue));
       });
@@ -206,7 +211,10 @@ void main() {
         final errorSecureStorage = SecureStorage.testing(storage: errorStorage);
         const defaultValue = 'fallback';
 
-        final loaded = await errorSecureStorage.loadSafe('key', defaultData: defaultValue);
+        final loaded = await errorSecureStorage.loadSafe(
+          'key',
+          defaultData: defaultValue,
+        );
 
         expect(loaded, equals(defaultValue));
       });
@@ -268,7 +276,11 @@ void main() {
     group('typed JSON operations', () {
       test('should load typed JSON object', () async {
         const key = 'user_key';
-        final userData = {'id': 1, 'name': 'Alice', 'email': 'alice@example.com'};
+        final userData = {
+          'id': 1,
+          'name': 'Alice',
+          'email': 'alice@example.com',
+        };
 
         await secureStorage.saveJson(key, data: userData);
         final user = await secureStorage.loadTyped<Map<String, dynamic>>(
@@ -356,7 +368,10 @@ void main() {
       test('should skip non-existent keys in loadMultiple', () async {
         await secureStorage.save('existing', data: 'value');
 
-        final loaded = await secureStorage.loadMultiple(['existing', 'non_existent']);
+        final loaded = await secureStorage.loadMultiple([
+          'existing',
+          'non_existent',
+        ]);
 
         expect(loaded.length, equals(1));
         expect(loaded['existing'], equals('value'));
@@ -486,7 +501,7 @@ void main() {
         final errorSecureStorage = SecureStorage.testing(storage: errorStorage);
 
         expect(
-          () => errorSecureStorage.loadAll(),
+          errorSecureStorage.loadAll,
           throwsA(isA<StorageException>()),
         );
       });

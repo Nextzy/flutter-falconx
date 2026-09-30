@@ -1,7 +1,7 @@
 import 'package:flutter_falconx/src/src.dart';
 
 class IntCubit extends Cubit<int> {
-  IntCubit(super.data);
+  new(super.initialState);
 
   int get data => state;
 

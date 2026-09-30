@@ -5,7 +5,8 @@
 ///
 /// ## Features
 ///
-/// - **Secure Storage**: Uses platform-specific secure storage (Keychain on iOS, Keystore on Android)
+/// - **Secure Storage**: Uses platform-specific secure storage (Keychain on
+///   iOS, Keystore on Android)
 /// - **Simple API**: Easy-to-use methods for storing and retrieving data
 /// - **Type Safety**: Strongly typed methods ensure data integrity
 /// - **Singleton Pattern**: Efficient resource usage with singleton instance

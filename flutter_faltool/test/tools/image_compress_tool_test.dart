@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_faltool/flutter_faltool.dart';
@@ -52,13 +51,23 @@ void main() {
         debugDefaultTargetPlatformOverride = TargetPlatform.linux;
         expect(ImageCompressTool.engine, isA<DartImageCompressEngine>());
       },
-      skip: kIsWeb ? 'engine selection by TargetPlatform applies to native builds' : null,
+      skip: kIsWeb
+          ? 'engine selection by TargetPlatform applies to native builds'
+          : null,
     );
 
     test('Android, iOS, macOS use the native engine', () {
-      for (final p in [TargetPlatform.android, TargetPlatform.iOS, TargetPlatform.macOS]) {
+      for (final p in [
+        TargetPlatform.android,
+        TargetPlatform.iOS,
+        TargetPlatform.macOS,
+      ]) {
         debugDefaultTargetPlatformOverride = p;
-        expect(ImageCompressTool.engine, isA<NativeImageCompressEngine>(), reason: p.name);
+        expect(
+          ImageCompressTool.engine,
+          isA<NativeImageCompressEngine>(),
+          reason: p.name,
+        );
       }
     });
 
@@ -83,11 +92,15 @@ void main() {
       );
       expect(out, [9, 9, 9]);
       expect(engine.lastFormat, CompressFormat.png);
-      expect(engine.lastConfig, ImageCompressTool.profiles[ImageCompressProfile.thumbnail]);
+      expect(
+        engine.lastConfig,
+        ImageCompressTool.profiles[ImageCompressProfile.thumbnail],
+      );
     });
 
     test(
-      'ImageCompressProfile.original does not resize, through the real Dart engine',
+      'ImageCompressProfile.original does not resize, '
+      'through the real Dart engine',
       () async {
         debugDefaultTargetPlatformOverride = TargetPlatform.linux;
         final out = await ImageCompressTool.compressBytes(
@@ -99,13 +112,16 @@ void main() {
         expect(decoded.width, 30);
         expect(decoded.height, 30);
       },
-      skip: kIsWeb ? 'engine selection by TargetPlatform applies to native builds' : null,
+      skip: kIsWeb
+          ? 'engine selection by TargetPlatform applies to native builds'
+          : null,
     );
   });
 
   group('compressFile', () {
     test(
-      'reads an XFile, detects format from the name, returns bytes-backed XFile on web or a temp file otherwise',
+      'reads an XFile, detects format from the name, '
+      'returns bytes-backed XFile on web or a temp file otherwise',
       () async {
         final engine = _RecordingEngine();
         ImageCompressTool.debugEngineOverride = engine;
@@ -115,19 +131,27 @@ void main() {
         expect(engine.lastFormat, CompressFormat.png);
         expect(await out!.readAsBytes(), [9, 9, 9]);
       },
-      skip: !kIsWeb ? 'path_provider has no VM test implementation; covered by web run' : null,
+      skip: !kIsWeb
+          ? 'path_provider has no VM test implementation; covered by web run'
+          : null,
     );
 
     test(
-      'HEIC on a desktop platform surfaces UnsupportedError, not MissingPluginException',
+      'HEIC on a desktop platform surfaces UnsupportedError, '
+      'not MissingPluginException',
       () async {
         debugDefaultTargetPlatformOverride = TargetPlatform.windows;
         expect(
-          () => ImageCompressTool.compressBytes(bytes: _png(), format: CompressFormat.heic),
+          () => ImageCompressTool.compressBytes(
+            bytes: _png(),
+            format: CompressFormat.heic,
+          ),
           throwsA(isA<UnsupportedError>()),
         );
       },
-      skip: kIsWeb ? 'HEIC fallback applies to native Windows/Linux builds' : null,
+      skip: kIsWeb
+          ? 'HEIC fallback applies to native Windows/Linux builds'
+          : null,
     );
   });
 

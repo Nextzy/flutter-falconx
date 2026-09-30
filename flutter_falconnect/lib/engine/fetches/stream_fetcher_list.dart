@@ -6,8 +6,8 @@ import 'package:flutter_falconnect/src/src.dart';
 /// Provides centralized management of multiple stream fetchers with proper
 /// resource lifecycle management and memory leak prevention.
 class EitherStreamFetcherList {
-  final Map<dynamic, EitherStreamFetcher> _fetcherMap = 
-      <dynamic, EitherStreamFetcher>{};
+  final Map<dynamic, EitherStreamFetcher<Object?>> _fetcherMap = 
+      <dynamic, EitherStreamFetcher<Object?>>{};
 
   /// Fetches data from a stream with automatic debouncing and lifecycle 
   /// management.
@@ -76,7 +76,7 @@ class EitherStreamFetcherList {
     } else {
       // Remove and close old fetcher before starting new one
       final fetcher = _fetcherMap.remove(key);
-      fetcher?.close();
+      unawaited(fetcher?.close());
       return true;
     }
   }
@@ -87,7 +87,7 @@ class EitherStreamFetcherList {
   /// Use [closeAsync] if you need to wait for all operations to complete.
   void closeSync() {
     for (final fetcher in _fetcherMap.values) {
-      fetcher.close();
+      unawaited(fetcher.close());
     }
     _fetcherMap.clear();
   }

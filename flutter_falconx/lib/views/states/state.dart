@@ -39,7 +39,7 @@ import 'package:flutter_falconx/src/src.dart';
 
 abstract class FalconState<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
-  FalconState({FullWidgetState? initialWidgetState})
+  new({FullWidgetState? initialWidgetState})
     : _initState = initialWidgetState;
 
   final FullWidgetState? _initState;

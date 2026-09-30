@@ -1,7 +1,7 @@
 import 'package:flutter_falconx/src/src.dart';
 
 abstract class PublishBloc<EVENT, STATE> extends FalconBloc<EVENT, STATE> {
-  PublishBloc(super.initialState);
+  new(super.initialState);
 
   final _subject = PublishSubject<STATE>();
 

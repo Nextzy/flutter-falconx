@@ -1,7 +1,7 @@
 import 'package:flutter_falconx/src/src.dart';
 
 class ContentState<T> extends Cubit<WidgetDataState<T>> {
-  ContentState.initial(T data) : super(WidgetDataState.initial(data));
+  new initial(T data) : super(WidgetDataState.initial(data));
 
   bool get isInitial => state.isInitial; //
   bool get isSelected => state.isSelected; //
@@ -62,7 +62,7 @@ class ContentState<T> extends Cubit<WidgetDataState<T>> {
 
 class ContentBuilder<T>
     extends BlocBuilder<ContentState<T>, WidgetDataState<T>> {
-  const ContentBuilder({
+  const new({
     super.key,
     required ContentState<T> content,
     super.buildWhen,

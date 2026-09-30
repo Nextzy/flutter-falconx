@@ -11,4 +11,4 @@ final result = await Navigator.of(context).push<PopResult<User>>(
 if (result?.isSuccess ?? false) refreshList(result!.data);
 ```
 
-`FalconBlocState.buildCompatPopScope` (`references/state.md`) wires `PopScope`/`WillPopScope` around whatever router you choose, so gate-based pop confirmation still goes through `buildWithBloc`'s `canPop`/`onPop` parameters rather than a router-specific API.
+`FalconBlocState.buildCompatPopScope` (`references/state.md`) wires `PopScope` around whatever router you choose, so gate-based pop confirmation still goes through `buildWithBloc`'s `canPop`/`onPop` parameters rather than a router-specific API.

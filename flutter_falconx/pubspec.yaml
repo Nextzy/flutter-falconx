@@ -9,8 +9,11 @@ environment:
 resolution: workspace
 
 dependencies:
+  app_links: ^7.2.1
+  bloc_concurrency: ^0.3.0
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.1.1
   flutter_falconnect:
     git:
       url: https://github.com/Nextzy/flutter-falconx
@@ -31,11 +34,6 @@ dependencies:
       url: https://github.com/Nextzy/flutter-falconx
       ref: 4.0.0
       path: flutter_faltool
-
-  #PLATFORM: All
-  app_links: ^7.2.1
-  bloc_concurrency: ^0.3.0
-  flutter_bloc: ^9.1.1
   flutter_local_notifications: ^22.3.1
   provider: ^6.1.5+1
 

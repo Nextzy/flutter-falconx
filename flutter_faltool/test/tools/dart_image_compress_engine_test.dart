@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 import 'package:flutter_faltool/flutter_faltool.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -22,12 +21,16 @@ Uint8List _redJpegWithExifTag({int width = 200, int height = 200}) {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  final engine = DartImageCompressEngine();
+  const engine = DartImageCompressEngine();
 
   test('resizes down to minWidth/minHeight and encodes JPEG', () async {
     final out = await engine.compress(
       bytes: _redPng(),
-      config: const ImageCompressConfig(minWidth: 50, minHeight: 50, quality: 80),
+      config: const ImageCompressConfig(
+        minWidth: 50,
+        minHeight: 50,
+        quality: 80,
+      ),
       format: CompressFormat.jpeg,
     );
     final decoded = img.decodeJpg(out)!;
@@ -38,7 +41,11 @@ void main() {
   test('keeps aspect ratio when one side already meets the minimum', () async {
     final out = await engine.compress(
       bytes: _redPng(width: 400, height: 100),
-      config: const ImageCompressConfig(minWidth: 100, minHeight: 50, quality: 80),
+      config: const ImageCompressConfig(
+        minWidth: 100,
+        minHeight: 50,
+        quality: 80,
+      ),
       format: CompressFormat.png,
     );
     final decoded = img.decodePng(out)!;
@@ -71,7 +78,11 @@ void main() {
     expect(
       () => engine.compress(
         bytes: _redPng(),
-        config: const ImageCompressConfig(minWidth: 0, minHeight: 0, quality: 80),
+        config: const ImageCompressConfig(
+          minWidth: 0,
+          minHeight: 0,
+          quality: 80,
+        ),
         format: CompressFormat.heic,
       ),
       throwsA(isA<UnsupportedError>()),
@@ -102,7 +113,11 @@ void main() {
     expect(
       () => engine.compress(
         bytes: Uint8List.fromList([1, 2, 3]),
-        config: const ImageCompressConfig(minWidth: 0, minHeight: 0, quality: 80),
+        config: const ImageCompressConfig(
+          minWidth: 0,
+          minHeight: 0,
+          quality: 80,
+        ),
         format: CompressFormat.jpeg,
       ),
       throwsA(isA<ImageCompressException>()),

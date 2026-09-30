@@ -2,7 +2,7 @@ import 'package:flutter_falconx/src/src.dart';
 
 abstract class FalconWidgetDataStateBloc<EVENT, DATA>
     extends FalconBloc<EVENT, WidgetDataState<DATA>> {
-  FalconWidgetDataStateBloc(
+  new(
     DATA initialData,
   ) : super(
           WidgetDataState.initial(initialData),
@@ -104,7 +104,7 @@ abstract class FalconWidgetDataStateBloc<EVENT, DATA>
 
 abstract class FalconNullableWidgetDataStateBloc<EVENT, DATA>
     extends FalconBloc<EVENT, WidgetDataState<DATA?>> {
-  FalconNullableWidgetDataStateBloc({
+  new({
     DATA? initialData,
   }) : super(WidgetDataState.initial(initialData));
 
@@ -276,7 +276,7 @@ abstract class FalconNullableWidgetDataStateBloc<EVENT, DATA>
 // }
 
 abstract class FalconBloc<EVENT, STATE> extends Bloc<EVENT, STATE> {
-  FalconBloc(
+  new(
     super.initialState,
   )   : _fetcher = EitherStreamFetcherList();
 
@@ -306,8 +306,8 @@ abstract class FalconBloc<EVENT, STATE> extends Bloc<EVENT, STATE> {
         call: call,
         debounceFetch: debounceFetch,
       ).map(
-        (WidgetDataState<T?> event) => event.mapData(
-          (T? a) => a ?? defaultData,
+        (event) => event.mapData(
+          (a) => a ?? defaultData,
         ),
       );
 
@@ -333,8 +333,8 @@ abstract class FalconBloc<EVENT, STATE> extends Bloc<EVENT, STATE> {
         call: call,
         debounceFetch: debounceFetch,
       ).map(
-        (WidgetDataState<T?> event) => event.mapData(
-          (T? a) => a ?? defaultData,
+        (event) => event.mapData(
+          (a) => a ?? defaultData,
         ),
       );
 

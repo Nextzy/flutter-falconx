@@ -1,7 +1,7 @@
 import 'package:flutter_falconnect/src/src.dart';
 
 class ConnectivityInterceptor extends Interceptor {
-  ConnectivityInterceptor({Connectivity? connectivity})
+  new({Connectivity? connectivity})
     : _connectivity = connectivity ?? Connectivity();
 
   final Connectivity _connectivity;
