@@ -31,7 +31,7 @@ flutter_falstore     → flutter_faltool only
 
 ## Platform support
 
-- Every package targets Android, iOS, macOS, Windows, Linux, and web. Web compilation is proven only by the Chrome test runs: `flutter_faltool` (`flutter test --platform chrome test/tools/ test/utils/`) and `flutter_falstore` (`flutter test --platform chrome`). No test compiles `flutter_falconnect` or `flutter_falconx` for web.
+- Every package targets Android, iOS, macOS, Windows, Linux, and web. Web compilation is proven only by the Chrome test runs: `flutter_faltool` (`flutter test --platform chrome test/tools/ test/utils/`), `flutter_falstore` (`flutter test --platform chrome`), `flutter_falconnect` (`flutter test --platform chrome test/web_smoke_test.dart`), and `flutter_falconx` (`flutter test --platform chrome test/web_smoke_test.dart`). The two `web_smoke_test.dart` files exist solely to prove each package's own barrel compiles for web; `flutter_falconx`'s also touches a symbol from each re-exported sibling layer.
 - Never `import 'dart:io'` under `lib/` except in the `if (dart.library.io)` branch of a conditional import (see `flutter_faltool/lib/tools/src/directory_io.dart`). Detect platforms with `PlatformChecker`, which uses `defaultTargetPlatform` and `kIsWeb`. In a browser `defaultTargetPlatform` is the browser's OS, so `PlatformChecker.platform` and `isAndroid`/`isIos`/`isMacOs`/... report that OS; test `isWeb` first, and use the `*OnWeb` getters for the browser's OS. Handle files as `XFile` from `cross_file`.
 - Feature gaps that remain, and how they fail:
 
