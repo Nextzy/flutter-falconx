@@ -1,0 +1,35 @@
+name: flutter_falconnect
+description: Network layer for Flutter on top of dart_falconnect.
+version: 4.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  connectivity_plus: ^7.0.0
+  dart_falconnect:
+    git:
+      url: https://github.com/Nextzy/dart-falconx
+      ref: 2.3.1
+      path: dart_falconnect
+  flutter:
+    sdk: flutter
+  flutter_falmodel:
+    git:
+      url: https://github.com/Nextzy/flutter-falconx
+      ref: 4.0.0
+      path: flutter_falmodel
+  flutter_faltool:
+    git:
+      url: https://github.com/Nextzy/flutter-falconx
+      ref: 4.0.0
+      path: flutter_faltool
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^11.0.0

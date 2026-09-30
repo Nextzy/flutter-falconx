@@ -1,0 +1,43 @@
+name: flutter_faltool
+description: A tools library for Flutter.
+version: 4.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  ansicolor: ^2.0.3
+  cross_file: ^0.3.5+5
+  dart_faltool:
+    git:
+      url: https://github.com/Nextzy/dart-falconx
+      ref: 2.3.1
+      path: dart_faltool
+  device_info_plus: ^13.2.0
+  flutter:
+    sdk: flutter
+  #PLATFORM: Android, iOS, macOS, Web (Windows/Linux use package:image)
+  flutter_image_compress: ^2.5.1
+  #PLATFORM: Android, iOS, Linux, macOS, Windows (no web)
+  flutter_udid: ^4.1.6
+  image: ^4.10.1
+  leak_tracker: ^11.0.2
+  package_info_plus: ^10.2.1
+  path: ^1.9.1
+  #PLATFORM: Android, iOS, Linux, macOS, Windows (no web)
+  path_provider: ^2.1.6
+  rate_limiter: ^1.1.1
+  share_plus: ^13.3.0
+  shared_preferences: ^2.5.5
+  web: ^1.1.1
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  very_good_analysis: ^11.0.0
