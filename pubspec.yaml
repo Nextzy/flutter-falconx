@@ -68,6 +68,14 @@ melos:
       packageFilters:
         dirExists: test
 
+    test:web:
+      description: Run each package's web-proving tests in Chrome, compiled with dart2js and then with dart2wasm; the file sets match the Platform support section of CLAUDE.md.
+      run: >-
+        (cd flutter_faltool && flutter test --platform chrome test/tools/ test/utils/ && flutter test --platform chrome --wasm test/tools/ test/utils/) &&
+        (cd flutter_falstore && flutter test --platform chrome && flutter test --platform chrome --wasm) &&
+        (cd flutter_falconnect && flutter test --platform chrome test/web_smoke_test.dart && flutter test --platform chrome --wasm test/web_smoke_test.dart) &&
+        (cd flutter_falconx && flutter test --platform chrome test/web_smoke_test.dart && flutter test --platform chrome --wasm test/web_smoke_test.dart)
+
     build_runner:
       description: Run build_runner for code generation in all packages.
       exec:
