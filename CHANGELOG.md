@@ -4,7 +4,7 @@
 
 ### Changed
 
-- WebAssembly (dart2wasm) is now a verified web target. `melos run test:web` runs each package's web-proving tests in Chrome under dart2js and again under dart2wasm; no package imports `dart:html` or `dart:js`, and the only browser API used is `package:web` in `flutter_faltool`. Apps can build with `flutter build web --wasm`. The feature gaps listed for web in `CLAUDE.md` apply unchanged under wasm.
+- WebAssembly (dart2wasm) is now a verified web target. `melos run test:web` runs each package's web-proving tests in Chrome under dart2js and again under dart2wasm; no package imports `dart:html` or `dart:js`, and the only browser API used is `package:web` in `flutter_faltool`. Apps can build with `flutter build web --wasm`. The web limits listed under Gotchas in `skills/flutter-falconx-package/SKILL.md` apply unchanged under wasm.
 
 ## 4.1.0 — 2026-09-30
 

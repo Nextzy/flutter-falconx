@@ -69,7 +69,7 @@ melos:
         dirExists: test
 
     test:web:
-      description: Run each package's web-proving tests in Chrome, compiled with dart2js and then with dart2wasm; the file sets match the Platform support section of CLAUDE.md.
+      description: Run each package's web-proving tests in Chrome, compiled with dart2js and then with dart2wasm.
       run: >-
         (cd flutter_faltool && flutter test --platform chrome test/tools/ test/utils/ && flutter test --platform chrome --wasm test/tools/ test/utils/) &&
         (cd flutter_falstore && flutter test --platform chrome && flutter test --platform chrome --wasm) &&
