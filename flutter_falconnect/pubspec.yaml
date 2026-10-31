@@ -9,11 +9,11 @@ environment:
 resolution: workspace
 
 dependencies:
-  connectivity_plus: ^7.0.0
+  connectivity_plus: ^7.3.2
   dart_falconnect:
     git:
       url: https://github.com/Nextzy/dart-falconx
-      ref: 2.4.0
+      ref: 2.4.2
       path: dart_falconnect
   flutter:
     sdk: flutter
