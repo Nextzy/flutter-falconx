@@ -8,14 +8,19 @@
 .Trashes
 
 ### AI ###
-.serena/
-.superpowers/
-.claude/worktrees/
-.claude/scheduled_tasks.lock
+# AI agent artifacts and private docs: kept in the private flutter-falconx-workspace repository, never pushed here
+.claude/
+CLAUDE.md
+CLAUDE.local.md
 .claude.local.md
-.claude/settings.local.json
+AGENTS.md
 .mcp.local.json
-.playwright-mcp
+.superpowers/
+.playwright-mcp/
+.serena/
+_bmad/
+_bmad-output/
+/docs
 
 
 ### IntelliJ ###
