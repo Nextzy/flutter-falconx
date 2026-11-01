@@ -19,6 +19,7 @@ analyzer:
     avoid_positional_boolean_parameters: ignore
   exclude:
     - "**/build/**"
+    - "**/tmp/**"
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "**/*.gen.dart"
@@ -30,6 +31,8 @@ analyzer:
     - "**/coverage/**"
     - "**/.dart_frog/**"
     - "**/test/**.mocks.dart"
+    - build/**
+    - tmp/**
 
 linter:
   # The lint rules applied to this project can be customized in the
