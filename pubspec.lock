@@ -221,29 +221,29 @@ packages:
     dependency: transitive
     description:
       path: dart_falconnect
-      ref: "2.4.2"
-      resolved-ref: "7ee4b1f6d01dba010b5767fea7b87b56e52de010"
+      ref: "2.5.0"
+      resolved-ref: "43e80a149599d9afb28934e4d42de2a1b4f8427f"
       url: "https://github.com/Nextzy/dart-falconx"
     source: git
-    version: "2.4.2"
+    version: "2.5.0"
   dart_falmodel:
     dependency: transitive
     description:
       path: dart_falmodel
-      ref: "2.4.2"
-      resolved-ref: "7ee4b1f6d01dba010b5767fea7b87b56e52de010"
+      ref: "2.5.0"
+      resolved-ref: "43e80a149599d9afb28934e4d42de2a1b4f8427f"
       url: "https://github.com/Nextzy/dart-falconx"
     source: git
-    version: "2.4.2"
+    version: "2.5.0"
   dart_faltool:
     dependency: transitive
     description:
       path: dart_faltool
-      ref: "2.4.2"
-      resolved-ref: "7ee4b1f6d01dba010b5767fea7b87b56e52de010"
+      ref: "2.5.0"
+      resolved-ref: "43e80a149599d9afb28934e4d42de2a1b4f8427f"
       url: "https://github.com/Nextzy/dart-falconx"
     source: git
-    version: "2.4.2"
+    version: "2.5.0"
   dartx:
     dependency: transitive
     description:
@@ -575,10 +575,10 @@ packages:
     dependency: transitive
     description:
       name: hashlib
-      sha256: b998d270c41c782d4e75e8fd19c8f43b64070f65bfeb528bbf886bb253cbb35b
+      sha256: fa06cb0c656de26310dfd77f2916d17e44a8eea463a85fc5d921ed7d94709323
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2"
+    version: "2.4.4"
   hooks:
     dependency: transitive
     description:

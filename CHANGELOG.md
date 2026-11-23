@@ -5,6 +5,21 @@
 ### Added
 
 - `flutter_faltool` re-exports `restart_app` ^1.10.2, so apps can call `Restart.restartApp()` without adding it themselves. On iOS it restarts the Flutter engine only and needs `RestartAppPlugin.configureEngineRestart` in `AppDelegate.swift`.
+- Each package now ships its own agent skills, and they install with `dart run skills@ get`. See the README. The skills are:
+  - `flutter_faltool`: `flutter-faltool-utils`, plus a generated copy of `dart_faltool`'s skill.
+  - `flutter_falmodel`: `flutter-falmodel-state`, plus a generated copy of `dart_falmodel`'s skill.
+  - `flutter_falconnect`: `flutter-falconnect-network`, plus a generated copy of `dart_falconnect`'s skill.
+  - `flutter_falstore`: `flutter-falstore-storage`.
+  - `flutter_falconx`: the router `flutter-falconx-package`, plus generated copies of the other skills above.
+- `melos run skills:sync` regenerates the copies. `melos run check:skills` fails when a copy has drifted, and `melos run check:skills:test` tests the sync tool. After every `dart_fal*` `ref:` bump, run `melos run get`, then `melos run skills:sync`.
+
+### Changed
+
+- Every `dart-falconx` dependency moves to 2.5.0, which ships the `dart_fal*` skills. No public API changed.
+
+### Removed
+
+- The repo-root `skills/` folder. If you copied `flutter-falconx-package` into `.claude/skills/` by hand and your app lists `flutter_falconx`, `dart run skills@ get` replaces that copy for Claude. Otherwise, or for another agent, delete `.claude/skills/flutter-falconx-package/` first, then run `get`.
 
 ## 4.1.1 — 2026-11-01
 

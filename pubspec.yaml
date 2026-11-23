@@ -127,3 +127,15 @@ melos:
     check:exports:test:
       description: Analyze and test tool/export_check, which melos run analyze and melos run test skip.
       run: cd tool/export_check && dart pub get && dart analyze && dart test
+
+    skills:sync:
+      description: Regenerate each package's copies of the agent skills it re-exports from its dependencies.
+      run: cd tool/skills_sync && dart pub get && dart run bin/skills_sync.dart sync
+
+    check:skills:
+      description: Fail when a generated skill copy has drifted from its source or a published skill fails skills_lint.
+      run: cd tool/skills_sync && dart pub get && dart run bin/skills_sync.dart check
+
+    check:skills:test:
+      description: Analyze and test tool/skills_sync, which melos run analyze and melos run test skip.
+      run: cd tool/skills_sync && dart pub get && dart analyze && dart test

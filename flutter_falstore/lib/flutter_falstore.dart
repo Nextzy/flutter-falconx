@@ -36,7 +36,7 @@
 /// - ✅ Linux (libsecret)
 /// - ✅ macOS (Keychain)
 /// - ✅ Windows (Windows Credential Store)
-/// - ✅ Web (IndexedDB with encryption)
+/// - ✅ Web (encrypted values in localStorage)
 library;
 
 export 'package:flutter_secure_storage/flutter_secure_storage.dart';

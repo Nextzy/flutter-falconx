@@ -14,7 +14,7 @@ dependencies:
   dart_faltool:
     git:
       url: https://github.com/Nextzy/dart-falconx
-      ref: 2.4.2
+      ref: 2.5.0
       path: dart_faltool
   device_info_plus: ^13.3.0
   flutter:
