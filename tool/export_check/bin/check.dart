@@ -28,6 +28,7 @@ const List<LibraryRef> _targets = [
   (uri: 'dart:math', root: _workspace),
   (uri: 'dart:typed_data', root: _workspace),
   (uri: 'dart:ui', root: _workspace),
+  (uri: 'package:cupertino_ui/cupertino_ui.dart', root: _workspace),
   (uri: 'package:flutter/cupertino.dart', root: _workspace),
   (uri: 'package:flutter/foundation.dart', root: _workspace),
   (uri: 'package:flutter/services.dart', root: _workspace),
@@ -52,9 +53,10 @@ const _singlePackageName =
 
 const _refreshCallback =
     "material_ui's RefreshCallback typedef (RefreshIndicator.onRefresh); "
-    "Flutter's Cupertino library declares its own, the same pair that "
-    'package:flutter/material.dart and package:flutter/cupertino.dart '
-    'always formed, so an app that imports both hides one.';
+    "Flutter's Cupertino libraries, package:cupertino_ui and the deprecated "
+    'package:flutter/cupertino.dart, declare their own, the same pair that '
+    'material.dart and cupertino.dart always formed, so an app that imports '
+    'both hides one.';
 
 const Map<AllowlistKey, String> _allowlist = {
   (

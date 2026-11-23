@@ -23,7 +23,7 @@ export 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // `ImageDecoderCallback` collides with dart:ui's. `Badge` and `Notification`
 // are hidden so apps that use the `badges` package or define their own
 // `Notification` model do not hit ambiguous imports; import
-// `package:flutter/material.dart` directly with `show Badge` to get
+// `package:material_ui/material_ui.dart` directly with `show Badge` to get
 // Material's.
 export 'package:material_ui/material_ui.dart'
     hide Badge, ImageDecoderCallback, Notification;
