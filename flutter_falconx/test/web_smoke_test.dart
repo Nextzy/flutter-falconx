@@ -2,8 +2,9 @@
 // web/Chrome). No other test in this package compiles it for web. Only
 // package:flutter_falconx/flutter_falconx.dart is imported; the symbols
 // touched span each layer the umbrella re-exports (flutter_falconnect,
-// flutter_falmodel, flutter_falstore, flutter_faltool, and falconx's own
-// networks/), so a compile failure here catches a break in any of them.
+// flutter_falmodel, flutter_falstore, flutter_faltool, material_ui, and
+// falconx's own networks/), so a compile failure here catches a break in any
+// of them.
 import 'package:flutter_falconx/flutter_falconx.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -31,5 +32,8 @@ void main() {
     // flutter_falconnect, re-exported.
     final interceptor = ConnectivityInterceptor();
     expect(interceptor, isA<ConnectivityInterceptor>());
+
+    // material_ui, re-exported.
+    expect(ThemeData().colorScheme, isA<ColorScheme>());
   });
 }

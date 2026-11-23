@@ -30,8 +30,8 @@ const List<LibraryRef> _targets = [
   (uri: 'dart:ui', root: _workspace),
   (uri: 'package:flutter/cupertino.dart', root: _workspace),
   (uri: 'package:flutter/foundation.dart', root: _workspace),
-  (uri: 'package:flutter/material.dart', root: _workspace),
   (uri: 'package:flutter/services.dart', root: _workspace),
+  (uri: 'package:material_ui/material_ui.dart', root: _workspace),
 ];
 
 /// Flutter owns these declarations; their collisions with `dart:` libraries,
@@ -50,7 +50,17 @@ const _singlePackageName =
     'flutter-falconx-package skill tells apps to hide the name when they '
     'import the barrel next to material.';
 
+const _refreshCallback =
+    "material_ui's RefreshCallback typedef (RefreshIndicator.onRefresh); "
+    "Flutter's Cupertino library declares its own, the same pair that "
+    'package:flutter/material.dart and package:flutter/cupertino.dart '
+    'always formed, so an app that imports both hides one.';
+
 const Map<AllowlistKey, String> _allowlist = {
+  (
+    subject: 'package:flutter_falconx/flutter_falconx.dart',
+    name: 'RefreshCallback',
+  ): _refreshCallback,
   (
     subject: 'package:flutter_falconx/flutter_falconx.dart',
     name: 'HttpResponse',
