@@ -25,7 +25,7 @@ Answers "does flutter_falconnect already provide this?" here and routes "how do 
 ## Gotchas
 
 - `ConnectivityInterceptor` checks connectivity per request; it does not cache the result. For a continuous connectivity stream for UI banners, use `InternetConnectionBloc` from `flutter_falconx`.
-- Importing this package's barrel next to `package:flutter/material.dart` (4.0.1, re-derived with the analyzer): `hide Path` on the import — Retrofit's `@Path` silently shadows `dart:ui`'s without an analyzer error, so `Path()..moveTo(...)` fails with `undefined_method` instead.
+- Importing this package's barrel next to `package:material_ui/material_ui.dart` (5.0.0, re-derived with the analyzer): `hide Path` on the import — Retrofit's `@Path` silently shadows `dart:ui`'s without an analyzer error, so `Path()..moveTo(...)` fails with `undefined_method` instead.
 - Since 4.0.1 this package no longer re-exports `flutter_falmodel`, which supplies `WidgetDataState<T?>`, the state type `EitherStreamFetcher` returns.
 - An app that imports a package this barrel does not re-export (`dart_falmodel`, ...) must also list that package in its own `pubspec.yaml`; otherwise `flutter analyze` flags `depend_on_referenced_packages`.
 

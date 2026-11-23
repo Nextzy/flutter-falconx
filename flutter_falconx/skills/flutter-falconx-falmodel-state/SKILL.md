@@ -28,7 +28,7 @@ Answers "does flutter_falmodel already provide this?" here and routes "how do I 
 
 - `copyWith` on `WidgetDataState` never copies `event`; events are one-shot by design. `toState` and the `toX` transitions do not carry it either; `mapData` and `mapState` do.
 - `WidgetDataState.warning` defaults `feedback` to `Warning()` and `.fail` to `Failure()`; every other state defaults to `Information()`.
-- Importing this package's barrel next to `package:flutter/material.dart` needs no `hide` (4.0.1, verified with the analyzer); its own export chain carries no colliding name.
+- Importing this package's barrel next to `package:material_ui/material_ui.dart` needs no `hide` (5.0.0, verified with the analyzer); its own export chain carries no colliding name.
 
 ## Out of scope
 

@@ -18,12 +18,12 @@ dependencies:
       path: flutter_falconx
 environment:
   sdk: ">=3.13.0 <4.0.0"            # not below the constraint in flutter_falconx/pubspec.yaml
-  flutter: ">=3.44.0"
+  flutter: ">=3.47.0"
 ```
 
 Since 4.0.1, a package no longer brings the packages below it: `flutter_falconnect` alone gives you only `flutter_falconnect`'s own API, not `flutter_falmodel`'s or `flutter_faltool`'s; `flutter_falmodel` and `flutter_falstore` alone no longer give you `flutter_faltool`'s. List and import every package you use directly, or depend on `flutter_falconx` alone — the umbrella still re-exports all four. List any mix of packages with the same tag and copy the `url` exactly; pub treats a `.git` suffix or SSH URL as a different source. Only `flutter_falconnect`, `flutter_falmodel`, and `flutter_faltool` re-export a `dart_fal*` counterpart, at the tag pinned inside this repository; `flutter_falstore` has none.
 
-`flutter: ">=3.44.0"` (set by `app_links` and `flutter_local_notifications`) and Android `compileSdk 37` (set by `flutter_local_notifications`; `app_links` needs 36) are floors, both pulled in through `flutter_falconx`; raise your app's `compileSdk` if it is lower. `flutter_local_notifications` 23 also builds with Android Gradle plugin 9.1.1; use that version or higher in your app.
+`flutter: ">=3.47.0"` (set by `material_ui`; `app_links` and `flutter_local_notifications` need 3.44.0) and Android `compileSdk 37` (set by `flutter_local_notifications`; `app_links` needs 36) are floors, both pulled in through `flutter_falconx`; raise your app's `compileSdk` if it is lower. `flutter_local_notifications` 23 also builds with Android Gradle plugin 9.1.1; use that version or higher in your app.
 
 To build against a local clone, put `dependency_overrides` with `path:` entries in a gitignored `pubspec_overrides.yaml` beside the app's `pubspec.yaml`.
 
@@ -46,7 +46,7 @@ import 'package:flutter_faltool/flutter_faltool.dart';
 | Connectivity-aware requests, stream/future fetch lifecycle, `NLog` | `flutter_falconnect` |
 | Secure key-value storage | `flutter_falstore` |
 | Platform detection, stable device id, image compression, logging, re-exported device, share, path, and preference plugins | `flutter_faltool` |
-| Re-exported third-party libs: `flutter_bloc`, `provider`, `bloc_concurrency`, `app_links`, `flutter_local_notifications` | `flutter_falconx` |
+| Re-exported third-party libs: `material_ui`, `flutter_bloc`, `provider`, `bloc_concurrency`, `app_links`, `flutter_local_notifications` | `flutter_falconx` |
 | Re-exported third-party libs: `connectivity_plus` | `flutter_falconnect` |
 | Re-exported third-party libs: `flutter_secure_storage` | `flutter_falstore` |
 | Re-exported third-party libs: `device_info_plus`, `flutter_udid`, `package_info_plus`, `share_plus`, `shared_preferences`, `path_provider`, `leak_tracker`, `rate_limiter`, `restart_app`, `cross_file` | `flutter_faltool` |
@@ -65,7 +65,7 @@ import 'package:flutter_faltool/flutter_faltool.dart';
 | Loading/success/fail UI from state | `FullWidgetStatesBuilder`, `ContentState<T>`, `NullableContentState<T>`, `FalconApplicationState`, `FalconBlocState` family, `FullWidgetStatesNotifier`, `PopResult` | `references/state.md` |
 | Routing | flutter-falconx ships no router today | `references/routing.md` |
 | Internet reachability BLoC | `InternetConnectionBloc` | `references/connectivity.md` |
-| Third-party libs, free with the import | `flutter_bloc`, `provider`, `bloc_concurrency`, `app_links`, `flutter_local_notifications` | `references/third-party.md` |
+| Third-party libs, free with the import | `material_ui`, `flutter_bloc`, `provider`, `bloc_concurrency`, `app_links`, `flutter_local_notifications` | `references/third-party.md` |
 
 ## Do not reinvent
 
@@ -77,7 +77,8 @@ import 'package:flutter_faltool/flutter_faltool.dart';
 ## Gotchas
 
 - `flutter_falconx` hides `Path` on its `flutter_falconnect` export, `TextDirection` on its `flutter_faltool` export, and `log` on `dart:math`. `Path` is Retrofit's annotation; `TextDirection` is intl's; `log` would collide with `dart:developer`'s. For Retrofit, write `import 'package:retrofit/retrofit.dart' as retrofit;` and use `@retrofit.Path(...)` / `@retrofit.Headers(...)`; an unprefixed import beside the umbrella makes `@Headers` an `ambiguous_import` with dio's. For intl's `TextDirection`, import `package:intl/intl.dart`. For `math.log`, write `import 'dart:math' as math;`. `dart_falconnect`'s auth typedef is `TokenRefreshCallback` since 4.1.0 and is exported.
-- `flutter_falconx` hides `Badge`, `ImageDecoderCallback`, and `Notification` on its `flutter/material.dart` export, because it also exports `dart:ui` directly: `ImageDecoderCallback` collides with `dart:ui`'s, and `Badge`/`Notification` are hidden so apps using the `badges` package or their own `Notification` model do not hit an ambiguous import. Import `package:flutter/material.dart` directly with `show Badge` to get Material's. This is umbrella-only — no non-umbrella package exports `dart:ui` or `material.dart`.
+- `flutter_falconx` exports `package:material_ui/material_ui.dart` (since 5.0.0; before, `package:flutter/material.dart`) and hides `Badge`, `ImageDecoderCallback`, and `Notification` on it, because it also exports `dart:ui` directly: `ImageDecoderCallback` collides with `dart:ui`'s, and `Badge`/`Notification` are hidden so apps using the `badges` package or their own `Notification` model do not hit an ambiguous import. Import `package:material_ui/material_ui.dart` directly with `show Badge` to get Material's. `RefreshCallback` is not hidden; it is ambiguous only in a file that also imports `package:flutter/cupertino.dart`, so `hide RefreshCallback` on one of them. This is umbrella-only — no non-umbrella package exports `dart:ui` or `material_ui`.
+- `material_ui` declares its own copy of every Material class, so its `ThemeData`, `MaterialApp`, and the rest are different types from `package:flutter/material.dart`'s. Migrate an app with `dart fix --apply --code=migrate_design_widgets`, and use `GlobalMaterialLocalizations.delegates` from `material_ui` for localization. A third-party widget that still imports `package:flutter/material.dart` reads the legacy theme and localizations, so wrap the app with `MaterialUiCompatibilityBridge(child: child!)` in `MaterialApp.builder`, or wrap that one subtree.
 - `CompressFormat` is re-exported by `flutter_faltool`, and by the umbrella `flutter_falconx`; pass `format: CompressFormat.png` without importing `flutter_image_compress` when you depend on one of those two. Since 4.0.1 `flutter_falmodel` and `flutter_falstore` no longer chain to `flutter_faltool`, so they no longer carry `CompressFormat`.
 - An app that imports a hidden or non-re-exported package directly (`retrofit`, `dart_falconnect`, `flutter_image_compress`, ...) must also list that package in its own `pubspec.yaml`; otherwise `flutter analyze` flags `depend_on_referenced_packages`.
 - `flutter_local_notifications` 23 uses named parameters in `initialize()` and `show()`.

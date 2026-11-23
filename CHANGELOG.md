@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Breaking
+
+- `flutter_falconx` exports `package:material_ui/material_ui.dart` instead of `package:flutter/material.dart`, which Flutter 3.50 deprecates. `material_ui` declares its own copy of every Material class, so `ThemeData`, `MaterialApp`, and the rest are new types. Run `dart fix --apply --code=migrate_design_widgets` in your app to rewrite its imports, and use `GlobalMaterialLocalizations.delegates` from `material_ui` for localization.
+- An app that uses third-party packages that still import `package:flutter/material.dart` wraps its tree with `MaterialUiCompatibilityBridge`, either in `MaterialApp.builder` or around the one subtree that holds the legacy widget.
+- The umbrella still hides `Badge`, `ImageDecoderCallback`, and `Notification` on the new export. Import `package:material_ui/material_ui.dart` with `show Badge` to get Material's `Badge`.
+- The Flutter floor rises from 3.44.0 to 3.47.0, the minimum `material_ui` requires.
+
 ### Added
 
 - `flutter_faltool` re-exports `restart_app` ^1.10.2, so apps can call `Restart.restartApp()` without adding it themselves. On iOS it restarts the Flutter engine only and needs `RestartAppPlugin.configureEngineRestart` in `AppDelegate.swift`.
@@ -16,6 +23,7 @@
 ### Changed
 
 - Every `dart-falconx` dependency moves to 2.5.0, which ships the `dart_fal*` skills. No public API changed.
+- `flutter_falmodel` imports `package:flutter/widgets.dart` instead of `package:flutter/material.dart`, so it does not depend on `material_ui`.
 
 ### Removed
 

@@ -4,6 +4,7 @@ Every package here reaches your app once you depend on `flutter_falconx`, which 
 
 | Package | For | Platform gaps |
 |---|---|---|
+| `material_ui` | Material widgets, `ThemeData`, `MaterialApp`; the umbrella exports it instead of `package:flutter/material.dart` since 5.0.0 | requires Flutter >=3.47.0; see the migration gotcha in `SKILL.md` |
 | `flutter_bloc` | BLoC/Cubit base classes underlying every state class in `references/state.md` | none |
 | `provider` | `context.read`/`context.watch`, used by `FalconBlocState.bloc` | none |
 | `bloc_concurrency` | Event transformers (`droppable`, `restartable`, `sequential`, `concurrent`) for `on<EVENT>(..., transformer: ...)` | none |

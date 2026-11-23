@@ -28,7 +28,7 @@ Answers "does flutter_falstore already provide this?" here and routes "how do I 
 
 - `loadSafe` swallows every error and returns `defaultData`; it never throws `StorageException`. Use `load` to tell "not found" from "storage read failed".
 - `SecureStorage.testing` is for tests only; production code always uses `SecureStorage.instance`.
-- Importing this package's barrel next to `package:flutter/material.dart` needs no `hide` (4.0.1, verified with the analyzer); its own export chain carries no colliding name.
+- Importing this package's barrel next to `package:material_ui/material_ui.dart` needs no `hide` (5.0.0, verified with the analyzer); its own export chain carries no colliding name.
 
 ## Out of scope
 

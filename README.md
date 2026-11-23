@@ -25,14 +25,18 @@ dependencies:
       path: flutter_falconx
 environment:
   sdk: ">=3.13.0 <4.0.0"
-  flutter: ">=3.44.0"
+  flutter: ">=3.47.0"
 ```
 
-Use the same `ref` for every falconx package you list, and copy the `url` exactly. Android apps need `compileSdk` 37 or higher. Then run:
+Use the same `ref` for every falconx package you list, and copy the `url` exactly. Android apps need `compileSdk` 37 or higher.
+
+Then run:
 
 ```sh
 flutter pub get
 ```
+
+`flutter_falconx` exports `material_ui` instead of `package:flutter/material.dart`. To switch an app over, run `dart fix --apply --code=migrate_design_widgets`; the Breaking section of `CHANGELOG.md` covers third-party packages that still use the old library.
 
 ## Agent skills
 
