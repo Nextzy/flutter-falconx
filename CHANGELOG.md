@@ -1,5 +1,34 @@
 # Changelog
 
+## 5.0.0 — 2026-11-23
+
+### Breaking
+
+- `flutter_falconx` exports `package:material_ui/material_ui.dart` instead of `package:flutter/material.dart`, which Flutter 3.50 deprecates. `material_ui` declares its own copy of every Material class, so `ThemeData`, `MaterialApp`, and the rest are new types. Run `dart fix --apply --code=migrate_design_widgets` in your app to rewrite its imports. The fix also adds `material_ui` to your `pubspec.yaml` and a `material_ui` import beside the `flutter_falconx` import. Remove both, since the umbrella already exports it, unless the app needs Material's `Badge` (see below). If your app uses `flutter_localizations`, switch to `GlobalMaterialLocalizations.delegates` from `material_ui`.
+- An app that uses third-party packages that still import `package:flutter/material.dart` can wrap its tree with `MaterialUiCompatibilityBridge`, either in `MaterialApp.builder` or around the one subtree that holds the legacy widget. `material_ui` marks the bridge `@Deprecated` as a temporary migration utility, so `flutter analyze` fails on it unless you add `// ignore: deprecated_member_use` on the line that uses it. Remove the bridge once those packages migrate.
+- The umbrella still hides `Badge`, `ImageDecoderCallback`, and `Notification` on the new export. Import `package:material_ui/material_ui.dart` with `show Badge` to get Material's `Badge`, and list `material_ui: ^1.11.1` in your `pubspec.yaml`, or `flutter analyze` reports `depend_on_referenced_packages`.
+- The Flutter floor rises from 3.44.0 to 3.47.0 for apps that list `flutter_falconx`, because `material_ui` requires it. The other four packages bring no `material_ui`, so they do not raise your floor to 3.47.0.
+
+### Added
+
+- `flutter_faltool` re-exports `restart_app` ^1.10.2, so apps can call `Restart.restartApp()` without adding it themselves. On iOS it restarts the Flutter engine only and needs `RestartAppPlugin.configureEngineRestart` in `AppDelegate.swift`.
+- Each package now ships its own agent skills, and they install with `dart run skills@ get`. See the README. The skills are:
+  - `flutter_faltool`: `flutter-faltool-utils`, plus a generated copy of `dart_faltool`'s skill.
+  - `flutter_falmodel`: `flutter-falmodel-state`, plus a generated copy of `dart_falmodel`'s skill.
+  - `flutter_falconnect`: `flutter-falconnect-network`, plus a generated copy of `dart_falconnect`'s skill.
+  - `flutter_falstore`: `flutter-falstore-storage`.
+  - `flutter_falconx`: the router `flutter-falconx-package`, plus generated copies of the other skills above.
+- `melos run skills:sync` regenerates the copies. `melos run check:skills` fails when a copy has drifted, and `melos run check:skills:test` tests the sync tool. After every `dart_fal*` `ref:` bump, run `melos run get`, then `melos run skills:sync`.
+
+### Changed
+
+- Every `dart-falconx` dependency moves to 2.5.0, which ships the `dart_fal*` skills. No public API changed.
+- `flutter_falmodel` imports `package:flutter/widgets.dart` instead of `package:flutter/material.dart`, so it does not depend on `material_ui`.
+
+### Removed
+
+- The repo-root `skills/` folder. If you copied `flutter-falconx-package` into `.claude/skills/` by hand and your app lists `flutter_falconx`, `dart run skills@ get` replaces that copy for Claude. Otherwise, or for another agent, delete `.claude/skills/flutter-falconx-package/` first, then run `get`.
+
 ## 4.1.1 — 2026-11-01
 
 ### Changed

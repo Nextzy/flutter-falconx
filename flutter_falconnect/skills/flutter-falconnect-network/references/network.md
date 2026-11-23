@@ -1,0 +1,70 @@
+# Network
+
+`package: flutter_falconnect` (re-exports `connectivity_plus` and `dart_falconnect`). Since 4.0.1 `flutter_falconnect` no longer re-exports `flutter_falmodel`, which supplies `WidgetDataState<T?>`, the state type that `EitherStreamFetcher`/`EitherStreamFetcherList` below return. `Failure` and `NoInternetConnectException` come from `dart_falmodel`, and `Either` from `fpdart`, which `dart_faltool` re-exports; neither is in this package's barrel.
+
+For `BaseHttpClient`, Retrofit, `HttpClientConfig`, interceptor configuration, and exceptions, see the skill shipped for `dart_falconnect` (installed with this package), `references/http.md` — `flutter_falconnect` does not add its own HTTP client, only a connectivity gate and stream/future fetch plumbing on top of `dart_falconnect`.
+
+## `ConnectivityInterceptor`
+
+A Dio interceptor that rejects a request before it leaves the device when there is no usable connection (wifi, ethernet, mobile, or VPN).
+
+```dart
+class ConnectivityInterceptor extends Interceptor {
+  ConnectivityInterceptor({Connectivity? connectivity});
+}
+```
+
+```dart
+DefaultHttpClient.instance.dio.interceptors.add(ConnectivityInterceptor());
+```
+
+On no connectivity it rejects with a `DioException` whose `error` is `NoInternetConnectException` (`connectionError` type) rather than letting the request time out.
+
+## `EitherStreamFetcher<T>` / `EitherStreamFetcherList`
+
+The machinery behind `FalconBloc.fetchEither*` (`flutter_falconx`); use directly only when you need fetch lifecycle management outside a `FalconBloc`.
+
+```dart
+// WidgetDataState is from flutter_falmodel; Either is fpdart's; Failure is dart_falmodel's.
+class EitherStreamFetcher<T> {
+  EitherStreamFetcher([StreamController<WidgetDataState<T?>>? controller]);
+  Stream<WidgetDataState<T?>> get stream;
+  bool get isClosed;
+  Stream<WidgetDataState<T?>> fetch(Stream<Either<Failure, T>> call);
+  Future<void> close();
+}
+
+class EitherStreamFetcherList {
+  Stream<WidgetDataState<T?>> fetchStream<T>({required Object key, required Stream<Either<Failure, T>> call, bool debounceFetch = true});
+  Stream<WidgetDataState<T?>> fetchFuture<T>({required Object key, required Future<Either<Failure, T>> call, bool debounceFetch = true});
+  int get activeCount;
+  bool get hasActiveFetchers;
+  void closeSync();
+  Future<void> closeAsync();
+}
+```
+
+`debounceFetch: true` (the default) drops a repeat `fetchStream`/`fetchFuture` call for a `key` already in flight and returns the existing fetcher's stream instead; `debounceFetch: false` cancels the in-flight fetcher and starts a new one. Every fetcher emits `WidgetDataState.loading(null)` first, then `success`/error from the underlying `Either`.
+
+## `NLog`
+
+A boxed-corner console logger, active only outside release mode (`!kReleaseMode`).
+
+```dart
+class NLog {
+  static void i(String tag, String message);
+  static void e(String tag, String serviceName, Object exception);
+}
+```
+
+```dart
+NLog.i('UserRepo', 'fetched ${users.length} users');
+NLog.e('UserRepo', 'getUser', exception);
+```
+
+For general debug logging outside a network context, prefer `Log` from `flutter_faltool`, which adds levels, ANSI color, and stack traces.
+
+## Gotchas
+
+- `ConnectivityInterceptor` checks connectivity per request; it does not cache the result. For a continuous connectivity stream for UI banners, use `InternetConnectionBloc` from `flutter_falconx`.
+- `EitherStreamFetcherList.fetchStream` treats a debounce hit for a key that resolved to a different generic type as a fallback: it creates a brand-new fetcher rather than crashing on the cast, but this only happens if you reuse a `key` across mismatched types.
