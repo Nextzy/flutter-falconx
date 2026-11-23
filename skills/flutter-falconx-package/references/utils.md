@@ -1,6 +1,6 @@
 # Utils
 
-`package: flutter_faltool` (re-exports `cross_file`, `dart_faltool`, `device_info_plus`, `flutter_udid`, `leak_tracker`, `package_info_plus`, `path_provider`, `rate_limiter`, `share_plus`, `shared_preferences`, and `CompressFormat` from `flutter_image_compress`).
+`package: flutter_faltool` (re-exports `cross_file`, `dart_faltool`, `device_info_plus`, `flutter_udid`, `leak_tracker`, `package_info_plus`, `path_provider`, `rate_limiter`, `restart_app`, `share_plus`, `shared_preferences`, and `CompressFormat` from `flutter_image_compress`).
 
 ## `PlatformChecker`
 

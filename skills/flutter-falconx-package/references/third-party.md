@@ -19,6 +19,7 @@ Every package here reaches your app once you depend on the `flutter_fal*` packag
 | `path_provider` | `^2.1.6` | flutter_faltool | Filesystem paths (temp dir for `ImageCompressTool.compressFile`'s non-web output) | no web implementation — `ImageCompressTool` avoids it on web |
 | `leak_tracker` | `^11.0.2` | flutter_faltool | Memory leak detection in debug/test builds | none |
 | `rate_limiter` | `^1.1.1` | flutter_faltool | Debounce/throttle primitives | none |
+| `restart_app` | `^1.10.2` | flutter_faltool | `Restart.restartApp()` relaunches the app; returns `RestartResult` (`success`, `code`, `message`); `Restart.restartCapability()` reports what the platform supports | iOS restarts the Flutter engine only (native process stays) and needs `RestartAppPlugin.configureEngineRestart` in `AppDelegate.swift`; web reloads the page (`webOrigin:` picks the URL) |
 | `cross_file` | `^0.3.5+5` | flutter_faltool | `XFile`, the cross-platform file handle `ImageCompressTool` takes and returns | none |
 
 ## Not re-exported

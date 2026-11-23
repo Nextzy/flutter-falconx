@@ -19,17 +19,16 @@ dependencies:
   device_info_plus: ^13.3.0
   flutter:
     sdk: flutter
-  #PLATFORM: Android, iOS, macOS, Web (Windows/Linux use package:image)
+
   flutter_image_compress: ^2.5.1
-  #PLATFORM: Android, iOS, Linux, macOS, Windows (no web)
   flutter_udid: ^4.1.6
   image: ^4.12.0
   leak_tracker: ^11.0.2
   package_info_plus: ^10.2.2
   path: ^1.9.1
-  #PLATFORM: Android, iOS, Linux, macOS, Windows (no web)
   path_provider: ^2.1.6
   rate_limiter: ^1.1.1
+  restart_app: ^1.10.2
   share_plus: ^13.3.1
   shared_preferences: ^2.5.6
   web: ^1.1.2

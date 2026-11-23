@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `flutter_faltool` re-exports `restart_app` ^1.10.2, so apps can call `Restart.restartApp()` without adding it themselves. On iOS it restarts the Flutter engine only and needs `RestartAppPlugin.configureEngineRestart` in `AppDelegate.swift`.
+
 ## 4.1.1 — 2026-11-01
 
 ### Changed

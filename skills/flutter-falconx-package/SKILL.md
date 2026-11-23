@@ -53,7 +53,7 @@ import 'package:flutter_faltool/flutter_faltool.dart';
 | Stable device id | `DeviceIdGenerator.getDeviceId()` | flutter_faltool | `references/utils.md` |
 | Image compression on every platform | `ImageCompressTool.compressFile/compressBytes/compressAndSaveFile/batchCompressFiles` with `XFile` | flutter_faltool | `references/utils.md` |
 | Debug logging | `Log.i/d/w/e/f`, `printInfo`, `printError`, `printSuccess` | flutter_faltool | `references/utils.md` |
-| Third-party libs, free with the import | `flutter_bloc`, `provider`, `bloc_concurrency`, `app_links`, `flutter_local_notifications`, `connectivity_plus`, `flutter_secure_storage`, `device_info_plus`, `package_info_plus`, `share_plus`, `shared_preferences`, `path_provider`, `flutter_udid`, `leak_tracker`, `rate_limiter`, `cross_file` | see ref | `references/third-party.md` |
+| Third-party libs, free with the import | `flutter_bloc`, `provider`, `bloc_concurrency`, `app_links`, `flutter_local_notifications`, `connectivity_plus`, `flutter_secure_storage`, `device_info_plus`, `package_info_plus`, `share_plus`, `shared_preferences`, `path_provider`, `flutter_udid`, `leak_tracker`, `rate_limiter`, `restart_app`, `cross_file` | see ref | `references/third-party.md` |
 
 ## Do not reinvent
 
