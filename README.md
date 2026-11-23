@@ -25,10 +25,10 @@ dependencies:
       path: flutter_falconx
 environment:
   sdk: ">=3.13.0 <4.0.0"
-  flutter: ">=3.47.0"
+  flutter: ">=3.47.0"                # when you list flutter_falconx; the other packages do not raise it
 ```
 
-Use the same `ref` for every falconx package you list, and copy the `url` exactly. Android apps need `compileSdk` 37 or higher.
+Use the same `ref` for every falconx package you list, and copy the `url` exactly. Android apps need `compileSdk` 37 or higher. Only `flutter_falconx` brings `material_ui`, so only an app that lists it needs Flutter 3.47.0 or higher.
 
 Then run:
 

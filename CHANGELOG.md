@@ -4,10 +4,10 @@
 
 ### Breaking
 
-- `flutter_falconx` exports `package:material_ui/material_ui.dart` instead of `package:flutter/material.dart`, which Flutter 3.50 deprecates. `material_ui` declares its own copy of every Material class, so `ThemeData`, `MaterialApp`, and the rest are new types. Run `dart fix --apply --code=migrate_design_widgets` in your app to rewrite its imports, and use `GlobalMaterialLocalizations.delegates` from `material_ui` for localization.
-- An app that uses third-party packages that still import `package:flutter/material.dart` wraps its tree with `MaterialUiCompatibilityBridge`, either in `MaterialApp.builder` or around the one subtree that holds the legacy widget.
-- The umbrella still hides `Badge`, `ImageDecoderCallback`, and `Notification` on the new export. Import `package:material_ui/material_ui.dart` with `show Badge` to get Material's `Badge`.
-- The Flutter floor rises from 3.44.0 to 3.47.0, the minimum `material_ui` requires.
+- `flutter_falconx` exports `package:material_ui/material_ui.dart` instead of `package:flutter/material.dart`, which Flutter 3.50 deprecates. `material_ui` declares its own copy of every Material class, so `ThemeData`, `MaterialApp`, and the rest are new types. Run `dart fix --apply --code=migrate_design_widgets` in your app to rewrite its imports. The fix also adds `material_ui` to your `pubspec.yaml` and a `material_ui` import beside the `flutter_falconx` import. Remove both, since the umbrella already exports it, unless the app needs Material's `Badge` (see below). If your app uses `flutter_localizations`, switch to `GlobalMaterialLocalizations.delegates` from `material_ui`.
+- An app that uses third-party packages that still import `package:flutter/material.dart` can wrap its tree with `MaterialUiCompatibilityBridge`, either in `MaterialApp.builder` or around the one subtree that holds the legacy widget. `material_ui` marks the bridge `@Deprecated` as a temporary migration utility, so `flutter analyze` fails on it unless you add `// ignore: deprecated_member_use` on the line that uses it. Remove the bridge once those packages migrate.
+- The umbrella still hides `Badge`, `ImageDecoderCallback`, and `Notification` on the new export. Import `package:material_ui/material_ui.dart` with `show Badge` to get Material's `Badge`, and list `material_ui: ^1.11.1` in your `pubspec.yaml`, or `flutter analyze` reports `depend_on_referenced_packages`.
+- The Flutter floor rises from 3.44.0 to 3.47.0 for apps that list `flutter_falconx`, because `material_ui` requires it. The other four packages bring no `material_ui`, so they do not raise your floor to 3.47.0.
 
 ### Added
 
