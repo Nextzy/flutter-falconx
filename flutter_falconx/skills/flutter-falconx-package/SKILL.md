@@ -23,7 +23,7 @@ environment:
 
 Since 4.0.1, a package no longer brings the packages below it: `flutter_falconnect` alone gives you only `flutter_falconnect`'s own API, not `flutter_falmodel`'s or `flutter_faltool`'s; `flutter_falmodel` and `flutter_falstore` alone no longer give you `flutter_faltool`'s. List and import every package you use directly, or depend on `flutter_falconx` alone — the umbrella still re-exports all four. List any mix of packages with the same tag and copy the `url` exactly; pub treats a `.git` suffix or SSH URL as a different source. Only `flutter_falconnect`, `flutter_falmodel`, and `flutter_faltool` re-export a `dart_fal*` counterpart, at the tag pinned inside this repository; `flutter_falstore` has none.
 
-`flutter: ">=3.44.0"` and Android `compileSdk 36` are floors set by `app_links` and `flutter_local_notifications`, both pulled in through `flutter_falconx`; raise your app's `compileSdk` if it is lower.
+`flutter: ">=3.44.0"` (set by `app_links` and `flutter_local_notifications`) and Android `compileSdk 37` (set by `flutter_local_notifications`; `app_links` needs 36) are floors, both pulled in through `flutter_falconx`; raise your app's `compileSdk` if it is lower. `flutter_local_notifications` 23 also builds with Android Gradle plugin 9.1.1; use that version or higher in your app.
 
 To build against a local clone, put `dependency_overrides` with `path:` entries in a gitignored `pubspec_overrides.yaml` beside the app's `pubspec.yaml`.
 
@@ -80,7 +80,7 @@ import 'package:flutter_faltool/flutter_faltool.dart';
 - `flutter_falconx` hides `Badge`, `ImageDecoderCallback`, and `Notification` on its `flutter/material.dart` export, because it also exports `dart:ui` directly: `ImageDecoderCallback` collides with `dart:ui`'s, and `Badge`/`Notification` are hidden so apps using the `badges` package or their own `Notification` model do not hit an ambiguous import. Import `package:flutter/material.dart` directly with `show Badge` to get Material's. This is umbrella-only — no non-umbrella package exports `dart:ui` or `material.dart`.
 - `CompressFormat` is re-exported by `flutter_faltool`, and by the umbrella `flutter_falconx`; pass `format: CompressFormat.png` without importing `flutter_image_compress` when you depend on one of those two. Since 4.0.1 `flutter_falmodel` and `flutter_falstore` no longer chain to `flutter_faltool`, so they no longer carry `CompressFormat`.
 - An app that imports a hidden or non-re-exported package directly (`retrofit`, `dart_falconnect`, `flutter_image_compress`, ...) must also list that package in its own `pubspec.yaml`; otherwise `flutter analyze` flags `depend_on_referenced_packages`.
-- `flutter_local_notifications` 22 uses named parameters in `initialize()` and `show()`.
+- `flutter_local_notifications` 23 uses named parameters in `initialize()` and `show()`.
 
 ## Out of scope
 

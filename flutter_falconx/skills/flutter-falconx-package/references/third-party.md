@@ -8,7 +8,7 @@ Every package here reaches your app once you depend on `flutter_falconx`, which 
 | `provider` | `context.read`/`context.watch`, used by `FalconBlocState.bloc` | none |
 | `bloc_concurrency` | Event transformers (`droppable`, `restartable`, `sequential`, `concurrent`) for `on<EVENT>(..., transformer: ...)` | none |
 | `app_links` | Deep link / universal link handling | requires Flutter >=3.44.0; Android needs `compileSdk` 36+ |
-| `flutter_local_notifications` | Local push notifications | requires Flutter >=3.38.1; `initialize()`/`show()` use named parameters in v22; Android needs `compileSdk` 36+ |
+| `flutter_local_notifications` | Local push notifications | requires Flutter >=3.44.0; `initialize()`/`show()` use named parameters since v20; Android needs `compileSdk` 37+ and Android Gradle plugin 9.1.1+ |
 
 ## Not re-exported
 

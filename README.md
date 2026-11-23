@@ -28,7 +28,7 @@ environment:
   flutter: ">=3.44.0"
 ```
 
-Use the same `ref` for every falconx package you list, and copy the `url` exactly. Android apps need `compileSdk` 36 or higher. Then run:
+Use the same `ref` for every falconx package you list, and copy the `url` exactly. Android apps need `compileSdk` 37 or higher. Then run:
 
 ```sh
 flutter pub get
